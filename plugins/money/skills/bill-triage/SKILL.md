@@ -1,7 +1,7 @@
 ---
 name: bill-triage
 description: >-
-  Use when sorting medical or household bills/EOBs: what is owed, to whom, due date, and next call. No credentials.
+  Use when sorting medical or household bills/EOBs: what is owed, to whom, due date, and next call. No credentials. Educational, not advice.
 ---
 # Bill triage
 
@@ -13,6 +13,7 @@ Turn a pile of bills or EOBs into a clear list: owe / wait / dispute / pay.
 - Never store card numbers, SSNs, or portal passwords.
 - Flag urgency without panic language.
 - Draft call scripts or emails only; draft-never-send applies.
+- Educational triage aid, not legal or medical billing advice.
 - Never use em-dashes.
 
 ## Steps

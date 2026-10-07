@@ -1,8 +1,8 @@
 {
   "name": "money",
   "displayName": "Money",
-  "description": "Personal spend clarity and bill triage. No secrets in the repo.",
-  "version": "1.0.0",
+  "description": "Personal money procedures: margin plan, debt order, cushion, purchase pause, and bill triage. No secrets in the repo.",
+  "version": "1.1.0",
   "author": {
     "name": "Brad",
     "url": "https://github.com/bradcerb"

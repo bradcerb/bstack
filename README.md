@@ -38,7 +38,7 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map and how projects pull.
 | `gtm` | Thin freelance guardrails (Corey stays upstream) |
 | `design` | Figma handoff + leave-behind check |
 | `engineering` | Cloud-agent handoff + prove plugin local |
-| `money` | Spend clarity + bill triage; **CFO seat**. Ramsey-shaped skills listed in ARCHITECTURE (no secrets) |
+| `money` | Principle-based personal money skills; **CFO seat**. Plaid for live balances; optional fiscal.sh; Tiller only if still the plan sheet. No secrets. |
 | `health` | Thin training / recovery notes |
 | `family` | Rhythm and calendar boundaries |
 | `faith` | Quiet reflection and reading plans |
@@ -50,11 +50,13 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map and how projects pull.
 - Triumph Rock / PM / sales
 - Corey Haines marketing (install upstream)
 - Product defaults for Showup / Atlas / bradcerb.com
+- Branded money-coach program copy (procedures stay principle-based in `money`)
 
 ## Safety
 
 - Draft never send is the default for outbound.
 - No bank credentials, tokens, or client PII in this repo.
+- Money skills are educational planning aids, not advice.
 - Human judgment for money, relationships, leadership, and faith.
 
 ## License

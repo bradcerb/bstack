@@ -31,12 +31,11 @@ Anyone should be able to start with empty configs and clear skill names. No jarg
 | **gtm** | `gtm-guardrails` | Freelance / personal marketing. Corey stays separate. |
 | **design** | `figma-design-handoff`, `leave-behind-check` | Design handoff and print checks |
 | **engineering** | `cloud-agent-handoff`, `prove-plugin-local` | Your agent/plugin habits. Repo floor is still pstack. |
-| **money** | `money-check`, `bill-triage` (add Ramsey set below) | Personal money. **CFO seat installs this plugin.** No bank secrets in the repo. |
+| **money** | `money-check`, `bill-triage`, `margin-plan`, `debt-order`, `cash-cushion`, `purchase-pause`, `money-date`, `giving-plan`, `step-status` | Personal money. **CFO seat installs this plugin.** No bank secrets in the repo. |
 | **health** | `training-note`, `recovery-check` | Log and plan with a coach seat; thin skills only |
 | **family** | `family-rhythm`, `calendar-boundaries` | Protect evenings and weekends on purpose |
 | **faith** | `reflection`, `reading-plan` | Quiet practices. Portable. Not a sermon kit. |
 | **project-ops** | `project-brief`, `weekly-review` | Side and freelance projects. Triumph PM stays in Triumph. |
-
 
 ## Seats that load plugins
 
@@ -70,39 +69,47 @@ Other plugins are on-demand for any bot or for you directly.
 
 **Conference week** → relationship seats + `relationships` skills. Judgment stays human.
 
-
-
 ## Money and the CFO seat
 
-The **CFO** bot installs `plugins/money`. That is the home for personal finance procedures.
+The **CFO** bot installs `plugins/money`. That is the home for personal finance *procedures* (portable Agent Skills anyone can use).
 
-Tiller (or any ledger) is the *data* path. Skills never hold bank logins. The human pastes numbers or the CFO seat reads an approved connector.
+### Numbers vs procedures
 
-### Skills to keep in `money` (portable, anyone can use)
+| Layer | Role |
+| --- | --- |
+| **Live balances / txs** | Finance connector (Plaid) on Grok, read-only when connected |
+| **Plan / categories sheet** | Tiller (or any sheet) only while it is still the household plan source |
+| **Optional ledger agents** | [fiscal.sh](https://fiscal.sh/) / `fscl` on Actual Budget upstream; install like Corey, do not fork into bstack |
+| **bstack `money`** | Principle-based skills below; ask for numbers; never store credentials |
 
-Already shipped:
-- `money-check` — calm snapshot + one decision
-- `bill-triage` — medical/household bills and EOBs
+Pick one plan ledger long-term. Do not run three books forever.
 
-Add next (Dave Ramsey–shaped, plain names):
-- `baby-steps-status` — where you are on Baby Steps 1–7, one next move
-- `zero-based-budget` — every dollar a job for this month
-- `debt-snowball` — debts smallest to largest; which one to attack
-- `emergency-fund-check` — starter vs fully funded; gap and timeline
-- `purchase-pause` — before a non-budget buy: need, wait, or yes
-- `money-date` — short couple/household money meeting agenda
-- `giving-plan` — tithe/giving inside the budget (optional; faith-aware)
+### Skills in `money`
+
+- `money-check` - calm snapshot + one decision
+- `bill-triage` - medical/household bills and EOBs
+- `margin-plan` - zero-based month: every dollar assigned
+- `debt-order` - smallest-balance-first default; optional largest-APR compare
+- `cash-cushion` - starter buffer vs fuller months-of-expenses cushion
+- `purchase-pause` - need / wait / yes before a non-budget buy
+- `money-date` - short household money meeting agenda
+- `giving-plan` - optional giving inside the margin plan (faith-neutral)
+- `step-status` - ordered foundations ladder; current step + one next action
 
 ### What not to put in the plugin
 
 - Bank credentials, card numbers, SSNs
 - One-off tax advice or investment picking
 - Triumph or client billing (different lane)
+- Branded program names or trademarked product copy
 
-### Upstream?
+### Upstream
 
-There is no required upstream Ramsey plugin. If a solid public EveryDollar/Ramsey skill pack appears later, install it like Corey Haines and keep only *your* wrappers here. Until then, grow `plugins/money` in bstack and let CFO load it.
+- **Finance / Plaid (Grok):** live balances when the seat has the connector.
+- **fiscal.sh:** optional Actual Budget + agent skills; install upstream if you want agent-driven envelopes.
+- **Tiller:** fine as the plan sheet until you switch.
+- No required branded “money coach” plugin. Grow procedures here; let CFO load `money`.
 
 ## One line
 
-Coding floor = pstack. You = bstack. Writing = Triumph plugins. Triumph delivery = Triumph plugins. Upstream marketing = Corey. One product's quirks = that product's repo.
+Coding floor = pstack. You = bstack. Writing = Triumph plugins. Triumph delivery = Triumph plugins. Upstream marketing = Corey. Optional money ledger agents = fiscal.sh. One product's quirks = that product's repo.

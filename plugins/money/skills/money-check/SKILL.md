@@ -1,7 +1,7 @@
 ---
 name: money-check
 description: >-
-  Use for a calm spend check: income/outflow snapshot, categories, and one decision. Ask for numbers; never store credentials.
+  Use for a calm spend check: income/outflow snapshot, categories, and one decision. Ask for numbers; never store credentials. Educational, not advice.
 ---
 # Money check
 
@@ -11,6 +11,8 @@ A short, calm look at money so the author can decide one next step.
 
 - **Ask for numbers.** Do not scrape banks or store credentials.
 - No account numbers, passwords, or full statements in the repo.
+- Educational snapshot, not financial, tax, or investment advice.
+- Draft-never-send for any outbound.
 - One decision or question at the end.
 - Never use em-dashes.
 
