@@ -23,7 +23,7 @@ Anyone should be able to start with empty configs and clear skill names. No jarg
 | **thinking** | `form-my-point-of-view`, `examine-my-alignment`, `build-fluency`, `action-method` | Beliefs, understanding, deciding |
 | **money** | `money-check`, `bill-triage`, `margin-plan`, `debt-order`, `cash-cushion`, `purchase-pause`, `money-date`, `step-status` | Personal money procedures. Optional CFO seat. No bank secrets in the repo. |
 | **relationships** | `conference-who-to-meet`, `thank-you-note` | Sharp reusable jobs (conference prep + thank-you). Not a domain filler pack. Seats keep lane/voice/tools. |
-| **agent-ops** | `project-brief`, `weekly-review`, `daily-plan`, `gated-work` | Open a project, plan the week, plan the day, then move queue items safely in capped, gated runs |
+| **agent-ops** | `project-brief`, `weekly-plan`, `daily-plan`, `gated-work` | Open a project, plan the week, plan the day, then move queue items safely in capped, gated runs |
 
 ## What does *not* live here
 
@@ -49,7 +49,7 @@ Anyone should be able to start with empty configs and clear skill names. No jarg
 
 **Triumph delivery / client GTM / product quirks** → Triumph plugins, Corey upstream, or that product's repo.
 
-**Planning and work queue:** `agent-ops`. `project-brief` opens a project, `weekly-review` sets the week's priorities, `daily-plan` picks today's slice and feeds the queue, `gated-work` moves the items. The caller owns the source; the skill owns the method.
+**Planning and work queue:** `agent-ops`. `project-brief` opens a project, `weekly-plan` sets the week's priorities, `daily-plan` picks today's slice and feeds the queue, `gated-work` moves the items. The caller owns the source; the skill owns the method.
 
 ## Money procedures
 
@@ -95,9 +95,9 @@ Identity, company lane, CRM, and voice live outside the skill (seat memory or wo
 
 ## Agent ops procedures
 
-`plugins/agent-ops` is planning plus gated execution. Order of use: `project-brief` (open), `weekly-review` (week), `daily-plan` (day), `gated-work` (run). Not a PM board owner. Not leadership coaching.
+`plugins/agent-ops` is planning plus gated execution. Order of use: `project-brief` (open), `weekly-plan` (week), `daily-plan` (day), `gated-work` (run). Not a PM board owner. Not leadership coaching.
 
-- `weekly-review` - takes a week snapshot (pasted upstream output with What got done / In flight / Coming up / Stuck or at risk, or equivalent lists). Light roles scan, need/want brainstorm, separate large from small, prune to about three to five ranked priorities, reduce the rest (eliminate, defer, delegate, automate), place big rocks first with slack. Draft only.
+- `weekly-plan` - takes a weekly review or week snapshot (pasted upstream output with What got done / In flight / Coming up / Stuck or at risk, or equivalent lists). Light roles scan, need/want brainstorm, separate large from small, prune to about three to five ranked priorities, reduce the rest (eliminate, defer, delegate, automate), place big rocks first with slack. Draft only.
 - `project-brief` - for a real project (large initiative, unique result, end point): purpose and success measure, principles, scope in and not doing, action stages as finish lines, info/risks/waiting on, one next action. Keeps active projects few. Draft only.
 - `daily-plan` - process inbox slices top to bottom (delete, file, do if two minutes or less, delegate, defer to a trusted list), pick about three most important tasks tied to the week's priorities, shape the day at 70 percent with a deep-work block and batched quick clears, hand agent-runnable items to `gated-work` with the handoff checklist, park next actions at shutdown. Draft only.
 - `gated-work` - capped runs (default 5, planned at about 70 percent capacity; leftovers roll over). Classify do now / draft for gate / defer / eliminate / skip. Handoff checklist per item: desired result, guidelines, resources, accountability, consequences. Human gate, execute, verify, close with evidence. Quiet when empty.
@@ -106,11 +106,11 @@ Identity, company lane, CRM, and voice live outside the skill (seat memory or wo
 
 | Layer | Owns | Example |
 | --- | --- | --- |
-| Skill (this repo) | The method | `weekly-review` steps and output shape |
+| Skill (this repo) | The method | `weekly-plan` steps and output shape |
 | Routine or command | When it runs | A Friday routine, a slash command, a scheduled agent |
 | Connector | The data | Task board, calendar, repo issues, inbox |
 
-Upstream commands are inputs, not forks. If an org already ships a weekly-review command that pulls its tasks and calendar, run it, paste the output into `weekly-review`, and let this skill add triage and priorities. Do not copy the upstream command into bstack.
+Upstream commands are inputs, not forks. If an org already ships a `/weekly-review` command that pulls its tasks and calendar, run it, paste the output into `weekly-plan`, and let this skill add triage and priorities. Do not copy the upstream command into bstack. `weekly-plan` is deliberately not named weekly-review, so it stays distinct from those commands and from Cursor Team Kit's `weekly-review` skill.
 
 Default gates: send, spend, merge, publish, delete, relationship-affecting outreach.
 

@@ -34,14 +34,14 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map.
 | `thinking` | POV, alignment, fluency, Action Method |
 | `money` | Principle-based personal money skills. Optional CFO seat. Plaid for live balances; optional fiscal.sh; Tiller only if still the plan sheet. No secrets. |
 | `relationships` | Sharp reusable jobs only: `conference-who-to-meet`, `thank-you-note`. Seats keep lane/voice/tools. |
-| `agent-ops` | Planning plus gated execution: `project-brief`, `weekly-review`, `daily-plan`, `gated-work` (capped runs, handoff checklist, human gate) |
+| `agent-ops` | Planning plus gated execution: `project-brief`, `weekly-plan`, `daily-plan`, `gated-work` (capped runs, handoff checklist, human gate) |
 
 ## Skill, routine, connector
 
 - **Skill** = the method (portable, in this repo).
 - **Routine or command** = when it runs (schedule, trigger, or slash command in your host).
 - **Connector** = the data (task board, calendar, repo, inbox).
-- Upstream commands (for example an org's own weekly-review command that pulls tasks and calendar) are **inputs**, not forks. Paste their output into the bstack skill; do not copy them here.
+- Upstream commands (for example an org's own `/weekly-review` command that pulls tasks and calendar) are **inputs**, not forks. Paste their output into `weekly-plan`; do not copy them here. `weekly-plan` is named to stay distinct from those review commands and from Cursor Team Kit's `weekly-review` skill.
 
 ## Not in this repo
 

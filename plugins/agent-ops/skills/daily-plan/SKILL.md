@@ -19,7 +19,7 @@ Do the most important thing first, one thing at a time. The week sets the priori
 ## Inputs
 
 - Inbox slices or pasted items (email, messages, notes, captured ideas)
-- This week's ranked priorities (from weekly-review or an equivalent list)
+- This week's ranked priorities (from weekly-plan or an equivalent list)
 - Today's calendar (meetings, fixed commitments, open blocks)
 - Optional: run cap for inbox items this pass (default: process to empty)
 
