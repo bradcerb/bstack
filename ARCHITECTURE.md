@@ -3,7 +3,7 @@
 High-value, portable skill plugins you can install and reuse. Not a second engineering floor. Not one plugin per life domain.
 
 **pstack** stays the coding floor (verify first, small changes, clean PRs).
-**bstack** ships only skills worth downloading: knowledge intake, thinking, personal money procedures, sharp relationship jobs, and agent ops.
+**bstack** ships only skills worth downloading: knowledge intake, thinking, personal money procedures, sharp relationship jobs, and agent ops (planning plus gated execution).
 
 Writing skills install from Triumph plugins; not in bstack. Corey Haines marketing skills stay upstream. Do not fork either here.
 
@@ -23,12 +23,12 @@ Anyone should be able to start with empty configs and clear skill names. No jarg
 | **thinking** | `form-my-point-of-view`, `examine-my-alignment`, `build-fluency`, `action-method` | Beliefs, understanding, deciding |
 | **money** | `money-check`, `bill-triage`, `margin-plan`, `debt-order`, `cash-cushion`, `purchase-pause`, `money-date`, `step-status` | Personal money procedures. Optional CFO seat. No bank secrets in the repo. |
 | **relationships** | `conference-who-to-meet`, `thank-you-note` | Sharp reusable jobs (conference prep + thank-you). Not a domain filler pack. Seats keep lane/voice/tools. |
-| **agent-ops** | `gated-work` | Process a work queue safely: intake → classify → human gate → execute → verify → close |
+| **agent-ops** | `weekly-review`, `project-brief`, `gated-work` | Plan the week, open a project, then move queue items safely in capped, gated runs |
 
 ## What does *not* live here
 
 - **Writing skills:** install from Triumph plugins; not in bstack.
-- Domain filler packs (communication, engineering, faith, family, health, gtm, design, project-ops, leadership). Prefer seats, Triumph, pstack, or upstream marketplace packs instead of growing bstack.
+- Domain filler packs (communication, engineering, faith, family, health, gtm, design, project-ops, leadership; the small PM set lives in `agent-ops`). Prefer seats, Triumph, pstack, or upstream marketplace packs instead of growing bstack.
 - Triumph Rock / Lava / C# / SQL delivery, PM, and sales playbooks
 - Product defaults for Showup / Atlas / bradcerb.com
 - Secrets, tokens, Notion database IDs, client PII
@@ -49,7 +49,7 @@ Anyone should be able to start with empty configs and clear skill names. No jarg
 
 **Triumph delivery / client GTM / product quirks** → Triumph plugins, Corey upstream, or that product's repo.
 
-**Work queue / agent runs** → `agent-ops` (`gated-work`). Seat owns the source; skill owns the gate.
+**Planning and work queue:** `agent-ops`. `project-brief` opens a project, `gated-work` moves its items, `weekly-review` checks the week and resets priorities. The caller owns the source; the skill owns the method.
 
 ## Money procedures
 
@@ -95,11 +95,23 @@ Identity, company lane, CRM, and voice live outside the skill (seat memory or wo
 
 ## Agent ops procedures
 
-`plugins/agent-ops` is one portable loop for how agents process work queues. Not a PM board owner. Not leadership coaching.
+`plugins/agent-ops` is planning plus gated execution. Not a PM board owner. Not leadership coaching.
 
-- `gated-work` - intake → classify (do now / draft for gate / skip) → prepare → human gate when needed → execute → verify → close with evidence. Quiet when empty.
+- `weekly-review` - takes a week snapshot (pasted upstream output with What got done / In flight / Coming up / Stuck or at risk, or equivalent lists). Light roles scan, need/want brainstorm, separate large from small, prune to about three to five ranked priorities, reduce the rest (eliminate, defer, delegate, automate), place big rocks first with slack. Draft only.
+- `project-brief` - for a real project (large initiative, unique result, end point): purpose and success measure, principles, scope in and not doing, action stages as finish lines, info/risks/waiting on, one next action. Keeps active projects few. Draft only.
+- `gated-work` - capped runs (default 5, planned at about 70 percent capacity; leftovers roll over). Classify do now / draft for gate / defer / eliminate / skip. Handoff checklist per item: desired result, guidelines, resources, accountability, consequences. Human gate, execute, verify, close with evidence. Quiet when empty.
 
-Source adapters (which board, repo, or inbox) live in the seat or prompt that calls the skill. Default gates: send, spend, merge, publish, delete, relationship-affecting outreach.
+### Skill, routine, connector
+
+| Layer | Owns | Example |
+| --- | --- | --- |
+| Skill (this repo) | The method | `weekly-review` steps and output shape |
+| Routine or command | When it runs | A Friday routine, a slash command, a scheduled agent |
+| Connector | The data | Task board, calendar, repo issues, inbox |
+
+Upstream commands are inputs, not forks. If an org already ships a weekly-review command that pulls its tasks and calendar, run it, paste the output into `weekly-review`, and let this skill add triage and priorities. Do not copy the upstream command into bstack.
+
+Default gates: send, spend, merge, publish, delete, relationship-affecting outreach.
 
 ## One line
 

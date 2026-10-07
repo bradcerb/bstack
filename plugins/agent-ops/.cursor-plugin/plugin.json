@@ -1,8 +1,8 @@
 {
   "name": "agent-ops",
   "displayName": "Agent Ops",
-  "description": "Gated work loop: intake, classify, human gate, execute, verify, close",
-  "version": "1.0.0",
+  "description": "Planning plus gated execution: weekly-review, project-brief, and a capped gated work loop (intake, classify, handoff, human gate, execute, verify, close)",
+  "version": "1.1.0",
   "author": {
     "name": "Brad",
     "url": "https://github.com/bradcerb"
@@ -13,6 +13,9 @@
   "keywords": [
     "agent-ops",
     "bstack",
-    "skills"
+    "skills",
+    "planning",
+    "weekly-review",
+    "project-brief"
   ]
 }

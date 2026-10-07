@@ -1,6 +1,6 @@
 # bstack
 
-High-value portable skill plugins: knowledge intake, thinking, personal money procedures, sharp relationship jobs, and agent ops.
+High-value portable skill plugins: knowledge intake, thinking, personal money procedures, sharp relationship jobs, and agent ops (planning plus gated execution).
 
 **pstack** is the coding floor. **bstack** is only what is worth downloading and reusing. Not a life-domain matrix.
 
@@ -34,12 +34,19 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map.
 | `thinking` | POV, alignment, fluency, Action Method |
 | `money` | Principle-based personal money skills. Optional CFO seat. Plaid for live balances; optional fiscal.sh; Tiller only if still the plan sheet. No secrets. |
 | `relationships` | Sharp reusable jobs only: `conference-who-to-meet`, `thank-you-note`. Seats keep lane/voice/tools. |
-| `agent-ops` | Gated work loop: intake → classify → human gate → execute → verify → close |
+| `agent-ops` | Planning plus gated execution: `weekly-review`, `project-brief`, `gated-work` (capped runs, handoff checklist, human gate) |
+
+## Skill, routine, connector
+
+- **Skill** = the method (portable, in this repo).
+- **Routine or command** = when it runs (schedule, trigger, or slash command in your host).
+- **Connector** = the data (task board, calendar, repo, inbox).
+- Upstream commands (for example an org's own weekly-review command that pulls tasks and calendar) are **inputs**, not forks. Paste their output into the bstack skill; do not copy them here.
 
 ## Not in this repo
 
 - Writing skills (Triumph plugins)
-- Domain filler packs (communication, engineering, faith, family, health, gtm, design, project-ops, leadership)
+- Domain filler packs (communication, engineering, faith, family, health, gtm, design, project-ops, leadership; the small PM set lives in `agent-ops`)
 - Triumph Rock / PM / sales
 - Corey Haines marketing (install upstream)
 - Product defaults for Showup / Atlas / bradcerb.com
