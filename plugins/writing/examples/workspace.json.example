@@ -1,9 +1,0 @@
-{
-  "context_dir": "context",
-  "style_guide": "context/style-guide.md",
-  "voice": "context/voice.md",
-  "working_preferences": "context/working-preferences.md",
-  "about_me": "context/about-me.md",
-  "work_context": "context/work-context.md",
-  "notes": "Fill with your paths. Never commit secrets."
-}

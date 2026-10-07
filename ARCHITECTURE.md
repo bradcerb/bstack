@@ -1,13 +1,15 @@
 # bstack
 
-Brad’s personal skill stack. Simple plugins you can install and use. Not a second engineering floor.
+Brad's personal skill stack. Simple plugins you can install and use. Not a second engineering floor.
 
 **pstack** stays the coding floor (verify first, small changes, clean PRs).
-**bstack** is the rest of life and work: writing, thinking, money, health, family, faith, freelance, and how you show up with people.
+**bstack** is the rest of life and work: thinking, communication, money, health, family, faith, freelance, and how you show up with people.
 
 Triumph Rock, project management, and sales playbooks live in the Triumph repos and get used mainly in Claude with the team. They are not copied here.
 
-Corey Haines marketing skills stay upstream. Install them when you need them. Don’t fork them into this repo.
+**Writing skills:** install from Triumph plugins; not in bstack. (`write-like-me`, voice, coach, long-form, social stay there.)
+
+Corey Haines marketing skills stay upstream. Install them when you need them. Don't fork them into this repo.
 
 ## How to use this
 
@@ -22,7 +24,6 @@ Anyone should be able to start with empty configs and clear skill names. No jarg
 | Plugin | Skills (names) | When to load |
 | --- | --- | --- |
 | **knowledge-intake** | `knowledge-intake`, `capture-articles`, `capture-newsletters`, `capture-podcasts`, `capture-youtube`, `capture-meetings`, `wiki-ingest` | Capture → raw → wiki |
-| **writing** | `write-like-me`, `writing-coach`, `house-voice`, `long-form-drafting`, `social-post-formats`, `build-my-style-guide` | Anything you’ll send or publish |
 | **thinking** | `form-my-point-of-view`, `examine-my-alignment`, `build-fluency`, `action-method` | Beliefs, understanding, deciding |
 | **communication** | `draft-never-send`, `clear-ask`, `hard-news`, `meeting-follow-up` | Emails, messages, updates (draft only) |
 | **leadership** | `one-on-one`, `feedback-draft`, `decision-log` | Managing people (run by hand first; skills help after) |
@@ -38,6 +39,7 @@ Anyone should be able to start with empty configs and clear skill names. No jarg
 
 ## What does *not* live here
 
+- **Writing skills:** install from Triumph plugins; not in bstack.
 - Triumph Rock / Lava / C# / SQL delivery
 - Triumph project management and sales (later, in Triumph plugins)
 - Showup / Atlas / bradcerb.com product defaults (those stay in those repos)
@@ -46,11 +48,11 @@ Anyone should be able to start with empty configs and clear skill names. No jarg
 
 ## How projects pull
 
-**Triumph Rock work** → pstack + Triumph plugins (Claude) + Rock Lab seat.
+**Triumph Rock work** → pstack + Triumph plugins (Claude) + Rock Lab seat. Writing from Triumph when needed.
 
-**Freelance client** → Corey (upstream) + `gtm` + `writing` + Client GTM seat. Code still gets pstack.
+**Freelance client** → Corey (upstream) + `gtm` + Triumph writing skills + Client GTM seat. Code still gets pstack.
 
-**Showup / Atlas / bradcerb.com** → pstack + that repo’s defaults + the right seats. Add `writing` or `engineering` from bstack only when you need them.
+**Showup / Atlas / bradcerb.com** → pstack + that repo's defaults + the right seats. Add `engineering` from bstack when you need it; writing from Triumph.
 
 **Beliefs / fluency** → `thinking` + `knowledge-intake`.
 
@@ -58,4 +60,4 @@ Anyone should be able to start with empty configs and clear skill names. No jarg
 
 ## One line
 
-Coding floor = pstack. You = bstack. Triumph delivery = Triumph plugins. Upstream marketing = Corey. One product’s quirks = that product’s repo.
+Coding floor = pstack. You = bstack. Writing = Triumph plugins. Triumph delivery = Triumph plugins. Upstream marketing = Corey. One product's quirks = that product's repo.
