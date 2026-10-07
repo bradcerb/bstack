@@ -1,0 +1,19 @@
+{
+  "name": "thinking",
+  "owner": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "metadata": {
+    "description": "POV, alignment, fluency, and Action Method decision writing",
+    "version": "1.0.0",
+    "repository": "https://github.com/bradcerb/bstack"
+  },
+  "plugins": [
+    {
+      "name": "thinking",
+      "description": "POV, alignment, fluency, and Action Method decision writing",
+      "source": "./"
+    }
+  ]
+}

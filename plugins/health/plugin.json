@@ -1,0 +1,17 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "health",
+  "version": "1.0.0",
+  "description": "Thin training and recovery notes. A coach seat owns plans.",
+  "author": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "repository": "https://github.com/bradcerb/bstack",
+  "license": "MIT",
+  "keywords": [
+    "health",
+    "skills",
+    "bstack"
+  ]
+}

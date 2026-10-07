@@ -1,0 +1,19 @@
+{
+  "name": "money",
+  "owner": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "metadata": {
+    "description": "Personal spend clarity and bill triage. No secrets in the repo.",
+    "version": "1.0.0",
+    "repository": "https://github.com/bradcerb/bstack"
+  },
+  "plugins": [
+    {
+      "name": "money",
+      "description": "Personal spend clarity and bill triage. No secrets in the repo.",
+      "source": "./"
+    }
+  ]
+}

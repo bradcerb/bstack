@@ -1,0 +1,17 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "family",
+  "version": "1.0.0",
+  "description": "Family rhythm and calendar boundaries to protect evenings and weekends",
+  "author": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "repository": "https://github.com/bradcerb/bstack",
+  "license": "MIT",
+  "keywords": [
+    "family",
+    "skills",
+    "bstack"
+  ]
+}

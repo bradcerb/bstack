@@ -1,0 +1,17 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "engineering",
+  "version": "1.0.0",
+  "description": "Cloud-agent handoff and local plugin proof. Repo floor remains pstack.",
+  "author": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "repository": "https://github.com/bradcerb/bstack",
+  "license": "MIT",
+  "keywords": [
+    "engineering",
+    "skills",
+    "bstack"
+  ]
+}

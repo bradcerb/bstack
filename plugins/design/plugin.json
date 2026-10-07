@@ -1,0 +1,17 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "design",
+  "version": "1.0.0",
+  "description": "Figma handoff pipeline and leave-behind / print checks",
+  "author": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "repository": "https://github.com/bradcerb/bstack",
+  "license": "MIT",
+  "keywords": [
+    "design",
+    "skills",
+    "bstack"
+  ]
+}

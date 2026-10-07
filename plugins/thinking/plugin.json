@@ -1,0 +1,17 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "thinking",
+  "version": "1.0.0",
+  "description": "POV, alignment, fluency, and Action Method decision writing",
+  "author": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "repository": "https://github.com/bradcerb/bstack",
+  "license": "MIT",
+  "keywords": [
+    "thinking",
+    "skills",
+    "bstack"
+  ]
+}

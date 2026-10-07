@@ -1,0 +1,17 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "money",
+  "version": "1.0.0",
+  "description": "Personal spend clarity and bill triage. No secrets in the repo.",
+  "author": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "repository": "https://github.com/bradcerb/bstack",
+  "license": "MIT",
+  "keywords": [
+    "money",
+    "skills",
+    "bstack"
+  ]
+}

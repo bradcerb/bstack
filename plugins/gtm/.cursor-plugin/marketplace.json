@@ -1,0 +1,19 @@
+{
+  "name": "gtm",
+  "owner": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "metadata": {
+    "description": "Thin freelance GTM guardrails. Install Corey Haines (or similar) upstream separately.",
+    "version": "1.0.0",
+    "repository": "https://github.com/bradcerb/bstack"
+  },
+  "plugins": [
+    {
+      "name": "gtm",
+      "description": "Thin freelance GTM guardrails. Install Corey Haines (or similar) upstream separately.",
+      "source": "./"
+    }
+  ]
+}

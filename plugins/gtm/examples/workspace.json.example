@@ -1,0 +1,4 @@
+{
+  "clients_root": "clients/",
+  "notes": "One folder per client. Never commit credentials."
+}
