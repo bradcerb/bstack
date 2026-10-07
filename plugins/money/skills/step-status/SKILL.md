@@ -29,7 +29,7 @@ A simple sequence of foundations. Not a branded program. Walk one step at a time
 1. Brief interview: cushion dollars, consumer debt total, essentials/month, whether retirement/housing/giving are in play.
 2. Map them to the lowest unfinished foundation on the ladder.
 3. State current step in one sentence and why.
-4. One next action this week (dollar amount or concrete task). Point at sibling skills (`margin-plan`, `debt-order`, `cash-cushion`, `giving-plan`) when useful.
+4. One next action this week (dollar amount or concrete task). Point at sibling skills (`margin-plan`, `debt-order`, `cash-cushion`) when useful. Giving lives as a line inside `margin-plan` when they want it.
 5. Stop. Do not lecture through the whole ladder.
 
 ## Completion

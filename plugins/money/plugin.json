@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "money",
-  "version": "1.1.0",
-  "description": "Personal money procedures: margin plan, debt order, cushion, purchase pause, and bill triage. No secrets in the repo.",
+  "version": "1.2.0",
+  "description": "Principle-based personal money skills: margin plan, debt order, cash cushion, purchase pause, bill triage, money check, money date, and step status. No secrets in the repo.",
   "author": {
     "name": "Brad",
     "url": "https://github.com/bradcerb"

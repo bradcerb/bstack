@@ -1,10 +1,10 @@
 # bstack
 
-Personal skill stack: portable plugins for thinking, communication, and the rest of life and work.
+High-value portable skill plugins: knowledge intake, thinking, and personal money procedures.
 
-**pstack** is the coding floor. **bstack** is everything else you load on purpose.
+**pstack** is the coding floor. **bstack** is only what is worth downloading and reusing. Not a life-domain matrix.
 
-Triumph Rock / PM / sales stay in Triumph plugins. **Writing skills:** install from Triumph plugins; not in bstack. Corey Haines marketing stays upstream. Do not fork either here.
+Writing skills install from Triumph plugins; not in bstack. Corey Haines marketing stays upstream. Do not fork either here.
 
 ## Install
 
@@ -19,34 +19,25 @@ Pick a plugin under `plugins/<name>/`:
 
 `InstallPlugin` marketplace id is N/A until a plugin is published. The prove path is local:
 
-- Copy each plugin folder as a **real directory** (not an out-of-tree symlink) to `~/.cursor/plugins/local/<plugin-name>`, where `<plugin-name>` matches that plugin’s root `plugin.json` `name` (for example `knowledge-intake`, `thinking`).
+- Copy each plugin folder as a **real directory** (not an out-of-tree symlink) to `~/.cursor/plugins/local/<plugin-name>`, where `<plugin-name>` matches that plugin's root `plugin.json` `name` (for example `knowledge-intake`, `thinking`, `money`).
 - A whole-repo checkout is optional and fine for browsing. Loaders expect per-plugin directories with a root `plugin.json`.
 
 Copy `plugins/<name>/examples/workspace.json.example` when present. Fill in *your* paths. Never commit secrets or real Notion IDs. The file at `plugins/knowledge-intake/skills/knowledge-intake/references/workspace.json` is a pointer only.
 
 ## Plugins
 
-See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map and how projects pull.
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map.
 
 | Plugin | Purpose |
 | --- | --- |
 | `knowledge-intake` | Capture → raw → wiki |
 | `thinking` | POV, alignment, fluency, Action Method |
-| `communication` | Draft-only asks, hard news, follow-ups |
-| `leadership` | 1:1s, feedback drafts, decision log |
-| `relationships` | Conference prep, notes, thank-yous |
-| `gtm` | Thin freelance guardrails (Corey stays upstream) |
-| `design` | Figma handoff + leave-behind check |
-| `engineering` | Cloud-agent handoff + prove plugin local |
-| `money` | Principle-based personal money skills; **CFO seat**. Plaid for live balances; optional fiscal.sh; Tiller only if still the plan sheet. No secrets. |
-| `health` | Thin training / recovery notes |
-| `family` | Rhythm and calendar boundaries |
-| `faith` | Quiet reflection and reading plans |
-| `project-ops` | Side/freelance briefs and weekly review |
+| `money` | Principle-based personal money skills. Optional CFO seat. Plaid for live balances; optional fiscal.sh; Tiller only if still the plan sheet. No secrets. |
 
 ## Not in this repo
 
 - Writing skills (Triumph plugins)
+- Domain filler packs (communication, engineering, faith, family, health, gtm, design, project-ops, leadership, relationships)
 - Triumph Rock / PM / sales
 - Corey Haines marketing (install upstream)
 - Product defaults for Showup / Atlas / bradcerb.com
@@ -54,10 +45,9 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map and how projects pull.
 
 ## Safety
 
-- Draft never send is the default for outbound.
 - No bank credentials, tokens, or client PII in this repo.
 - Money skills are educational planning aids, not advice.
-- Human judgment for money, relationships, leadership, and faith.
+- Human judgment for money and any outbound send.
 
 ## License
 
