@@ -34,7 +34,7 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map.
 | `thinking` | POV, alignment, fluency, Action Method |
 | `money` | Principle-based personal money skills. Optional CFO seat. Plaid for live balances; optional fiscal.sh; Tiller only if still the plan sheet. No secrets. |
 | `relationships` | Sharp reusable jobs only: `conference-who-to-meet`, `thank-you-note`. Seats keep lane/voice/tools. |
-| `agent-ops` | Planning plus gated execution: `weekly-review`, `project-brief`, `gated-work` (capped runs, handoff checklist, human gate) |
+| `agent-ops` | Planning plus gated execution: `project-brief`, `weekly-review`, `daily-plan`, `gated-work` (capped runs, handoff checklist, human gate) |
 
 ## Skill, routine, connector
 

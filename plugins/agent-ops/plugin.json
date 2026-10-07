@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "agent-ops",
-  "version": "1.1.0",
-  "description": "Planning plus gated execution: weekly-review, project-brief, and a capped gated work loop (intake, classify, handoff, human gate, execute, verify, close)",
+  "version": "1.2.0",
+  "description": "Planning plus gated execution: project-brief, weekly-review, daily-plan, and a capped gated work loop (intake, classify, handoff, human gate, execute, verify, close)",
   "author": {
     "name": "Brad",
     "url": "https://github.com/bradcerb"
@@ -15,6 +15,7 @@
     "bstack",
     "planning",
     "weekly-review",
-    "project-brief"
+    "project-brief",
+    "daily-plan"
   ]
 }
