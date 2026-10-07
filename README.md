@@ -15,7 +15,14 @@ Pick a plugin under `plugins/<name>/`:
 3. **Claude Code** - use `.claude-plugin/marketplace.json` the same way.
 4. **Agent Plugins / Grok** - install from the plugin directory (root `plugin.json`).
 
-Copy `plugins/<name>/examples/workspace.json.example` when present. Fill in *your* paths. Never commit secrets or real Notion IDs.
+### Grok Bot / Cursor local prove
+
+`InstallPlugin` marketplace id is N/A until a plugin is published. The prove path is local:
+
+- Copy each plugin folder as a **real directory** (not an out-of-tree symlink) to `~/.cursor/plugins/local/<plugin-name>`, where `<plugin-name>` matches that plugin’s root `plugin.json` `name` (for example `knowledge-intake`, `thinking`).
+- A whole-repo checkout is optional and fine for browsing. Loaders expect per-plugin directories with a root `plugin.json`.
+
+Copy `plugins/<name>/examples/workspace.json.example` when present. Fill in *your* paths. Never commit secrets or real Notion IDs. The file at `plugins/knowledge-intake/skills/knowledge-intake/references/workspace.json` is a pointer only.
 
 ## Plugins
 
