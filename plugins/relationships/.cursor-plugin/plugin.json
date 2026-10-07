@@ -1,0 +1,19 @@
+{
+  "name": "relationships",
+  "displayName": "Relationships",
+  "description": "Sharp reusable relationship jobs: conference who-to-meet and thank-you notes. Draft only; judgment stays human.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "homepage": "https://github.com/bradcerb/bstack",
+  "repository": "https://github.com/bradcerb/bstack",
+  "license": "MIT",
+  "keywords": [
+    "relationships",
+    "conference",
+    "bstack",
+    "skills"
+  ]
+}

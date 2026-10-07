@@ -3,7 +3,7 @@
 High-value, portable skill plugins you can install and reuse. Not a second engineering floor. Not one plugin per life domain.
 
 **pstack** stays the coding floor (verify first, small changes, clean PRs).
-**bstack** ships only skills worth downloading: knowledge intake, thinking, and personal money procedures.
+**bstack** ships only skills worth downloading: knowledge intake, thinking, personal money procedures, and sharp relationship jobs.
 
 Writing skills install from Triumph plugins; not in bstack. Corey Haines marketing skills stay upstream. Do not fork either here.
 
@@ -22,23 +22,27 @@ Anyone should be able to start with empty configs and clear skill names. No jarg
 | **knowledge-intake** | `knowledge-intake`, `capture-articles`, `capture-newsletters`, `capture-podcasts`, `capture-youtube`, `capture-meetings`, `wiki-ingest` | Capture → raw → wiki |
 | **thinking** | `form-my-point-of-view`, `examine-my-alignment`, `build-fluency`, `action-method` | Beliefs, understanding, deciding |
 | **money** | `money-check`, `bill-triage`, `margin-plan`, `debt-order`, `cash-cushion`, `purchase-pause`, `money-date`, `step-status` | Personal money procedures. Optional CFO seat. No bank secrets in the repo. |
+| **relationships** | `conference-who-to-meet`, `thank-you-note` | Sharp reusable jobs (conference prep + thank-you). Not a domain filler pack. Seats keep lane/voice/tools. |
 
 ## What does *not* live here
 
 - **Writing skills:** install from Triumph plugins; not in bstack.
-- Domain filler packs (communication, engineering, faith, family, health, gtm, design, project-ops, leadership, relationships). Prefer seats, Triumph, or pstack instead of growing bstack.
+- Domain filler packs (communication, engineering, faith, family, health, gtm, design, project-ops, leadership). Prefer seats, Triumph, pstack, or upstream marketplace packs instead of growing bstack.
 - Triumph Rock / Lava / C# / SQL delivery, PM, and sales playbooks
 - Product defaults for Showup / Atlas / bradcerb.com
 - Secrets, tokens, Notion database IDs, client PII
 - Branded money-coach program copy (procedures stay principle-based)
+- Seat wiring (who you are, company lane, CRM, voice) — keep that in the seat or workspace config, not in downloadable skills
 
 ## How projects pull
 
-**Coding** → pstack (always the floor).
+**Coding** → pstack (always the floor). Companion: cursor-team-kit when installed.
 
 **Beliefs / fluency / capture** → `thinking` + `knowledge-intake`.
 
 **Personal money** → `money` (optional CFO seat). Numbers from your ledger connectors or sheets; skills are judgment procedures only.
+
+**Relationships** → `relationships` for method (conference who-to-meet, thank-you). Trip lane, voice, and CRM stay in the seat (e.g. Conference Scout points at the skill as SoT).
 
 **Writing / voice** → Triumph plugins and Writer / Public Posts seats. Not bstack.
 
@@ -77,6 +81,15 @@ Pick one plan ledger long-term. Do not run three books forever.
 - Client or employer billing (different lane)
 - Branded program names or trademarked product copy
 
+## Relationships procedures
+
+`plugins/relationships` is two sharp jobs, not a life-domain matrix.
+
+- `conference-who-to-meet` - public roster → Must/Should/Nice → draft-only reach-outs and follow-ups (operational networking preferences; no book dumps)
+- `thank-you-note` - one specific memory + one concrete offer/next step; draft only
+
+Identity, company lane, CRM, and voice live outside the skill (seat memory or workspace config). Change the method here once; point seats at it.
+
 ## One line
 
-Coding floor = pstack. High-value portable life skills = bstack (`knowledge-intake`, `thinking`, `money`). Writing = Triumph plugins. Upstream marketing = Corey. Optional money ledger agents = fiscal.sh. One product's quirks = that product's repo.
+Coding floor = pstack. High-value portable skills = bstack (`knowledge-intake`, `thinking`, `money`, `relationships`). Writing = Triumph plugins. Upstream marketing = Corey. Optional money ledger agents = fiscal.sh. One product's quirks = that product's repo.
