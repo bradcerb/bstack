@@ -3,7 +3,7 @@
 High-value, portable skill plugins you can install and reuse. Not a second engineering floor. Not one plugin per life domain.
 
 **pstack** stays the coding floor (verify first, small changes, clean PRs).
-**bstack** ships only skills worth downloading: knowledge intake, thinking, personal money procedures, and sharp relationship jobs.
+**bstack** ships only skills worth downloading: knowledge intake, thinking, personal money procedures, sharp relationship jobs, and agent ops.
 
 Writing skills install from Triumph plugins; not in bstack. Corey Haines marketing skills stay upstream. Do not fork either here.
 
@@ -15,7 +15,7 @@ Writing skills install from Triumph plugins; not in bstack. Corey Haines marketi
 
 Anyone should be able to start with empty configs and clear skill names. No jargon required.
 
-## Plugins
+## Keepers
 
 | Plugin | Skills (names) | When to load |
 | --- | --- | --- |
@@ -23,6 +23,7 @@ Anyone should be able to start with empty configs and clear skill names. No jarg
 | **thinking** | `form-my-point-of-view`, `examine-my-alignment`, `build-fluency`, `action-method` | Beliefs, understanding, deciding |
 | **money** | `money-check`, `bill-triage`, `margin-plan`, `debt-order`, `cash-cushion`, `purchase-pause`, `money-date`, `step-status` | Personal money procedures. Optional CFO seat. No bank secrets in the repo. |
 | **relationships** | `conference-who-to-meet`, `thank-you-note` | Sharp reusable jobs (conference prep + thank-you). Not a domain filler pack. Seats keep lane/voice/tools. |
+| **agent-ops** | `gated-work` | Process a work queue safely: intake → classify → human gate → execute → verify → close |
 
 ## What does *not* live here
 
@@ -32,7 +33,7 @@ Anyone should be able to start with empty configs and clear skill names. No jarg
 - Product defaults for Showup / Atlas / bradcerb.com
 - Secrets, tokens, Notion database IDs, client PII
 - Branded money-coach program copy (procedures stay principle-based)
-- Seat wiring (who you are, company lane, CRM, voice) — keep that in the seat or workspace config, not in downloadable skills
+- Seat wiring (who you are, company lane, CRM, voice) - keep that in the seat or workspace config, not in downloadable skills
 
 ## How projects pull
 
@@ -47,6 +48,8 @@ Anyone should be able to start with empty configs and clear skill names. No jarg
 **Writing / voice** → Triumph plugins and Writer / Public Posts seats. Not bstack.
 
 **Triumph delivery / client GTM / product quirks** → Triumph plugins, Corey upstream, or that product's repo.
+
+**Work queue / agent runs** → `agent-ops` (`gated-work`). Seat owns the source; skill owns the gate.
 
 ## Money procedures
 
@@ -90,6 +93,14 @@ Pick one plan ledger long-term. Do not run three books forever.
 
 Identity, company lane, CRM, and voice live outside the skill (seat memory or workspace config). Change the method here once; point seats at it.
 
+## Agent ops procedures
+
+`plugins/agent-ops` is one portable loop for how agents process work queues. Not a PM board owner. Not leadership coaching.
+
+- `gated-work` - intake → classify (do now / draft for gate / skip) → prepare → human gate when needed → execute → verify → close with evidence. Quiet when empty.
+
+Source adapters (which board, repo, or inbox) live in the seat or prompt that calls the skill. Default gates: send, spend, merge, publish, delete, relationship-affecting outreach.
+
 ## One line
 
-Coding floor = pstack. High-value portable skills = bstack (`knowledge-intake`, `thinking`, `money`, `relationships`). Writing = Triumph plugins. Upstream marketing = Corey. Optional money ledger agents = fiscal.sh. One product's quirks = that product's repo.
+Coding floor = pstack. High-value portable skills = bstack (`knowledge-intake`, `thinking`, `money`, `relationships`, `agent-ops`). Writing = Triumph plugins. Upstream marketing = Corey. Optional money ledger agents = fiscal.sh. One product's quirks = that product's repo.

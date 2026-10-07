@@ -1,0 +1,25 @@
+{
+  "name": "agent-ops",
+  "owner": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "metadata": {
+    "description": "Gated work loop: intake, classify, human gate, execute, verify, close",
+    "version": "1.0.0",
+    "repository": "https://github.com/bradcerb/bstack"
+  },
+  "plugins": [
+    {
+      "name": "agent-ops",
+      "description": "Gated work loop: intake, classify, human gate, execute, verify, close",
+      "source": "./",
+      "category": "productivity",
+      "tags": [
+        "bstack",
+        "agent-ops",
+        "skills"
+      ]
+    }
+  ]
+}
