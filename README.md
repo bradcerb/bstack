@@ -38,11 +38,18 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map and how projects pull.
 | `gtm` | Thin freelance guardrails (Corey stays upstream) |
 | `design` | Figma handoff + leave-behind check |
 | `engineering` | Cloud-agent handoff + prove plugin local |
-| `money` | Spend clarity and bill triage (no secrets) |
+| `money` | Spend clarity + bill triage; **CFO seat**. Ramsey-shaped skills listed in ARCHITECTURE (no secrets) |
 | `health` | Thin training / recovery notes |
 | `family` | Rhythm and calendar boundaries |
 | `faith` | Quiet reflection and reading plans |
 | `project-ops` | Side/freelance briefs and weekly review |
+
+## Not in this repo
+
+- Writing skills (Triumph plugins)
+- Triumph Rock / PM / sales
+- Corey Haines marketing (install upstream)
+- Product defaults for Showup / Atlas / bradcerb.com
 
 ## Safety
 
