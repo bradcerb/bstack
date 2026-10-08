@@ -4,7 +4,7 @@ Logged from my call on Thursday, Oct 8, 2026. Log only. Nothing here is built ye
 
 ## In flight
 
-1. **capture-meetings extension.** A date-range param ("last two weeks" or a set window) and a teammate filter are going into the standalone knowledge-intake-skills repo. Still to decide: does bstack's copy in `plugins/knowledge-intake` need the same change?
+1. **capture-meetings extension.** A date-range param ("last two weeks" or a set window) and a teammate filter are going into the standalone knowledge-intake-skills repo. bstack's copy in `plugins/knowledge-intake` needs the same change and is being ported in this PR.
 
 ## Skills to build
 
