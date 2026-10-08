@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "relationships",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Sharp reusable relationship jobs: conference who-to-meet and thank-you notes. Draft only; judgment stays human.",
   "author": {
     "name": "Brad",

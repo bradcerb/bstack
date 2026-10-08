@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "POV, alignment, fluency, and Action Method decision writing",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "repository": "https://github.com/bradcerb/bstack"
   },
   "plugins": [

@@ -14,20 +14,8 @@ Copy the repo `examples/workspace.json.example` to `workspace.json` in the works
 
 `onboarding` is the interview for that check. Name one skill. It reads that skill's `bstack-config` line, writes v2 bindings, and stops. It will not walk the whole stack.
 
-## Alias table
+## Aliases
 
-Old flat names still count until a file is rewritten. On write, store the v2 home and delete the old key. This table moves to a repo-root SOURCES.md later.
+Old flat names still count until a file is rewritten. On write, store the v2 home and delete the old key. The table is in the repo-root [SOURCES.md](../../SOURCES.md). Do not keep a second copy here.
 
-| Old name | New home |
-| --- | --- |
-| `leadership.transcripts_source` | `sources["transcripts.meetings"]` |
-| `leadership.skill_assessment_source` | `sources["people.assessments"]` |
-| `leadership.team_roster` | `sources["people.roster"]` |
-| `leadership.disc_source` | `sources["people.profiles"]` |
-| `leadership.one_on_one_history_source` | `sources["transcripts.one-on-ones"]` |
-| `leadership.open_items_log` | `sources["log.open-items"]` |
-| `leadership.open_items_read_sources` | `sources["tasks.commitments"]` |
-| `leadership.coaching_state` | `leadership.coaching_state` |
-| `leadership.coaching_briefs_dir` | `leadership.coaching_briefs_dir` |
-
-See the root [ARCHITECTURE.md](../../ARCHITECTURE.md) for the field list and how a host schedules `coaching-angles`.
+See the root [ARCHITECTURE.md](../../ARCHITECTURE.md) for which skills declare which entries, and how a host schedules `coaching-angles`.

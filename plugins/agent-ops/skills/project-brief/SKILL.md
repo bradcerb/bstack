@@ -9,7 +9,7 @@ description: >-
 
 One page to start a real project without boiling the ocean. A project here means a large initiative that produces a unique result and has an end point. It is not every two-step chore. Small one-off tasks belong on an actions list, not in this brief.
 
-Portable across agents. Which tools create tickets or pages later live in the adapter, routine, or prompt that calls this skill, not in this recipe.
+Portable across agents. This skill declares no config. Filing a ticket or a page is a later request, outside this brief.
 
 ## Principle
 

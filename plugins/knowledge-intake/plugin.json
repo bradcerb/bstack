@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "knowledge-intake",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Portable Notion-first knowledge capture and wiki ingest skills (newsletters, articles, podcasts, YouTube, meetings).",
   "author": {
     "name": "Brad",

@@ -13,7 +13,7 @@ metadata:
 
 Do this before any other step. Find `workspace.json`: the path the caller gave, else the active workspace root, else ask once. Read this skill's `bstack-config` line in the frontmatter. For each required source kind look up `sources.<kind>`; for each required setting look up its dotted path. If an entry is absent, empty, or starts with `REPLACE_WITH` (including inside nested objects and lists), ask only for that entry, write it into `workspace.json` in the v2 shape, and continue. Entries marked `?` that are absent or `"via": "none"` are skipped without asking. If a source is bound to a connector this host does not have, stop and say "`<kind>` is bound to `<connector>`, which is not connected here." Do not swap in another tool, a cached copy, or a guess. Old flat field names still count through the alias table in SOURCES.md. Do not run a full onboarding interview.
 
-A source kind is one key in `sources`, even when the name contains a dot. `people.profiles` means `sources["people.profiles"]`. Until SOURCES.md is in the repo, the leadership alias rows are in this plugin's README.
+A source kind is one key in `sources`, even when the name contains a dot. `people.profiles` means `sources["people.profiles"]`. The alias table is in repo-root SOURCES.md.
 
 Pull one person's DISC profile from that binding and add a short plain read on how to work with them. Read the source every time.
 

@@ -20,7 +20,7 @@ Then ask which one skill to set up, if the caller has not already named exactly 
 3. Read the `bstack-config` line in that file's frontmatter, using [field-declaration.md](references/field-declaration.md). If the file has no such line, say this skill declares no config, and stop.
 4. Find `workspace.json`: the path the caller gave, else the active workspace root. If the file is missing, start a new one when you write. Do not copy every placeholder from the example into it.
 5. Resolve each declared source kind under `sources` and each setting as a dotted path. A kind that contains a dot is still one key. An entry is missing when it is absent, empty, or a string that starts with `REPLACE_WITH`, including inside a nested object or list. Entries marked `?` that are absent or bound with `"via": "none"` are not missing.
-6. If the v2 entry is missing, check the alias table in this plugin's README (the same rows move to SOURCES.md later). A filled old value counts as present. The literal `paste` counts as `{ "via": "paste" }`. Any other filled string counts as `{ "via": "connector", "target": "<that string>" }`.
+6. If the v2 entry is missing, check the alias table in repo-root SOURCES.md. A filled old value counts as present. The literal `paste` counts as `{ "via": "paste" }`. Any other filled string counts as `{ "via": "connector", "target": "<that string>" }`.
 7. If nothing is missing, and no entry is present only under an old name, say so and stop. If an entry is present only under an old name, rewrite it into the v2 shape, delete the old key, and stop.
 8. Ask only for the entries that are still missing. Write each answer in the v2 binding shape. Delete the old key when you replace an alias. Leave every unrelated key alone. Then stop.
 

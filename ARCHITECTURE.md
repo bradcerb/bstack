@@ -17,35 +17,30 @@ Anyone should be able to start with empty configs and clear skill names. No jarg
 
 ## Config check
 
-`workspace.json` is the one config file you own. It is gitignored. Skills that read a source, a roster, or a schedule check it before they do anything else.
+`workspace.json` is the only config file. Copy `examples/workspace.json.example` to `workspace.json` in the workspace where you run skills. It is gitignored. Never commit it, and never put a secret in it.
 
-The check is per skill. If a field that skill needs is missing, empty, or still a `REPLACE_WITH_` placeholder, the skill asks only for those fields, writes them into `workspace.json`, and continues. It does not interview you for the whole pack. The `onboarding` skill in `leadership` runs that interview for one named skill, then stops.
+[SOURCES.md](./SOURCES.md) is the vocabulary: source kinds, settings, binding shapes, the alias table, the secrets rule, and the config-check text each declaring skill pastes. There is no per-plugin example.
 
-A placeholder is an empty value or any value that starts with `REPLACE_WITH`, including inside nested objects and lists. A value of `paste` means you will supply that data in the conversation. A path, label, or connector name is filled in by you.
+A skill that reads config declares it once, in frontmatter, on `metadata.bstack-config`. The check is per skill. A required entry that is missing, empty, or still a `REPLACE_WITH` placeholder is asked for, written in the v2 shape, and the skill continues. It does not interview you for the whole pack. An entry marked `?` that is absent, empty, a placeholder, or bound `"via": "none"` is skipped and does not block. The `onboarding` skill in `leadership` runs that interview for one named skill, then stops.
 
-Skills that only think from what you bring (no source, roster, or schedule) do not read this file.
+A binding of `paste` means you supply that data in the conversation. A path, label, connector name, or skill name is filled in by you. Relative paths resolve from `workspace.root` (the folder of `workspace.json` when `root` is `"."`).
 
-`plugins/knowledge-intake/examples/workspace.json.example` remains the field list for that plugin. The root example lists every field. Relative paths resolve from the workspace where the skill runs.
+A skill with no `bstack-config` line does not read this file.
 
-| Field | Skills | What you put there |
-| --- | --- | --- |
-| `raw_dir`, `loop_state`, `notion_raw_db`, `notion_wiki_db`, `notion_wiki_log`, `podcast_feeds` | knowledge-intake capture and ingest | Paths and Notion targets. |
-| `youtube_channels` | `capture-youtube` | Optional channel registry. A submitted video URL does not need it. |
-| `newsletter_sources` | `capture-newsletters` | Mailbox label, approved sender list, or newsletter feed list. |
-| `calendar_source` | `capture-meetings`, `daily-plan` | Calendar to read. |
-| `meeting_lookback` | `capture-meetings` | How far back to search completed events, such as `7d`. |
-| `inbox_source` | `daily-plan` | Inbox to process. Use `paste` if you will supply items in the conversation. |
-| `priorities_source` | `daily-plan` | Where this week's priorities live. `paste` is allowed. |
-| `week_snapshot_source` | `weekly-plan` | Week snapshot (done, in flight, coming up, stuck). `paste` is allowed. |
-| `work_queue_source` | `gated-work` | Queue, board, or repo slice to run. `paste` is allowed. |
-| `slack_source` | `daily-plan` | Optional chat source. Empty means skip it. |
-| `agent_queue_source` | `daily-plan` | Queue daily-plan hands agent work to. |
-| `sources["transcripts.meetings"]`, `sources["people.assessments"]`, `sources["people.roster"]` | `coaching-angles` | Team call transcripts, growth areas, and roster. Settings: `leadership.coaching_state`, optional `leadership.coaching_briefs_dir` (empty means do not save), optional `workspace.timezone`. |
-| `sources["people.profiles"]` | `personality` | DISC profiles, read on each request. |
-| `sources["transcripts.one-on-ones"]` (plus the meeting and assessment kinds) | `one-on-one-prep` | Past one-on-ones. Calls `personality` and `open-items`. |
-| `sources["log.open-items"]`, `sources["tasks.commitments"]` | `open-items` | Log binding, and a list of read bindings. Optional `workspace.timezone`. |
+| Declaration | Skills |
+| --- | --- |
+| `email.inbox`, `tasks.priorities`, `calendar.events`, `tasks.agent-queue`, `chat.messages?` | `daily-plan` |
+| `tasks.week-snapshot` | `weekly-plan` |
+| `tasks.work-queue` | `gated-work` |
+| `transcripts.meetings`, `people.assessments`, `people.roster`; settings `leadership.coaching_state`, `leadership.coaching_briefs_dir?`, `workspace.timezone?` | `coaching-angles` |
+| `people.profiles` | `personality` |
+| `transcripts.meetings`, `transcripts.one-on-ones`, `people.assessments` | `one-on-one-prep` |
+| `log.open-items`, `tasks.commitments`; setting `workspace.timezone?` | `open-items` |
+| `kb.positions?` | `examine-my-alignment` (read), `form-my-point-of-view` (optional write of a confirmed position) |
+| `voice.style-guide?` | `thank-you-note` |
+| settings `relationships.author_lane?`, `relationships.skip_list?` | `conference-who-to-meet` |
 
-The example also includes `workspace_id`, `workspace_root`, `workspace.timezone`, `wiki_ingest_skill`, `guardrails`, `routing_policy`, and `schema_categories`. Skills still read those where their existing steps already say so. They are not part of this pause list, except `workspace.timezone` when a skill names it.
+Knowledge-intake skills still name the old flat fields. Their v2 homes are already in the example (`kb.raw-index`, `kb.wiki`, `kb.wiki-log`, and the `knowledge.*` settings). The skill rewrite is the next change. Older flat names still resolve through the alias table in SOURCES.md.
 
 ## Keepers
 
@@ -54,7 +49,7 @@ The example also includes `workspace_id`, `workspace_root`, `workspace.timezone`
 | **knowledge-intake** | `knowledge-intake`, `capture-articles`, `capture-newsletters`, `capture-podcasts`, `capture-youtube`, `capture-meetings`, `wiki-ingest` | Capture → raw → wiki |
 | **thinking** | `form-my-point-of-view`, `examine-my-alignment`, `build-fluency`, `action-method` | Beliefs, understanding, deciding |
 | **money** | `money-check`, `bill-triage`, `margin-plan`, `debt-order`, `cash-cushion`, `purchase-pause`, `money-date`, `step-status` | Personal money procedures. Optional CFO seat. No bank secrets in the repo. |
-| **relationships** | `conference-who-to-meet`, `thank-you-note` | Sharp reusable jobs (conference prep + thank-you). Not a domain filler pack. Seats keep lane/voice/tools. |
+| **relationships** | `conference-who-to-meet`, `thank-you-note` | Sharp reusable jobs (conference prep + thank-you). Not a domain filler pack. Lane and skip list are optional settings. Voice stays outside the skill. |
 | **agent-ops** | `project-brief`, `weekly-plan`, `daily-plan`, `gated-work` | Open a project, plan the week, plan the day, then move queue items safely in capped, gated runs |
 | **leadership** | `coaching-angles`, `personality`, `one-on-one-prep`, `open-items`, `onboarding` | Prep a manager. One moment, a DISC read, a one-on-one brief, commitment tracking, one-skill config. Nothing is sent. |
 
@@ -76,13 +71,13 @@ The example also includes `workspace_id`, `workspace_root`, `workspace.timezone`
 
 **Personal money** → `money` (optional CFO seat). Numbers from your ledger connectors or sheets; skills are judgment procedures only.
 
-**Relationships** → `relationships` for method (conference who-to-meet, thank-you). Trip lane, voice, and CRM stay in the seat (e.g. Conference Scout points at the skill as SoT).
+**Relationships** → `relationships` for method (conference who-to-meet, thank-you). An optional lane and skip list live in `relationships` settings in `workspace.json`. Voice and CRM stay outside the skill.
 
 **Writing / voice** → Triumph plugins and Writer / Public Posts seats. Not bstack.
 
 **Triumph delivery / client GTM / product quirks** → Triumph plugins, Corey upstream, or that product's repo.
 
-**Planning and work queue:** `agent-ops`. `project-brief` opens a project, `weekly-plan` sets the week's priorities, `daily-plan` picks today's slice and feeds the queue, `gated-work` moves the items. The caller owns the source; the skill owns the method.
+**Planning and work queue:** `agent-ops`. `project-brief` opens a project, `weekly-plan` sets the week's priorities, `daily-plan` picks today's slice and feeds the queue, `gated-work` moves the items. Those three read their source kinds from `workspace.json`. `project-brief` declares no config. The skill owns the method.
 
 ## Money procedures
 
@@ -124,7 +119,7 @@ Pick one plan ledger long-term. Do not run three books forever.
 - `conference-who-to-meet` - public roster → Must/Should/Nice → draft-only reach-outs and follow-ups (operational networking preferences; no book dumps)
 - `thank-you-note` - one specific memory + one concrete offer/next step; draft only
 
-Identity, company lane, CRM, and voice live outside the skill (seat memory or workspace config). Change the method here once; point seats at it.
+`conference-who-to-meet` may read `relationships.author_lane` and `relationships.skip_list` when those settings are filled. `thank-you-note` may read `voice.style-guide` when that kind is bound. Either entry can be absent. CRM stays outside the skill. Change the method here once; point seats at it.
 
 ## Leadership procedures
 
@@ -136,7 +131,7 @@ Identity, company lane, CRM, and voice live outside the skill (seat memory or wo
 - `open-items` stores commitments through `sources["log.open-items"]` and reads `sources["tasks.commitments"]`. Add, update or close, list open. It surfaces items. The human follows up.
 - `onboarding` reads one named skill's `bstack-config` line, writes missing entries in the v2 binding shape, and stops.
 
-Leadership skills declare those entries in frontmatter. The old flat `leadership.*` names map to these homes in `plugins/leadership/README.md`. That alias table moves to SOURCES.md later.
+Leadership skills declare those entries in frontmatter. The old flat `leadership.*` names map to the homes in [SOURCES.md](./SOURCES.md).
 
 ## Agent ops procedures
 
