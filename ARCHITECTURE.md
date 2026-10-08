@@ -10,10 +10,36 @@ Writing skills install from Triumph plugins; not in bstack. Corey Haines marketi
 ## How to use this
 
 1. Install the plugin you need (or copy the `skills/` folders).
-2. Fill in `examples/workspace.json.example` with *your* paths and Notion targets. Never commit real IDs or secrets.
+2. Copy `examples/workspace.json.example` to `workspace.json` in the workspace where you run skills. Fill in your paths, sources, and targets. Never commit that file or real IDs.
 3. Run the skill when its trigger matches. Skip the rest.
 
 Anyone should be able to start with empty configs and clear skill names. No jargon required.
+
+## Config check
+
+`workspace.json` is the one config file you own. It is gitignored. Skills that read a source, a roster, or a schedule check it before they do anything else.
+
+The check is per skill. If a field that skill needs is missing, empty, or still a `REPLACE_WITH_` placeholder, the skill asks only for those fields, writes them into `workspace.json`, and continues. It does not interview you for the whole pack.
+
+A placeholder is an empty value or any value that starts with `REPLACE_WITH`, including inside nested objects and lists. A value of `paste` means you will supply that data in the conversation. A path, label, or connector name is filled in by you.
+
+Skills that only think from what you bring (no source, roster, or schedule) do not read this file.
+
+`plugins/knowledge-intake/examples/workspace.json.example` remains the field list for that plugin. The root example lists every field. Relative paths resolve from the workspace where the skill runs.
+
+| Field | Skills | What you put there |
+| --- | --- | --- |
+| `raw_dir`, `loop_state`, `notion_raw_db`, `notion_wiki_db`, `notion_wiki_log`, `podcast_feeds` | knowledge-intake capture and ingest | Paths and Notion targets. |
+| `youtube_channels` | `capture-youtube` | Optional channel registry. A submitted video URL does not need it. |
+| `newsletter_sources` | `capture-newsletters` | Mailbox label, approved sender list, or newsletter feed list. |
+| `calendar_source` | `capture-meetings`, `daily-plan` | Calendar to read. |
+| `meeting_lookback` | `capture-meetings` | How far back to search completed events, such as `7d`. |
+| `inbox_source` | `daily-plan` | Inbox to process. Use `paste` if you will supply items in the conversation. |
+| `priorities_source` | `daily-plan` | Where this week's priorities live. `paste` is allowed. |
+| `week_snapshot_source` | `weekly-plan` | Week snapshot (done, in flight, coming up, stuck). `paste` is allowed. |
+| `work_queue_source` | `gated-work` | Queue, board, or repo slice to run. `paste` is allowed. |
+
+The example also includes `workspace_id`, `workspace_root`, `wiki_ingest_skill`, `guardrails`, `routing_policy`, and `schema_categories`. Skills still read those where their existing steps already say so. They are not part of this pause list.
 
 ## Keepers
 

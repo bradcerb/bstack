@@ -11,6 +11,12 @@ Run a small batch from a named source through a safe agent loop: intake, classif
 
 Portable across agent hosts. Source adapters (which board, repo, or inbox) and schedules live in the adapter, routine, or prompt that calls this skill, not in this recipe.
 
+## Config check
+
+Do this before any other step. Read the user-owned `workspace.json` in the active workspace. This skill requires `work_queue_source`.
+
+If `workspace.json` is missing, or any required field is missing or still a placeholder, pause. A placeholder is an empty value or any value that starts with `REPLACE_WITH`, including inside nested objects and lists. Ask only for those missing fields. Write the answers into `workspace.json`. Then continue with the rest of this skill. Do not run a full onboarding interview.
+
 ## Principle
 
 Draft and verify before irreversible action. Human gate on send, spend, merge, publish, delete, and relationship-affecting outreach. Prefer the smallest reversible step. Run below full capacity so the queue keeps moving.

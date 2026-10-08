@@ -22,7 +22,9 @@ Pick a plugin under `plugins/<name>/`:
 - Copy each plugin folder as a **real directory** (not an out-of-tree symlink) to `~/.cursor/plugins/local/<plugin-name>`, where `<plugin-name>` matches that plugin's root `plugin.json` `name` (for example `knowledge-intake`, `thinking`, `money`, `relationships`, `agent-ops`).
 - A whole-repo checkout is optional and fine for browsing. Loaders expect per-plugin directories with a root `plugin.json`.
 
-Copy `plugins/<name>/examples/workspace.json.example` when present. Fill in *your* paths. Never commit secrets or real Notion IDs. The file at `plugins/knowledge-intake/skills/knowledge-intake/references/workspace.json` is a pointer only.
+Copy `examples/workspace.json.example` to `workspace.json` in the workspace where you run skills. That file is the one config you own, and it is gitignored. Skills that read a source, a roster, or a schedule check it first. If one of their fields is missing or still a `REPLACE_WITH_` placeholder, they ask only for those fields, write them into `workspace.json`, and continue. Skills that only think from what you bring do not read it.
+
+`plugins/knowledge-intake/examples/workspace.json.example` is the same kind of file for that plugin's fields. The root example lists every field. The file at `plugins/knowledge-intake/skills/knowledge-intake/references/workspace.json` is a pointer only. Never commit secrets or real Notion IDs.
 
 ## Keepers
 

@@ -7,6 +7,12 @@ description: >-
 ---
 # Wiki Ingest (Notion-first)
 
+## Config check
+
+Do this before any other step. Read the user-owned `workspace.json` in the active workspace. This skill requires `notion_wiki_db`, `notion_wiki_log`, and `raw_dir`.
+
+If `workspace.json` is missing, or any required field is missing or still a placeholder, pause. A placeholder is an empty value or any value that starts with `REPLACE_WITH`, including inside nested objects and lists. Ask only for those missing fields. Write the answers into `workspace.json`. Then continue with the rest of this skill. Do not run a full onboarding interview.
+
 ## Purpose
 
 Turn verified raw sources into durable Notion wiki pages. Raw blobs remain the source of truth outside Notion. Notion Wiki DB holds curated pages; Wiki Log records activity.

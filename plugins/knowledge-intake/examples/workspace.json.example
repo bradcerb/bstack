@@ -5,6 +5,9 @@
   "loop_state": ".agents/loops/knowledge-intake.json",
   "podcast_feeds": "skills/capture-podcasts/references/feeds.json",
   "youtube_channels": "skills/capture-youtube/references/channels.json",
+  "newsletter_sources": "REPLACE_WITH_NEWSLETTER_SOURCES",
+  "calendar_source": "REPLACE_WITH_CALENDAR",
+  "meeting_lookback": "REPLACE_WITH_LOOKBACK_WINDOW",
   "wiki_ingest_skill": "wiki-ingest",
   "notion_raw_db": {
     "name": "Raw",
