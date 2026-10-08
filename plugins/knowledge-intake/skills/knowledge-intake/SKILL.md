@@ -8,6 +8,12 @@ description: >-
 ---
 # Knowledge Intake (Notion-first)
 
+## Config check
+
+Do this before any other step. Read the user-owned `workspace.json` in the active workspace. This skill requires `raw_dir`, `notion_raw_db`, `notion_wiki_db`, `notion_wiki_log`, and `loop_state`.
+
+If `workspace.json` is missing, or any required field is missing or still a placeholder, pause. A placeholder is an empty value or any value that starts with `REPLACE_WITH`, including inside nested objects and lists. Ask only for those missing fields. Write the answers into `workspace.json`. Then continue with the rest of this skill. Do not run a full onboarding interview.
+
 ## Purpose
 
 Run a conservative intake cycle for the active personal workspace. Delegate source acquisition to capture skills, write immutable raw Markdown outside Notion, upsert a Notion Raw DB index row per raw item, then invoke wiki-ingest only for newly verified raw.

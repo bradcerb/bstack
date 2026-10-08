@@ -12,6 +12,12 @@ Turn a weekly review or factual week snapshot into next week's plan. Prefer past
 
 Portable across agents. Which tools supply the snapshot live in the adapter, routine, or prompt that calls this skill, not in this recipe.
 
+## Config check
+
+Do this before any other step. Read the user-owned `workspace.json` in the active workspace. This skill requires `week_snapshot_source`.
+
+If `workspace.json` is missing, or any required field is missing or still a placeholder, pause. A placeholder is an empty value or any value that starts with `REPLACE_WITH`, including inside nested objects and lists. Ask only for those missing fields. Write the answers into `workspace.json`. Then continue with the rest of this skill. Do not run a full onboarding interview.
+
 ## Principle
 
 Know what is most important and put it first. Plan the week before reacting to whatever is loudest. Put the big rocks in first; leave slack so smaller work and unplanned opportunities can fit. Prefer a flexible structure over an overloaded list.

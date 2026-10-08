@@ -12,6 +12,12 @@ Turn today's inputs into a short, doable day. Process what came in, choose what 
 
 Portable across agents. Which tools supply the inbox, priorities, and calendar live in the adapter, routine, or prompt that calls this skill, not in this recipe.
 
+## Config check
+
+Do this before any other step. Read the user-owned `workspace.json` in the active workspace. This skill requires `inbox_source`, `priorities_source`, and `calendar_source`.
+
+If `workspace.json` is missing, or any required field is missing or still a placeholder, pause. A placeholder is an empty value or any value that starts with `REPLACE_WITH`, including inside nested objects and lists. Ask only for those missing fields. Write the answers into `workspace.json`. Then continue with the rest of this skill. Do not run a full onboarding interview.
+
 ## Principle
 
 Do the most important thing first, one thing at a time. The week sets the priorities; the day executes a slice of them. Keep everything captured in one trusted list so nothing has to live in your head or sit in an inbox as a reminder.

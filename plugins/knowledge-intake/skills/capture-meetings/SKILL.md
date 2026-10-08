@@ -7,6 +7,12 @@ description: >-
 ---
 # Capture Meetings (Notion-first)
 
+## Config check
+
+Do this before any other step. Read the user-owned `workspace.json` in the active workspace. This skill requires `raw_dir`, `loop_state`, `notion_raw_db`, `calendar_source`, and `meeting_lookback`.
+
+If `workspace.json` is missing, or any required field is missing or still a placeholder, pause. A placeholder is an empty value or any value that starts with `REPLACE_WITH`, including inside nested objects and lists. Ask only for those missing fields. Write the answers into `workspace.json`. Then continue with the rest of this skill. Do not run a full onboarding interview.
+
 ## Prerequisites
 
 Require workspace config: `raw_dir`, routing policy, loop state, and configured Notion Raw DB. If Raw DB is missing, stop and ask. Do not create databases.

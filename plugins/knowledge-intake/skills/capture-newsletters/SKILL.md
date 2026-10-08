@@ -8,6 +8,12 @@ description: >-
 ---
 # Capture Newsletters (Notion-first)
 
+## Config check
+
+Do this before any other step. Read the user-owned `workspace.json` in the active workspace. This skill requires `raw_dir`, `notion_raw_db`, `newsletter_sources`, and `loop_state`.
+
+If `workspace.json` is missing, or any required field is missing or still a placeholder, pause. A placeholder is an empty value or any value that starts with `REPLACE_WITH`, including inside nested objects and lists. Ask only for those missing fields. Write the answers into `workspace.json`. Then continue with the rest of this skill. Do not run a full onboarding interview.
+
 ## Policy
 
 - Query only the configured mailbox label (for example a wiki-ingest label), approved senders, or approved newsletter RSS feeds. Never sweep the whole inbox.
