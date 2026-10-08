@@ -3,7 +3,7 @@
 High-value, portable skill plugins you can install and reuse. Not a second engineering floor. Not one plugin per life domain.
 
 **pstack** stays the coding floor (verify first, small changes, clean PRs).
-**bstack** ships only skills worth downloading: knowledge intake, thinking, personal money procedures, sharp relationship jobs, and agent ops (planning plus gated execution).
+**bstack** ships only skills worth downloading: knowledge intake, thinking, personal money procedures, sharp relationship jobs, agent ops (planning plus gated execution), and leadership (coaching prep).
 
 Writing skills install from Triumph plugins; not in bstack. Corey Haines marketing skills stay upstream. Do not fork either here.
 
@@ -19,7 +19,7 @@ Anyone should be able to start with empty configs and clear skill names. No jarg
 
 `workspace.json` is the one config file you own. It is gitignored. Skills that read a source, a roster, or a schedule check it before they do anything else.
 
-The check is per skill. If a field that skill needs is missing, empty, or still a `REPLACE_WITH_` placeholder, the skill asks only for those fields, writes them into `workspace.json`, and continues. It does not interview you for the whole pack.
+The check is per skill. If a field that skill needs is missing, empty, or still a `REPLACE_WITH_` placeholder, the skill asks only for those fields, writes them into `workspace.json`, and continues. It does not interview you for the whole pack. The `onboarding` skill in `leadership` runs that interview for one named skill, then stops.
 
 A placeholder is an empty value or any value that starts with `REPLACE_WITH`, including inside nested objects and lists. A value of `paste` means you will supply that data in the conversation. A path, label, or connector name is filled in by you.
 
@@ -38,6 +38,10 @@ Skills that only think from what you bring (no source, roster, or schedule) do n
 | `priorities_source` | `daily-plan` | Where this week's priorities live. `paste` is allowed. |
 | `week_snapshot_source` | `weekly-plan` | Week snapshot (done, in flight, coming up, stuck). `paste` is allowed. |
 | `work_queue_source` | `gated-work` | Queue, board, or repo slice to run. `paste` is allowed. |
+| `leadership.transcripts_source`, `leadership.skill_assessment_source`, `leadership.team_roster`, `leadership.coaching_state` | `coaching-angles` | Team call transcripts, growth areas, roster, and last-run state. Optional `leadership.coaching_briefs_dir` (empty means do not save). |
+| `leadership.disc_source` | `personality` | Where DISC profiles live (file, spreadsheet, or connector). |
+| `leadership.one_on_one_history_source` (plus the transcript and assessment fields) | `one-on-one-prep` | Past one-on-ones. Calls `personality` and `open-items` for profile and commitments. |
+| `leadership.open_items_log`, `leadership.open_items_read_sources` | `open-items` | Log write location, and read sources. Exactly these two. |
 
 The example also includes `workspace_id`, `workspace_root`, `wiki_ingest_skill`, `guardrails`, `routing_policy`, and `schema_categories`. Skills still read those where their existing steps already say so. They are not part of this pause list.
 
@@ -50,11 +54,12 @@ The example also includes `workspace_id`, `workspace_root`, `wiki_ingest_skill`,
 | **money** | `money-check`, `bill-triage`, `margin-plan`, `debt-order`, `cash-cushion`, `purchase-pause`, `money-date`, `step-status` | Personal money procedures. Optional CFO seat. No bank secrets in the repo. |
 | **relationships** | `conference-who-to-meet`, `thank-you-note` | Sharp reusable jobs (conference prep + thank-you). Not a domain filler pack. Seats keep lane/voice/tools. |
 | **agent-ops** | `project-brief`, `weekly-plan`, `daily-plan`, `gated-work` | Open a project, plan the week, plan the day, then move queue items safely in capped, gated runs |
+| **leadership** | `coaching-angles`, `personality`, `one-on-one-prep`, `open-items`, `onboarding` | Prep a manager. One moment, a DISC read, a one-on-one brief, commitment tracking, one-skill config. Nothing is sent. |
 
 ## What does *not* live here
 
 - **Writing skills:** install from Triumph plugins; not in bstack.
-- Domain filler packs (communication, engineering, faith, family, health, gtm, design, project-ops, leadership; the small PM set lives in `agent-ops`). Prefer seats, Triumph, pstack, or upstream marketplace packs instead of growing bstack.
+- Domain filler packs (communication, engineering, faith, family, health, gtm, design, project-ops; the small PM set lives in `agent-ops`). Leadership is back as a portable plugin: five skills, not a filler pack. Prefer seats, Triumph, pstack, or upstream marketplace packs instead of growing bstack with filler.
 - Triumph Rock / Lava / C# / SQL delivery, PM, and sales playbooks
 - Product defaults for Showup / Atlas / bradcerb.com
 - Secrets, tokens, Notion database IDs, client PII
@@ -119,6 +124,16 @@ Pick one plan ledger long-term. Do not run three books forever.
 
 Identity, company lane, CRM, and voice live outside the skill (seat memory or workspace config). Change the method here once; point seats at it.
 
+## Leadership procedures
+
+`plugins/leadership` is back as a portable plugin. Five skills, not a domain filler pack. They prep a manager for a live conversation. They do not message anyone, post, schedule, or take the conversation over.
+
+- `coaching-angles` reads team call transcripts for a window (since the last run, or the last 7 days, unless the caller overrides it) and returns one sourced moment per person, tied to a growth area. Delivery comes from `personality`. Quiet when nothing qualifies. A host schedule can run it; the date window is the override.
+- `personality` reads the configured DISC source on request. No cache, no fallback, no guessed style.
+- `one-on-one-prep` builds a private brief from recent one-on-ones, call transcripts, `open-items`, the skill assessment, and `personality`. It does not send an agenda or script the meeting.
+- `open-items` stores commitments in `leadership.open_items_log` and reads from `leadership.open_items_read_sources`. Add, update or close, list open. It surfaces items. The human follows up.
+- `onboarding` asks for one named skill's missing declared fields, writes them into `workspace.json`, and stops.
+
 ## Agent ops procedures
 
 `plugins/agent-ops` is planning plus gated execution. Order of use: `project-brief` (open), `weekly-plan` (week), `daily-plan` (day), `gated-work` (run). Not a PM board owner. Not leadership coaching.
@@ -142,4 +157,4 @@ Default gates: send, spend, merge, publish, delete, relationship-affecting outre
 
 ## One line
 
-Coding floor = pstack. High-value portable skills = bstack (`knowledge-intake`, `thinking`, `money`, `relationships`, `agent-ops`). Writing = Triumph plugins. Upstream marketing = Corey. Optional money ledger agents = fiscal.sh. One product's quirks = that product's repo.
+Coding floor = pstack. High-value portable skills = bstack (`knowledge-intake`, `thinking`, `money`, `relationships`, `agent-ops`, `leadership`). Writing = Triumph plugins. Upstream marketing = Corey. Optional money ledger agents = fiscal.sh. One product's quirks = that product's repo.

@@ -1,7 +1,10 @@
 {
-  "_comment": "Copy this file to workspace.json in the workspace where you run skills. Replace every REPLACE_WITH_ value. Never commit workspace.json. Relative paths are from that workspace. Knowledge-intake path defaults match that plugin's layout. slack_source is optional and may stay empty. agent_queue_source is the queue daily-plan hands agent work to. inbox_source is the email inbox (Gmail is the example).",
+  "_comment": "Copy this file to workspace.json in the workspace where you run skills. Replace every REPLACE_WITH_ value. Never commit workspace.json. Relative paths are from that workspace. Knowledge-intake path defaults match that plugin's layout. slack_source is optional and may stay empty. agent_queue_source is the queue daily-plan hands agent work to. inbox_source is the email inbox (Gmail is the example). Leadership source kinds live under sources. leadership.coaching_briefs_dir may stay empty, which means do not save briefs. workspace.timezone is optional for skills that mark it optional.",
   "workspace_id": "personal",
   "workspace_root": ".",
+  "workspace": {
+    "timezone": "REPLACE_WITH_IANA_TIMEZONE"
+  },
   "raw_dir": "learnings/raw",
   "loop_state": ".agents/loops/knowledge-intake.json",
   "podcast_feeds": "skills/capture-podcasts/references/feeds.json",
@@ -15,6 +18,44 @@
   "week_snapshot_source": "REPLACE_WITH_WEEK_SNAPSHOT",
   "work_queue_source": "REPLACE_WITH_WORK_QUEUE",
   "agent_queue_source": "REPLACE_WITH_AGENT_QUEUE",
+  "sources": {
+    "transcripts.meetings": {
+      "via": "skill",
+      "skill": "capture-meetings",
+      "target": "output=raw"
+    },
+    "transcripts.one-on-ones": {
+      "via": "file",
+      "path": "REPLACE_WITH_ONE_ON_ONE_FOLDER"
+    },
+    "people.roster": {
+      "via": "file",
+      "path": "REPLACE_WITH_ROSTER_FILE"
+    },
+    "people.assessments": {
+      "via": "file",
+      "path": "REPLACE_WITH_ASSESSMENT_FILE"
+    },
+    "people.profiles": {
+      "via": "connector",
+      "connector": "REPLACE_WITH_PROFILE_CONNECTOR",
+      "target": "REPLACE_WITH_DISC_FIELD"
+    },
+    "log.open-items": {
+      "via": "file",
+      "path": "leadership/open-items.json"
+    },
+    "tasks.commitments": [
+      {
+        "via": "file",
+        "path": "REPLACE_WITH_COMMITMENTS_FILE"
+      }
+    ]
+  },
+  "leadership": {
+    "coaching_state": ".agents/loops/coaching-angles.json",
+    "coaching_briefs_dir": ""
+  },
   "wiki_ingest_skill": "wiki-ingest",
   "notion_raw_db": {
     "name": "Raw",

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "leadership",
+  "version": "1.0.0",
+  "description": "Portable leadership skills: one coaching moment per person, a DISC lookup, one-on-one prep, commitment tracking, and per-skill config onboarding. Draft only. Nothing is sent.",
+  "author": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "repository": "https://github.com/bradcerb/bstack",
+  "license": "MIT",
+  "keywords": [
+    "leadership",
+    "coaching",
+    "skills",
+    "bstack"
+  ]
+}

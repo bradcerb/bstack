@@ -1,6 +1,6 @@
 # bstack
 
-High-value portable skill plugins: knowledge intake, thinking, personal money procedures, sharp relationship jobs, and agent ops (planning plus gated execution).
+High-value portable skill plugins: knowledge intake, thinking, personal money procedures, sharp relationship jobs, agent ops (planning plus gated execution), and leadership (coaching prep).
 
 **pstack** is the coding floor. **bstack** is only what is worth downloading and reusing. Not a life-domain matrix.
 
@@ -19,7 +19,7 @@ Pick a plugin under `plugins/<name>/`:
 
 `InstallPlugin` marketplace id is N/A until a plugin is published. The prove path is local:
 
-- Copy each plugin folder as a **real directory** (not an out-of-tree symlink) to `~/.cursor/plugins/local/<plugin-name>`, where `<plugin-name>` matches that plugin's root `plugin.json` `name` (for example `knowledge-intake`, `thinking`, `money`, `relationships`, `agent-ops`).
+- Copy each plugin folder as a **real directory** (not an out-of-tree symlink) to `~/.cursor/plugins/local/<plugin-name>`, where `<plugin-name>` matches that plugin's root `plugin.json` `name` (for example `knowledge-intake`, `thinking`, `money`, `relationships`, `agent-ops`, `leadership`).
 - A whole-repo checkout is optional and fine for browsing. Loaders expect per-plugin directories with a root `plugin.json`.
 
 Copy `examples/workspace.json.example` to `workspace.json` in the workspace where you run skills. That file is the one config you own, and it is gitignored. Skills that read a source, a roster, or a schedule check it first. If one of their fields is missing or still a `REPLACE_WITH_` placeholder, they ask only for those fields, write them into `workspace.json`, and continue. Skills that only think from what you bring do not read it.
@@ -37,6 +37,7 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map.
 | `money` | Principle-based personal money skills. Optional CFO seat. Plaid for live balances; optional fiscal.sh; Tiller only if still the plan sheet. No secrets. |
 | `relationships` | Sharp reusable jobs only: `conference-who-to-meet`, `thank-you-note`. Seats keep lane/voice/tools. |
 | `agent-ops` | Planning plus gated execution: `project-brief`, `weekly-plan`, `daily-plan`, `gated-work` (capped runs, handoff checklist, human gate) |
+| `leadership` | Coaching prep: `coaching-angles`, `personality`, `one-on-one-prep`, `open-items`, `onboarding`. Draft only. Nothing is sent. |
 
 ## Skill, routine, connector
 
@@ -48,7 +49,7 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map.
 ## Not in this repo
 
 - Writing skills (Triumph plugins)
-- Domain filler packs (communication, engineering, faith, family, health, gtm, design, project-ops, leadership; the small PM set lives in `agent-ops`)
+- Domain filler packs (communication, engineering, faith, family, health, gtm, design, project-ops; the small PM set lives in `agent-ops`). Leadership is back as a portable plugin, not a filler pack.
 - Triumph Rock / PM / sales
 - Corey Haines marketing (install upstream)
 - Product defaults for Showup / Atlas / bradcerb.com
