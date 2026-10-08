@@ -1,5 +1,5 @@
 {
-  "_comment": "Copy this file to workspace.json in the workspace where you run skills. Replace every REPLACE_WITH_ value. Never commit workspace.json. Relative paths are from that workspace. Knowledge-intake path defaults match that plugin's layout.",
+  "_comment": "Copy this file to workspace.json in the workspace where you run skills. Replace every REPLACE_WITH_ value. Never commit workspace.json. Relative paths are from that workspace. Knowledge-intake path defaults match that plugin's layout. slack_source is optional and may stay empty. agent_queue_source is the queue daily-plan hands agent work to. inbox_source is the email inbox (Gmail is the example).",
   "workspace_id": "personal",
   "workspace_root": ".",
   "raw_dir": "learnings/raw",
@@ -10,9 +10,11 @@
   "calendar_source": "REPLACE_WITH_CALENDAR",
   "meeting_lookback": "REPLACE_WITH_LOOKBACK_WINDOW",
   "inbox_source": "REPLACE_WITH_INBOX",
+  "slack_source": "",
   "priorities_source": "REPLACE_WITH_PRIORITIES_LIST",
   "week_snapshot_source": "REPLACE_WITH_WEEK_SNAPSHOT",
   "work_queue_source": "REPLACE_WITH_WORK_QUEUE",
+  "agent_queue_source": "REPLACE_WITH_AGENT_QUEUE",
   "wiki_ingest_skill": "wiki-ingest",
   "notion_raw_db": {
     "name": "Raw",
