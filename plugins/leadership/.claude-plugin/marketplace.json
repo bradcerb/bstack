@@ -1,13 +1,11 @@
 {
   "name": "leadership",
   "owner": {
-    "name": "Brad",
-    "url": "https://github.com/bradcerb"
+    "name": "bstack"
   },
   "metadata": {
     "description": "Portable leadership skills: one coaching moment per person, a DISC lookup, one-on-one prep, commitment tracking, and per-skill config onboarding. Draft only. Nothing is sent.",
-    "version": "1.0.0",
-    "repository": "https://github.com/bradcerb/bstack"
+    "version": "1.0.0"
   },
   "plugins": [
     {

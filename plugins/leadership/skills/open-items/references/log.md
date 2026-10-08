@@ -1,6 +1,6 @@
 # Open items log
 
-`leadership.open_items_log` is a JSON file the manager owns.
+The `log.open-items` binding names a JSON file the manager owns. When `via` is `file`, that file is `path`.
 
 ```json
 {

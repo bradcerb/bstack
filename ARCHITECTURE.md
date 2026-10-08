@@ -38,12 +38,14 @@ Skills that only think from what you bring (no source, roster, or schedule) do n
 | `priorities_source` | `daily-plan` | Where this week's priorities live. `paste` is allowed. |
 | `week_snapshot_source` | `weekly-plan` | Week snapshot (done, in flight, coming up, stuck). `paste` is allowed. |
 | `work_queue_source` | `gated-work` | Queue, board, or repo slice to run. `paste` is allowed. |
-| `leadership.transcripts_source`, `leadership.skill_assessment_source`, `leadership.team_roster`, `leadership.coaching_state` | `coaching-angles` | Team call transcripts, growth areas, roster, and last-run state. Optional `leadership.coaching_briefs_dir` (empty means do not save). |
-| `leadership.disc_source` | `personality` | Where DISC profiles live (file, spreadsheet, or connector). |
-| `leadership.one_on_one_history_source` (plus the transcript and assessment fields) | `one-on-one-prep` | Past one-on-ones. Calls `personality` and `open-items` for profile and commitments. |
-| `leadership.open_items_log`, `leadership.open_items_read_sources` | `open-items` | Log write location, and read sources. Exactly these two. |
+| `slack_source` | `daily-plan` | Optional chat source. Empty means skip it. |
+| `agent_queue_source` | `daily-plan` | Queue daily-plan hands agent work to. |
+| `sources["transcripts.meetings"]`, `sources["people.assessments"]`, `sources["people.roster"]` | `coaching-angles` | Team call transcripts, growth areas, and roster. Settings: `leadership.coaching_state`, optional `leadership.coaching_briefs_dir` (empty means do not save), optional `workspace.timezone`. |
+| `sources["people.profiles"]` | `personality` | DISC profiles, read on each request. |
+| `sources["transcripts.one-on-ones"]` (plus the meeting and assessment kinds) | `one-on-one-prep` | Past one-on-ones. Calls `personality` and `open-items`. |
+| `sources["log.open-items"]`, `sources["tasks.commitments"]` | `open-items` | Log binding, and a list of read bindings. Optional `workspace.timezone`. |
 
-The example also includes `workspace_id`, `workspace_root`, `wiki_ingest_skill`, `guardrails`, `routing_policy`, and `schema_categories`. Skills still read those where their existing steps already say so. They are not part of this pause list.
+The example also includes `workspace_id`, `workspace_root`, `workspace.timezone`, `wiki_ingest_skill`, `guardrails`, `routing_policy`, and `schema_categories`. Skills still read those where their existing steps already say so. They are not part of this pause list, except `workspace.timezone` when a skill names it.
 
 ## Keepers
 
@@ -131,8 +133,10 @@ Identity, company lane, CRM, and voice live outside the skill (seat memory or wo
 - `coaching-angles` reads team call transcripts for a window (since the last run, or the last 7 days, unless the caller overrides it) and returns one sourced moment per person, tied to a growth area. Delivery comes from `personality`. Quiet when nothing qualifies. A host schedule can run it; the date window is the override.
 - `personality` reads the configured DISC source on request. No cache, no fallback, no guessed style.
 - `one-on-one-prep` builds a private brief from recent one-on-ones, call transcripts, `open-items`, the skill assessment, and `personality`. It does not send an agenda or script the meeting.
-- `open-items` stores commitments in `leadership.open_items_log` and reads from `leadership.open_items_read_sources`. Add, update or close, list open. It surfaces items. The human follows up.
-- `onboarding` asks for one named skill's missing declared fields, writes them into `workspace.json`, and stops.
+- `open-items` stores commitments through `sources["log.open-items"]` and reads `sources["tasks.commitments"]`. Add, update or close, list open. It surfaces items. The human follows up.
+- `onboarding` reads one named skill's `bstack-config` line, writes missing entries in the v2 binding shape, and stops.
+
+Leadership skills declare those entries in frontmatter. The old flat `leadership.*` names map to these homes in `plugins/leadership/README.md`. That alias table moves to SOURCES.md later.
 
 ## Agent ops procedures
 

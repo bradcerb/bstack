@@ -4,7 +4,7 @@ This skill runs on demand. A host can also schedule it. The schedule lives in th
 
 ## Cadence
 
-Once a week is a sound default, or the morning after a standing block of team calls. Pick the clock and time zone in the host.
+Once a week is a sound default, or the morning after a standing block of team calls. Pick the clock in the host. Resolve date phrases in `workspace.timezone` when that setting is set.
 
 ## Default window
 

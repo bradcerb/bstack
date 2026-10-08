@@ -13,4 +13,4 @@ Keep the read to those lines. Do not add motives, childhood stories, or a rankin
 
 "Profile missing." is the whole personality result when the source has nothing for that person, the source cannot be read, or the stored value is empty. Do not borrow another person's profile. Do not score a transcript to manufacture letters.
 
-`coaching-angles` and `one-on-one-prep` call this skill. They do not read `leadership.disc_source` themselves.
+`coaching-angles` and `one-on-one-prep` call this skill. They do not read `people.profiles` themselves.

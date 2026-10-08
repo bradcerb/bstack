@@ -4,16 +4,18 @@ description: >-
   Use when a manager wants one coaching moment per person from team call
   transcripts in a date window, tied to that person's growth area, with
   delivery shaped by their DISC profile. On demand or scheduled. Draft only.
+metadata:
+  bstack-config: "sources: transcripts.meetings people.assessments people.roster | settings: leadership.coaching_state leadership.coaching_briefs_dir? workspace.timezone?"
 ---
 # Coaching angles
 
 ## Config check
 
-Do this before any other step. Read the user-owned `workspace.json` in the active workspace. This skill requires `leadership.transcripts_source`, `leadership.skill_assessment_source`, `leadership.team_roster`, and `leadership.coaching_state`.
+Do this before any other step. Find `workspace.json`: the path the caller gave, else the active workspace root, else ask once. Read this skill's `bstack-config` line in the frontmatter. For each required source kind look up `sources.<kind>`; for each required setting look up its dotted path. If an entry is absent, empty, or starts with `REPLACE_WITH` (including inside nested objects and lists), ask only for that entry, write it into `workspace.json` in the v2 shape, and continue. Entries marked `?` that are absent or `"via": "none"` are skipped without asking. If a source is bound to a connector this host does not have, stop and say "`<kind>` is bound to `<connector>`, which is not connected here." Do not swap in another tool, a cached copy, or a guess. Old flat field names still count through the alias table in SOURCES.md. Do not run a full onboarding interview.
 
-If `workspace.json` is missing, or any required field is missing or still a placeholder, pause. A placeholder is an empty value or any value that starts with `REPLACE_WITH`, including inside nested objects and lists. Ask only for those missing fields. Write the answers into `workspace.json`. Then continue with the rest of this skill. Do not run a full onboarding interview.
+A source kind is one key in `sources`, even when the name contains a dot. `transcripts.meetings` means `sources["transcripts.meetings"]`. Until SOURCES.md is in the repo, the leadership alias rows are in this plugin's README.
 
-A dotted name is a path: `leadership` is the object, then the key inside it. `leadership.coaching_briefs_dir` is optional and is not part of the required list. Empty means return the brief here and do not write a file.
+A present empty `leadership.coaching_briefs_dir` means do not save a file. Do not ask for it.
 
 One observed moment per person, tied to that person's growth area, with a delivery note shaped by their DISC profile. Private brief for the manager. The manager has the conversation.
 
@@ -21,13 +23,13 @@ Method notes: [method.md](../../references/method.md). Ranking, window, and sche
 
 ## Inputs
 
-- Date window. Caller override wins: a phrase such as "last two weeks", or explicit start and end dates. With no override, use `last_run_at` in the coaching state file through now. With no `last_run_at`, use the last 7 days. Show the resolved start and end in the brief.
-- Optional person filter. Limit the run to that person. If they are not on the roster, say so and stop. Do not invent a roster entry.
-- Team roster, transcripts, and skill assessment, from the required fields. A value of `paste` means the caller supplies that data in the conversation.
+- Date window. Caller override wins: a phrase such as "last two weeks", or explicit start and end dates. With no override, use `last_run_at` in the file named by `leadership.coaching_state`, through now. With no `last_run_at`, use the last 7 days. Resolve phrases in `workspace.timezone` when that setting is set. Show the resolved start and end in the brief.
+- Optional person filter. Limit the run to that person. If they are not on `people.roster`, say so and stop. Do not invent a roster entry.
+- `transcripts.meetings`, `people.assessments`, and `people.roster`. A binding of `paste` means the caller supplies that data in the conversation. A binding of `skill` means call that skill and use what it returns.
 
 ## DISC
 
-Call the `personality` skill for each person you will include. Use only what it returns. Do not open the DISC source, do not cache a profile, and do not guess a style from how someone talked. If `personality` reports the profile missing, write "Profile missing." on the delivery line.
+Call the `personality` skill for each person you will include. Use only what it returns. Do not open `people.profiles`, do not cache a profile, and do not guess a style from how someone talked. If `personality` reports the profile missing, write "Profile missing." on the delivery line.
 
 ## Steps
 
