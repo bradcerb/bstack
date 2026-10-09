@@ -1,0 +1,7 @@
+{
+  "name": "leadership",
+  "description": "Portable leadership skills: one coaching moment per person, a DISC lookup, one-on-one prep, commitment tracking, and per-skill config onboarding. Draft only. Nothing is sent.",
+  "version": "1.0.0",
+  "license": "MIT",
+  "skills": "./skills"
+}
