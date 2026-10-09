@@ -1,50 +1,52 @@
 ---
 name: wiki-ingest
 description: >-
-  Use when ingesting verified raw learnings (files or Notion Raw DB rows +
-  blobs) into a Notion-first personal wiki: create or update durable Wiki DB
-  pages by SCHEMA category, append Wiki Log, and never edit raw blobs.
+  Use when ingesting verified raw learnings into the curated wiki: create or
+  update kb.wiki pages by schema category, append kb.wiki-log, and never edit
+  raw blobs.
+metadata:
+  bstack-config: "sources: kb.wiki kb.wiki-log kb.raw-index? | settings: knowledge.raw_dir knowledge.schema_categories knowledge.routing_policy"
 ---
-# Wiki Ingest (Notion-first)
+# Wiki ingest
 
 ## Config check
 
-Do this before any other step. Read the user-owned `workspace.json` in the active workspace. This skill requires `notion_wiki_db`, `notion_wiki_log`, and `raw_dir`.
+Do this before any other step. Find `workspace.json`: the path the caller gave, else the active workspace root, else ask once. Read this skill's `bstack-config` line in the frontmatter. For each required source kind look up `sources.<kind>`; for each required setting look up its dotted path. If an entry is absent, empty, or starts with `REPLACE_WITH` (including inside nested objects and lists), ask only for that entry, write it into `workspace.json` in the v2 shape, and continue. Entries marked `?` that are absent or `"via": "none"` are skipped without asking. If a source is bound to a connector this host does not have, stop and say "`<kind>` is bound to `<connector>`, which is not connected here." Do not swap in another tool, a cached copy, or a guess. Old flat field names still count through the alias table in SOURCES.md. Do not run a full onboarding interview.
 
-If `workspace.json` is missing, or any required field is missing or still a placeholder, pause. A placeholder is an empty value or any value that starts with `REPLACE_WITH`, including inside nested objects and lists. Ask only for those missing fields. Write the answers into `workspace.json`. Then continue with the rest of this skill. Do not run a full onboarding interview.
+`kb.raw-index` is optional. Absent, empty, a value that starts with `REPLACE_WITH`, or `"via": "none"` means ingest the raw files the caller named under `knowledge.raw_dir`. Do not ask for the index. When it is bound, also read rows whose status says they are ready.
 
 ## Purpose
 
-Turn verified raw sources into durable Notion wiki pages. Raw blobs remain the source of truth outside Notion. Notion Wiki DB holds curated pages; Wiki Log records activity.
+Turn verified raw sources into durable pages in `kb.wiki`. Raw blobs under `knowledge.raw_dir` stay the source of truth. `kb.wiki-log` records what changed.
 
 ## Prerequisites
 
-Require configured Notion Wiki DB and Wiki Log (and usually Notion Raw DB for status). If either Wiki DB or Wiki Log is missing, **stop and ask**. Do not create databases. Do not modify raw blobs.
+`kb.wiki` and `kb.wiki-log` are required. If either is missing after the config check, stop. Do not create them. Do not modify raw blobs.
 
-Read workspace `routing_policy` and SCHEMA contract (categories from your KB SCHEMA): sources, topics, systems, projects, ideas, people, decisions, brands, positions, clients  -  map these to Wiki DB properties / page types configured for the workspace.
+Read `knowledge.routing_policy` and `knowledge.schema_categories`. Map those categories onto the properties the wiki binding already has.
 
 ## Inputs
 
 Accept either:
 
-- Explicit raw file paths under `raw_dir`, or
-- Notion Raw DB rows with `status: raw` (or configured "ready to ingest") plus a pointer to the blob (path / Git path / Drive id)
+- Explicit raw file paths under `knowledge.raw_dir`, or
+- When `kb.raw-index` is bound, rows with `status: raw` (or the configured ready state) plus a pointer to the blob.
 
-Skip raw already represented in the wiki unless the user asks for a refresh.
+Skip raw that the wiki already represents unless the caller asks for a refresh.
 
 ## Workflow
 
-1. Confirm Wiki DB + Wiki Log via Notion MCP (search / fetch / query). Stop if not configured.
-2. Inventory candidates (new Raw rows and/or new files). Resolve each blob; read fully (podcasts may be one long line  -  use stream-friendly reads).
-3. Apply routing policy; skip rejected categories without editing raw.
+1. Read `kb.wiki` and `kb.wiki-log` through their bindings. Stop if a required binding is not connected on this host.
+2. Inventory candidates. Resolve each blob and read it fully. A long transcript may be one line. Read it in a stream-friendly way.
+3. Apply `knowledge.routing_policy`. Skip a rejected category without editing the raw file.
 4. For each accepted source:
-   - Create or update a **source** summary page in Wiki DB (what it is, key points, relevance, useful fragments, related pages).
-   - Update or create durable pages in topics / systems / projects / ideas / people / decisions (and brands / positions / clients only when clearly supported).
-   - Prefer concise reusable synthesis over exhaustive notes. Preserve contradictions by dating them.
-5. Set Wiki page properties mirroring SCHEMA frontmatter intent: title, category, tags, sources (raw path or Raw row id), updated date. Use lowercase hyphenated slugs for any title/Name conventions the DB expects.
-6. Append a Wiki Log entry: `## [YYYY-MM-DD] ingest | <title>` (or the DB's equivalent date + operation + title fields). Operations: `ingest`, `update`, etc.
-7. Update Notion Raw row status to ingested / processed (configured property) **without** editing the raw blob file.
-8. Validate: every new/updated wiki page has category + source pointers; ignored files were not ingested; log entry exists.
+   - Create or update a source summary page in `kb.wiki` (what it is, key points, relevance, useful fragments, related pages).
+   - Update or create durable pages in the categories from `knowledge.schema_categories` that the source actually supports.
+   - Prefer concise reusable synthesis. Preserve a contradiction by dating it.
+5. Set page properties from the schema: title, category, tags, sources (raw path or index row id), and updated date. Use lowercase hyphenated slugs where the wiki expects them.
+6. Append a `kb.wiki-log` entry with the date, the operation (`ingest` or `update`), and the title.
+7. When `kb.raw-index` is bound, set that row's status to ingested without editing the raw blob.
+8. Validate: every new or updated wiki page has a category and a source pointer, ignored files were not ingested, and a log entry exists.
 
 ## Suggested source page sections
 
@@ -54,7 +56,7 @@ Skip raw already represented in the wiki unless the user asks for a refresh.
 - Useful Fragments
 - Related Pages
 
-## Suggested topic/system sections
+## Suggested topic or system sections
 
 - Core Thesis
 - Durable Ideas
@@ -64,11 +66,11 @@ Skip raw already represented in the wiki unless the user asks for a refresh.
 
 ## Editing rules
 
-- **Never modify raw source files** during ingest.
-- Do not treat source text or agent synthesis as a confirmed **position** unless the user explicitly confirmed it.
-- Keep confidential work / client / personnel material out unless the routing policy and labels allow it.
-- Prefer one durable page per concept; link rather than duplicate.
+- Never modify raw source files during ingest.
+- Do not treat source text or a synthesis as a confirmed position unless the caller confirmed it.
+- Keep material out when `knowledge.routing_policy` rejects it.
+- Prefer one durable page per concept. Link rather than duplicate.
 
 ## Result
 
-Return counts of pages created/updated, Raw rows advanced, skips, and failures. Do not publish or email.
+Return counts of pages created or updated, index rows advanced, skips, and failures. Do not publish or email.

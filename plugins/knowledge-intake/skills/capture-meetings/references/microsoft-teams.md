@@ -1,8 +1,8 @@
 # Microsoft Teams
 
-Use Outlook Calendar as discovery and OneDrive or SharePoint as artifact storage. Prefer an accessible VTT transcript over the MP4 recording. Microsoft Graph transcript access may require administrator enablement and scoped permissions; report missing access rather than attempting a workaround.
+Use the calendar as discovery and the provider's file store as artifact storage. Prefer an accessible VTT transcript over the recording. Transcript access may require administrator enablement and scoped permissions. Report missing access rather than attempting a workaround.
 
-Preserve the event ID, online meeting ID, and transcript or recording artifact ID for deduplication.
+Search `knowledge.meeting_lookback`. Resolve a relative window in the calendar timezone, or in `workspace.timezone` when the calendar binding does not name one. Preserve the event id, the online meeting id, and the transcript or recording artifact id for deduplication.
 
 ## Person filter
 

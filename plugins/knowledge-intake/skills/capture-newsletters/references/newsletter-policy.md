@@ -1,7 +1,7 @@
-# Newsletter Intake Policy
+# Newsletter intake policy
 
-Use an explicit mailbox label such as `wiki-ingest` for initial operation. Add automatic approved-sender rules only after the workspace owner reviews several successful runs.
+`email.newsletters` is the only mailbox or feed binding. Use the label, sender list, or feed list on that binding. Add automatic sender rules only after several successful runs.
 
-Treat delivery as capture, not consumption. Do not update reading metrics merely because a newsletter arrived.
+Treat delivery as capture, not consumption. Do not update reading metrics because a newsletter arrived.
 
-Keep full issue content private under the configured `raw_dir`. Preserve the canonical publisher URL when available so the source remains attributable.
+Keep the full issue private under `knowledge.raw_dir`. Preserve the canonical publisher URL when one exists so the source stays attributable.

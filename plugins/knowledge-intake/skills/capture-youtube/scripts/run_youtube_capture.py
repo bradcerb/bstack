@@ -14,29 +14,14 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
 
+_PLUGIN_ROOT = Path(__file__).resolve().parents[3]
+if str(_PLUGIN_ROOT) not in sys.path:
+    sys.path.append(str(_PLUGIN_ROOT))
+
+import workspace_config
 
 USER_AGENT = "LocalKnowledgeIntake/1.0 (+private YouTube reader)"
-
-
-def looks_like_workspace(path: Path) -> bool:
-    return (path / "skills" / "knowledge-intake" / "references" / "workspace.json").exists()
-
-
-def resolve_workspace_root(value: str | None = None) -> Path:
-    if value:
-        return Path(value).expanduser().resolve()
-    env_value = os.environ.get("KNOWLEDGE_WORKSPACE_ROOT")
-    if env_value:
-        return Path(env_value).expanduser().resolve()
-    for start in [Path.cwd().resolve(), Path(__file__).resolve()]:
-        for candidate in [start, *start.parents]:
-            if looks_like_workspace(candidate):
-                return candidate
-    return Path(__file__).resolve().parents[3]
-
-
-def resolve_under_workspace(workspace_root: Path, path: Path) -> Path:
-    return path if path.is_absolute() else workspace_root / path
+DEFAULT_MAX_YOUTUBE_ITEMS = 2
 
 
 def local_name(tag: str) -> str:
@@ -117,10 +102,12 @@ def parse_feed(payload: bytes) -> tuple[str, list[dict[str, str]]]:
     return channel_title, [video for video in videos if video["id"] and video["url"]]
 
 
-def capture_video(runner: Path, raw_dir: Path, video: dict[str, str], threads: int) -> dict:
+def capture_video(config_path: Path, runner: Path, raw_dir: Path, video: dict[str, str], threads: int) -> dict:
     command = [
         sys.executable,
         str(runner),
+        "--config",
+        str(config_path),
         "--url",
         video["url"],
         "--raw-dir",
@@ -142,20 +129,44 @@ def capture_video(runner: Path, raw_dir: Path, video: dict[str, str], threads: i
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--workspace-root")
-    parser.add_argument("--registry", required=True, type=Path)
-    parser.add_argument("--state", required=True, type=Path)
-    parser.add_argument("--raw-dir", required=True, type=Path)
-    parser.add_argument("--runner", required=True, type=Path)
-    parser.add_argument("--max-items", type=int, default=2)
+    parser.add_argument("--config", help="Path to workspace.json. Defaults to a walk upward from the working directory.")
+    parser.add_argument("--workspace-root", help="Override the workspace root for this run.")
+    parser.add_argument("--registry", type=Path, help="Override knowledge.youtube_channels for this run.")
+    parser.add_argument("--state", type=Path, help="Override knowledge.loop_state for this run.")
+    parser.add_argument("--raw-dir", type=Path, help="Override knowledge.raw_dir for this run.")
+    parser.add_argument("--runner", type=Path, help="Override the video capturer for this run.")
+    parser.add_argument("--max-items", type=int, help="Per-run item cap. Defaults to 2 when omitted.")
     parser.add_argument("--threads", type=int, default=4)
     parser.add_argument("--write-state", action="store_true")
     args = parser.parse_args()
-    workspace_root = resolve_workspace_root(args.workspace_root)
-    args.registry = resolve_under_workspace(workspace_root, args.registry)
-    args.state = resolve_under_workspace(workspace_root, args.state)
-    args.raw_dir = resolve_under_workspace(workspace_root, args.raw_dir)
-    args.runner = resolve_under_workspace(workspace_root, args.runner)
+    config_path, workspace_root, data = workspace_config.open_workspace(args.config, args.workspace_root)
+    if args.registry is None:
+        args.registry = workspace_config.under(
+            workspace_root,
+            workspace_config.knowledge_value(data, "youtube_channels", workspace_config.DEFAULT_YOUTUBE_CHANNELS),
+        )
+    else:
+        args.registry = workspace_config.under(workspace_root, args.registry)
+    if args.state is None:
+        args.state = workspace_config.under(
+            workspace_root,
+            workspace_config.knowledge_value(data, "loop_state", workspace_config.DEFAULT_LOOP_STATE),
+        )
+    else:
+        args.state = workspace_config.under(workspace_root, args.state)
+    if args.raw_dir is None:
+        args.raw_dir = workspace_config.under(
+            workspace_root,
+            workspace_config.knowledge_value(data, "raw_dir", workspace_config.DEFAULT_RAW_DIR),
+        )
+    else:
+        args.raw_dir = workspace_config.under(workspace_root, args.raw_dir)
+    if args.runner is None:
+        args.runner = Path(__file__).resolve().with_name("capture_youtube.py")
+    else:
+        args.runner = workspace_config.under(workspace_root, args.runner)
+    if args.max_items is None:
+        args.max_items = DEFAULT_MAX_YOUTUBE_ITEMS
 
     registry = load_json(args.registry)
     loop_state = load_json(args.state)
@@ -191,7 +202,7 @@ def main() -> int:
             selected = list(reversed(new_videos))[:remaining]
             successes: list[dict[str, str]] = []
             for video in selected:
-                result = capture_video(args.runner, args.raw_dir, video, args.threads)
+                result = capture_video(config_path, args.runner, args.raw_dir, video, args.threads)
                 if result["status"] == "written":
                     written.append(result)
                     successes.append(video)

@@ -7,33 +7,17 @@ import argparse
 import concurrent.futures
 import email.utils
 import json
-import os
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
 from datetime import date, datetime, timezone
 from pathlib import Path
 
+_PLUGIN_ROOT = Path(__file__).resolve().parents[3]
+if str(_PLUGIN_ROOT) not in sys.path:
+    sys.path.append(str(_PLUGIN_ROOT))
 
-def looks_like_workspace(path: Path) -> bool:
-    return (path / "skills" / "knowledge-intake" / "references" / "workspace.json").exists()
-
-
-def resolve_workspace_root(value: str | None = None) -> Path:
-    if value:
-        return Path(value).expanduser().resolve()
-    env_value = os.environ.get("KNOWLEDGE_WORKSPACE_ROOT")
-    if env_value:
-        return Path(env_value).expanduser().resolve()
-    for start in [Path.cwd().resolve(), Path(__file__).resolve()]:
-        for candidate in [start, *start.parents]:
-            if looks_like_workspace(candidate):
-                return candidate
-    return Path(__file__).resolve().parents[3]
-
-
-def resolve_under_workspace(workspace_root: Path, path: Path) -> Path:
-    return path if path.is_absolute() else workspace_root / path
+import workspace_config
 
 
 def local_name(tag: str) -> str:
@@ -98,10 +82,20 @@ def parse_feed(path: Path, since: date, limit: int | None) -> list[dict[str, str
     return episodes
 
 
-def run_episode(workspace_root: Path, runner: Path, raw_dir: Path, rss_feed: str, episode: dict[str, str], threads: int) -> dict[str, object]:
+def run_episode(
+    config_path: Path,
+    workspace_root: Path,
+    runner: Path,
+    raw_dir: Path,
+    rss_feed: str,
+    episode: dict[str, str],
+    threads: int,
+) -> dict[str, object]:
     command = [
         sys.executable,
         str(runner),
+        "--config",
+        str(config_path),
         "--workspace-root",
         str(workspace_root),
         "--raw-dir",
@@ -146,20 +140,30 @@ def run_episode(workspace_root: Path, runner: Path, raw_dir: Path, rss_feed: str
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--workspace-root")
+    parser.add_argument("--config", help="Path to workspace.json. Defaults to a walk upward from the working directory.")
+    parser.add_argument("--workspace-root", help="Override the workspace root for this run.")
     parser.add_argument("--feed-xml", required=True, type=Path)
     parser.add_argument("--rss-feed", required=True)
-    parser.add_argument("--raw-dir", required=True, type=Path)
-    parser.add_argument("--runner", required=True, type=Path)
+    parser.add_argument("--raw-dir", type=Path, help="Override knowledge.raw_dir for this run.")
+    parser.add_argument("--runner", type=Path, help="Override the episode transcriber for this run.")
     parser.add_argument("--since", required=True)
     parser.add_argument("--limit", type=int)
     parser.add_argument("--workers", type=int, default=3)
     parser.add_argument("--threads", type=int, default=4)
     args = parser.parse_args()
-    workspace_root = resolve_workspace_root(args.workspace_root)
-    args.feed_xml = resolve_under_workspace(workspace_root, args.feed_xml)
-    args.raw_dir = resolve_under_workspace(workspace_root, args.raw_dir)
-    args.runner = resolve_under_workspace(workspace_root, args.runner)
+    config_path, workspace_root, data = workspace_config.open_workspace(args.config, args.workspace_root)
+    args.feed_xml = workspace_config.under(workspace_root, args.feed_xml)
+    if args.raw_dir is None:
+        args.raw_dir = workspace_config.under(
+            workspace_root,
+            workspace_config.knowledge_value(data, "raw_dir", workspace_config.DEFAULT_RAW_DIR),
+        )
+    else:
+        args.raw_dir = workspace_config.under(workspace_root, args.raw_dir)
+    if args.runner is None:
+        args.runner = Path(__file__).resolve().with_name("transcribe_episode.py")
+    else:
+        args.runner = workspace_config.under(workspace_root, args.runner)
 
     since = date.fromisoformat(args.since)
     episodes = parse_feed(args.feed_xml, since, args.limit)
@@ -177,7 +181,7 @@ def main() -> int:
     results: list[dict[str, object]] = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as executor:
         futures = [
-            executor.submit(run_episode, workspace_root, args.runner, args.raw_dir, args.rss_feed, episode, args.threads)
+            executor.submit(run_episode, config_path, workspace_root, args.runner, args.raw_dir, args.rss_feed, episode, args.threads)
             for episode in episodes
         ]
         for future in concurrent.futures.as_completed(futures):

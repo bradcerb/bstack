@@ -20,7 +20,7 @@ Objects are ordered by `occurred_at`, then `external_id`.
 
 `output=raw`: the skill return is one `jsonl` fence and nothing else. Zero meetings is an empty fence.
 
-`output=both`: the skill return is the usual capture counts, then a heading `Raw transcripts`, then one `jsonl` fence. Include only meetings whose raw write and Raw DB upsert succeeded.
+`output=both`: the skill return is the usual capture counts, then a heading `Raw transcripts`, then one `jsonl` fence. Include only meetings whose raw write and raw-index upsert succeeded.
 
 ## Example
 

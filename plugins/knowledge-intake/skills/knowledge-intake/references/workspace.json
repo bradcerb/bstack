@@ -1,4 +1,0 @@
-{
-  "_comment": "Do not commit real Notion database IDs here. Copy examples/workspace.json.example from the plugin root into your workspace as workspace.json and fill in your own targets.",
-  "see": "../../examples/workspace.json.example"
-}

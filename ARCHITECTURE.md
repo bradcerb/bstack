@@ -40,7 +40,7 @@ A skill with no `bstack-config` line does not read this file.
 | `voice.style-guide?` | `thank-you-note` |
 | settings `relationships.author_lane?`, `relationships.skip_list?` | `conference-who-to-meet` |
 
-Knowledge-intake skills still name the old flat fields. Their v2 homes are already in the example (`kb.raw-index`, `kb.wiki`, `kb.wiki-log`, and the `knowledge.*` settings). The skill rewrite is the next change. Older flat names still resolve through the alias table in SOURCES.md.
+Knowledge-intake skills declare `kb.raw-index`, `kb.wiki`, `kb.wiki-log`, and the `knowledge.*` settings they use. A connector such as Notion is one way to bind the `kb.*` kinds. Older flat names still resolve through the alias table in SOURCES.md.
 
 ## Keepers
 

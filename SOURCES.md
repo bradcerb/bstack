@@ -236,7 +236,7 @@ Per-call arguments such as a date range, a person filter, or an output mode are 
 
 Read an old string with these rules. The literal `paste` is `{ "via": "paste" }`. Any other filled string is `{ "via": "connector", "target": "<that string>" }`. A list of filled strings is a list of those bindings. An empty string on an optional kind is `{ "via": "none" }`.
 
-Environment variables are not config. `KNOWLEDGE_WORKSPACE_ROOT` means the folder of the `workspace.json` passed as `--config`. `WHISPER_CPP_MODEL` means `knowledge.transcription.whisper_cpp_model`. The knowledge-intake scripts still read those variables until the next change. Do not add new ones.
+Environment variables are not config. Scripts take `--config`. If that flag is omitted, they walk upward from the working directory until they find `workspace.json`. The old name `KNOWLEDGE_WORKSPACE_ROOT` meant the folder of that file. The old name `WHISPER_CPP_MODEL` meant `knowledge.transcription.whisper_cpp_model`. Do not add either variable back.
 
 ## Secrets
 
@@ -262,9 +262,8 @@ Paste this at the top of every skill that declares `bstack-config`. Do not parap
 Do this before any other step. Find `workspace.json`: the path the caller gave, else the active workspace root, else ask once. Read this skill's `bstack-config` line in the frontmatter. For each required source kind look up `sources.<kind>`; for each required setting look up its dotted path. If an entry is absent, empty, or starts with `REPLACE_WITH` (including inside nested objects and lists), ask only for that entry, write it into `workspace.json` in the v2 shape, and continue. Entries marked `?` that are absent or `"via": "none"` are skipped without asking. If a source is bound to a connector this host does not have, stop and say "`<kind>` is bound to `<connector>`, which is not connected here." Do not swap in another tool, a cached copy, or a guess. Old flat field names still count through the alias table in SOURCES.md. Do not run a full onboarding interview.
 ```
 
-## Still on disk, not config
+## Scripts
 
-The knowledge-intake scripts still depend on three files. They are not a second config. The next change points the scripts at `workspace.json` and removes them.
+Knowledge-intake scripts read this file. Pass `--config path/to/workspace.json`, or run them from the workspace so they can walk upward to it. Relative paths resolve from the workspace root. `--raw-dir`, `--registry`, `--state`, `--max-items`, `--max-audio-minutes`, and `--whisper-cpp-model` override one run. They are not a second config.
 
-- `plugins/knowledge-intake/skills/knowledge-intake/references/workspace.json` is a marker stub. It is not the user's config.
-- `plugins/knowledge-intake/skills/capture-podcasts/references/feeds.json` and `plugins/knowledge-intake/skills/capture-youtube/references/channels.json` are empty files inside the plugin. The registries that count are the paths in `knowledge.podcast_feeds` and `knowledge.youtube_channels`.
+`knowledge.podcast_feeds` and `knowledge.youtube_channels` name workspace-owned files. A missing file is an empty list. Nothing in the plugin folder is a registry.

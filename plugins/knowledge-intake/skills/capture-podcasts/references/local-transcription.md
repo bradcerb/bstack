@@ -1,68 +1,64 @@
-# Local Podcast Transcription
+# Local podcast transcription
 
-This workflow keeps podcast transcription off paid APIs by running a local Whisper-compatible engine.
+This workflow keeps podcast transcription on a local engine.
 
 ## Current runner
 
 Use `scripts/transcribe_episode.py` for one episode at a time. It:
 
 - downloads the episode enclosure to a temporary directory;
-- converts the audio with `ffmpeg`;
-- transcribes with a local Whisper engine;
-- writes one immutable Markdown file directly under `learnings/raw`;
+- converts the audio with ffmpeg;
+- transcribes with a local engine;
+- writes one immutable Markdown file under `knowledge.raw_dir`;
 - reports missing dependencies without marking the episode handled.
 
-Check readiness from the selected workspace:
+Pass `--config`. The model path is `knowledge.transcription.whisper_cpp_model`. Tools live under `knowledge.transcription.tools_dir`.
+
+Check readiness:
 
 ```bash
 python3 skills/capture-podcasts/scripts/transcribe_episode.py \
-  --workspace-root "/path/to/workspace" \
+  --config workspace.json \
   --check-dependencies
 ```
 
 ## Workspace-local install
 
-The portable layout is:
+The tools directory from config holds:
 
-- `tools/bin/ffmpeg` or `tools/bin/ffmpeg.cmd`
-- `tools/bin/whisper-cli` or `tools/bin/whisper-cli.cmd`
-- `tools/whisper.cpp/models/ggml-base.en.bin`
+- `bin/ffmpeg` (or the platform equivalent)
+- `bin/whisper-cli` (or the platform equivalent)
+- the model file named by `knowledge.transcription.whisper_cpp_model`
 
-The runner discovers these paths from the selected workspace root. No shell PATH setup or OpenAI API key is required.
+The runner discovers these paths from the workspace root. No shell path setup is required.
 
-Check or prepare the selected workspace:
+Check or prepare the workspace:
 
 ```bash
 python3 skills/knowledge-intake/scripts/prepare_local_transcription.py \
-  --workspace-root "/path/to/workspace" \
+  --config workspace.json \
   --check
 ```
 
-After user approval:
+After the caller agrees:
 
 ```bash
 python3 skills/knowledge-intake/scripts/prepare_local_transcription.py \
-  --workspace-root "/path/to/workspace" \
+  --config workspace.json \
   --yes
 ```
 
-`whisper.cpp` runs in CPU mode by default because it is the most portable scheduled-background option across macOS and Windows. Enable machine-specific acceleration only after a successful local smoke test.
+The local engine runs on CPU by default because that is the portable option. Enable machine-specific acceleration only after a successful local smoke test.
 
 ## Supported engines
 
-Preferred:
+Preferred: the local `whisper-cli` binary and the model file from `knowledge.transcription.whisper_cpp_model`.
 
-- `whisper.cpp` via `whisper-cli`
-- Set `WHISPER_CPP_MODEL` to a local `.bin` model path.
-
-Fallback:
-
-- OpenAI's open-source Python Whisper package via the `whisper` CLI.
-- This is still local and has no per-minute API cost.
+Fallback: the local Python whisper CLI. `--model` overrides the Python model name for one run. This path is still local.
 
 ## Required tools
 
-- `ffmpeg`
-- either `whisper-cli` with `WHISPER_CPP_MODEL`, or the Python `whisper` CLI
+- ffmpeg
+- either `whisper-cli` with the configured model file, or the Python whisper CLI
 
-No OpenAI API key is required for local transcription.
+No remote transcription key is required for the local engines.

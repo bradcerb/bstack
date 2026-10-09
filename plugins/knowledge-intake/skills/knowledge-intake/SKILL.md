@@ -1,81 +1,69 @@
 ---
 name: knowledge-intake
 description: >-
-  Use when running a scheduled or on-demand knowledge-intake cycle for a
-  Notion-first personal KB: orchestrate capture skills into raw storage, upsert
-  Notion Raw DB index rows, verify writes, then invoke wiki-ingest for new raw
-  only.
+  Use when running a scheduled or on-demand knowledge-intake cycle: orchestrate
+  capture skills into raw storage, write a kb.raw-index row per raw item, verify
+  the writes, then invoke wiki-ingest for new raw only.
+metadata:
+  bstack-config: "sources: kb.raw-index kb.wiki kb.wiki-log | settings: knowledge.raw_dir knowledge.loop_state knowledge.routing_policy knowledge.wiki_ingest_skill"
 ---
-# Knowledge Intake (Notion-first)
+# Knowledge intake
 
 ## Config check
 
-Do this before any other step. Read the user-owned `workspace.json` in the active workspace. This skill requires `raw_dir`, `notion_raw_db`, `notion_wiki_db`, `notion_wiki_log`, and `loop_state`.
-
-If `workspace.json` is missing, or any required field is missing or still a placeholder, pause. A placeholder is an empty value or any value that starts with `REPLACE_WITH`, including inside nested objects and lists. Ask only for those missing fields. Write the answers into `workspace.json`. Then continue with the rest of this skill. Do not run a full onboarding interview.
+Do this before any other step. Find `workspace.json`: the path the caller gave, else the active workspace root, else ask once. Read this skill's `bstack-config` line in the frontmatter. For each required source kind look up `sources.<kind>`; for each required setting look up its dotted path. If an entry is absent, empty, or starts with `REPLACE_WITH` (including inside nested objects and lists), ask only for that entry, write it into `workspace.json` in the v2 shape, and continue. Entries marked `?` that are absent or `"via": "none"` are skipped without asking. If a source is bound to a connector this host does not have, stop and say "`<kind>` is bound to `<connector>`, which is not connected here." Do not swap in another tool, a cached copy, or a guess. Old flat field names still count through the alias table in SOURCES.md. Do not run a full onboarding interview.
 
 ## Purpose
 
-Run a conservative intake cycle for the active personal workspace. Delegate source acquisition to capture skills, write immutable raw Markdown outside Notion, upsert a Notion Raw DB index row per raw item, then invoke wiki-ingest only for newly verified raw.
+Run a conservative intake cycle for the active workspace. Delegate source acquisition to capture skills, write immutable raw Markdown under `knowledge.raw_dir`, write one `kb.raw-index` row per raw item, then invoke the skill named by `knowledge.wiki_ingest_skill` only for newly verified raw.
 
-## Architecture
+## Layout
 
-- **Raw blobs** live outside Notion (Git `learnings-raw` shape, Drive file, or box/workspace path). Notion Raw DB is an **index + status**, not the full body when large.
-- **Curated wiki** lives in Notion (Wiki DB + Wiki Log). Mirror your KB SCHEMA categories as Notion properties/pages.
-- Capture skills never invent database IDs. They require configured Notion targets from workspace config.
+- Raw blobs live at `knowledge.raw_dir`. `kb.raw-index` is the index and status, not the full body when the blob is large.
+- `kb.wiki` holds curated pages. `kb.wiki-log` records ingest activity.
+- Capture skills do not invent targets. They use the bindings this skill already checked.
+- Loop memory lives at `knowledge.loop_state`. Routing lives at `knowledge.routing_policy`.
 
-## Workspace configuration
-
-Ask which workspace to use when ambiguous. Read workspace config (for example `workspace.json` or the equivalent Notion-first config the user points to). Resolve:
-
-- `raw_dir`  -  local/Git path for raw Markdown blobs
-- `notion_raw_db`  -  configured Notion Raw DB (name or id from config; never hard-code)
-- `notion_wiki_db`  -  configured Notion Wiki DB
-- `notion_wiki_log`  -  configured Wiki Log DB or page
-- `loop_state`  -  cursor / in-flight state file
-- `routing_policy`  -  accept / reject / on_ambiguous
-- `wiki_ingest_skill`  -  usually `wiki-ingest`
-- optional feed registries for podcasts / YouTube
-
-If `notion_raw_db` or `notion_wiki_db` is missing, **stop and ask**. Do not create Notion databases.
+If `kb.raw-index` or `kb.wiki` is missing after the config check, stop. Do not create a database or a wiki for the caller.
 
 ## Delegation
 
 Invoke only the skills needed:
 
-1. `capture-newsletters`  -  approved newsletter email or RSS
-2. `capture-articles`  -  submitted or queued article URLs
-3. `capture-podcasts`  -  monitored public feeds and submitted episode links
-4. `capture-youtube`  -  submitted YouTube links and monitored channel RSS
-5. `capture-meetings`  -  authorized calendar-linked transcripts/notes/recordings
-6. Configured `wiki_ingest_skill` for verified new raw only
+1. `capture-newsletters` for approved newsletter mail or feeds (`email.newsletters`).
+2. `capture-articles` for a submitted URL or the queue at `knowledge.monitored_pages`.
+3. `capture-podcasts` for the feeds at `knowledge.podcast_feeds` and for a submitted episode link.
+4. `capture-youtube` for a submitted video link and, when set, the channels at `knowledge.youtube_channels`.
+5. `capture-meetings` for authorized calendar events and their transcripts.
+6. `knowledge.wiki_ingest_skill` for verified new raw only.
 
-Do not reproduce source-specific procedures here. Capture skills must not call this orchestrator.
+Do not reproduce source-specific procedures here. Capture skills do not call this orchestrator.
 
-Scheduled cycles call `capture-meetings` with no date range, person filter, or output mode. Those parameters are for an explicit caller request.
+Scheduled cycles call `capture-meetings` with no date range, person filter, or output mode. Those parameters are for an explicit caller request. Do not store them.
 
 ## Scheduled workflow
 
-1. Read routing policy, loop state, and confirm Notion Raw DB + Wiki DB are configured (Notion MCP search/fetch/query). If either DB is missing, stop and ask.
-2. Refuse to start if `state.in_flight` is active and newer than six hours. Otherwise record in-flight run id and start time.
-3. Run needed capture skills within guardrail limits.
-4. Require each skill to return counts: discovered, written, deferred, skipped, failed  -  plus exact raw paths and Notion Raw row ids when upserted.
-5. Verify each reported raw blob exists and is non-empty. Verify each has a Notion Raw row with `status: raw` (or configured equivalent) pointing at the blob path / Git path / Drive id.
+1. Read `knowledge.routing_policy`, `knowledge.loop_state`, and confirm `kb.raw-index` and `kb.wiki` are bound. If either source is missing, stop.
+2. Refuse to start if `state.in_flight` is active and newer than six hours. Otherwise record the in-flight run id and start time.
+3. Run the needed capture skills inside `knowledge.guardrails`.
+4. Require each skill to return counts: discovered, written, deferred, skipped, failed, plus exact raw paths and index row ids when written.
+5. Verify each reported raw blob exists and is non-empty. Verify each has a `kb.raw-index` row with `status: raw` (or the configured equivalent) pointing at the blob.
 6. Invoke wiki-ingest only for those verified new raw items. Never edit raw blobs during ingest.
-7. Update loop state (`last_run_at`, cursors, handled ids, failures); clear `in_flight`.
-8. Return one concise report. Surface failures and missing permissions; do not guess, bypass access controls, or silently discard items.
+7. Update `knowledge.loop_state` (`last_run_at`, cursors, handled ids, failures) and clear `in_flight`.
+8. Return one concise report. Surface failures and missing permissions. Do not guess, bypass access controls, or silently discard items.
 
-## Safety and cost controls
+## Safety
 
-- Initialize monitored feeds at the cursor; never historical backfill unless the user explicitly asks.
-- Podcasts: prefer publisher transcripts. YouTube: local Whisper only (no captions as source of truth).
-- Cap audio items / minutes per run from config.
+- Initialize monitored feeds at the cursor. Never historical backfill unless the caller asks.
+- Podcasts: prefer publisher transcripts. YouTube: local transcription only. Captions are not the source of truth.
+- Cap items and audio minutes from `knowledge.guardrails`.
 - Treat delivery as captured, not consumed.
-- Apply `routing_policy`. Never cross personal vs work / confidential company boundaries.
+- Apply `knowledge.routing_policy`. Do not cross a boundary the policy rejects.
 - Do not publish, email, reply, unsubscribe, or modify calendar events.
-- Prefer deterministic fetch/parse/hash/transcribe scripts; use judgment for routing, ambiguity, and wiki synthesis.
+- Prefer deterministic fetch, parse, hash, and transcribe scripts. Use judgment for routing, ambiguity, and wiki synthesis.
 - Leave recoverable failures pending for the next run.
+- The host routine owns the clock. This skill reads `workspace.timezone` only when a capture skill asks for it.
 
-## Completion contract
+## Completion
 
-Complete only when state is saved, raw blob + Notion Raw index rows are verified, requested wiki-ingest is verified, and deferred/failed items are listed.
+Complete only when state is saved, each raw blob and its `kb.raw-index` row are verified, the requested wiki-ingest is verified, and deferred or failed items are listed.
