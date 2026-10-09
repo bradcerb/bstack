@@ -2,7 +2,7 @@
   "name": "knowledge-intake",
   "displayName": "Knowledge Intake",
   "description": "Portable Notion-first knowledge capture and wiki ingest skills \u2014 newsletters, articles, podcasts, YouTube, meetings, and wiki ingest.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "Brad",
     "url": "https://github.com/bradcerb"

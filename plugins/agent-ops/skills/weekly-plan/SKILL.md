@@ -5,18 +5,16 @@ description: >-
   stuck) into next week's plan: roles check, need-and-want priorities, prune to
   a doable set, schedule big rocks with slack, triage the rest. Accepts pasted
   output from an upstream weekly review command.
+metadata:
+  bstack-config: "sources: tasks.week-snapshot"
 ---
 # Weekly plan
 
-Turn a weekly review or factual week snapshot into next week's plan. Prefer pasted output from an upstream weekly review command when available. This skill adds priority definition, pruning, and triage. It does not replace the upstream pull of tasks or calendar.
-
-Portable across agents. Which tools supply the snapshot live in the adapter, routine, or prompt that calls this skill, not in this recipe.
-
 ## Config check
 
-Do this before any other step. Read the user-owned `workspace.json` in the active workspace. This skill requires `week_snapshot_source`.
+Do this before any other step. Find `workspace.json`: the path the caller gave, else the active workspace root, else ask once. Read this skill's `bstack-config` line in the frontmatter. For each required source kind look up `sources.<kind>`; for each required setting look up its dotted path. If an entry is absent, empty, or starts with `REPLACE_WITH` (including inside nested objects and lists), ask only for that entry, write it into `workspace.json` in the v2 shape, and continue. Entries marked `?` that are absent or `"via": "none"` are skipped without asking. If a source is bound to a connector this host does not have, stop and say "`<kind>` is bound to `<connector>`, which is not connected here." Do not swap in another tool, a cached copy, or a guess. Old flat field names still count through the alias table in SOURCES.md. Do not run a full onboarding interview.
 
-If `workspace.json` is missing, or any required field is missing or still a placeholder, pause. A placeholder is an empty value or any value that starts with `REPLACE_WITH`, including inside nested objects and lists. Ask only for those missing fields. Write the answers into `workspace.json`. Then continue with the rest of this skill. Do not run a full onboarding interview.
+Turn a weekly review or factual week snapshot into next week's plan. The snapshot is `tasks.week-snapshot`. A `paste` binding means the caller supplies the week in the conversation, including output from an upstream weekly review command. This skill adds priority definition, pruning, and triage. It does not replace an upstream pull of tasks or calendar.
 
 ## Principle
 
@@ -24,12 +22,11 @@ Know what is most important and put it first. Plan the week before reacting to w
 
 ## Inputs
 
-- Pasted upstream review with sections when available: What got done, In flight, Coming up, Stuck or at risk
-- Or a comparable list of shipped, in progress, upcoming, and stuck items
+- `tasks.week-snapshot`: done, in flight, coming up, and stuck. When the binding is `paste`, accept an upstream review with sections What got done, In flight, Coming up, Stuck or at risk, or a comparable list.
 - Optional: standing roles or aims to scan (keep short; do not invent a full life plan here)
 - Optional: known protected windows and a standing week template (time zones for deep work, meetings, rest, family)
 
-If intake is empty, ask once for a paste or source. Do not invent a week.
+If intake is empty after config is filled, ask once for the snapshot. Do not invent a week.
 
 ## Rules
 
@@ -43,7 +40,7 @@ If intake is empty, ask once for a paste or source. Do not invent a week.
 
 ## Steps
 
-1. **Intake** - Accept the pasted upstream review or equivalent lists. Keep the factual tone. Optionally glance at last week's calendar for missed follow-ups and this week's calendar for prep that is still needed.
+1. **Intake** - Accept `tasks.week-snapshot`. Keep the factual tone. Optionally glance at last week's calendar for missed follow-ups and this week's calendar for prep that is still needed.
 2. **Roles scan (light)** - If roles or aims were provided, ask for each only what is needed or wanted this week, and whether any critical role is being neglected. Do not invent an item for every role.
 3. **Brainstorm priorities** - Ask two questions against the snapshot and roles: What do I need to do this week? What do I want to do this week? Pull candidates from Coming up, In flight, Stuck, and any longer initiatives that need a slice this week.
 4. **Separate large from small** - Large items are multi-day or high-concentration work. Small items are quick clears. List them apart so the load is realistic.

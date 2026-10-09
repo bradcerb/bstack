@@ -6,22 +6,20 @@ description: >-
   from weekly-plan's ranked list, put the top task in a deep-work block, send
   agent-ready work to the agent queue with a handoff, and leave the rest on
   the ranked list.
+metadata:
+  bstack-config: "sources: email.inbox tasks.priorities calendar.events tasks.agent-queue chat.messages?"
 ---
 # Daily plan
 
-Turn today's inputs into a short day. Empty what came in, take three tasks from this week's ranked list, protect the top one, hand an agent what it can run, and leave every other ranked priority where it is.
-
-Portable across agents. The inbox, Slack, ranked list, calendar, and agent queue are named in `workspace.json`. This recipe does not hard-code them.
-
 ## Config check
 
-Do this before any other step. Read the user-owned, gitignored `workspace.json` in the active workspace. This skill requires `inbox_source`, `priorities_source`, `calendar_source`, and `agent_queue_source`. `slack_source` is optional.
+Do this before any other step. Find `workspace.json`: the path the caller gave, else the active workspace root, else ask once. Read this skill's `bstack-config` line in the frontmatter. For each required source kind look up `sources.<kind>`; for each required setting look up its dotted path. If an entry is absent, empty, or starts with `REPLACE_WITH` (including inside nested objects and lists), ask only for that entry, write it into `workspace.json` in the v2 shape, and continue. Entries marked `?` that are absent or `"via": "none"` are skipped without asking. If a source is bound to a connector this host does not have, stop and say "`<kind>` is bound to `<connector>`, which is not connected here." Do not swap in another tool, a cached copy, or a guess. Old flat field names still count through the alias table in SOURCES.md. Do not run a full onboarding interview.
 
-If `workspace.json` is missing, flag that outright. Ask only for this skill's required fields. Write the answers into `workspace.json`. Then continue with the rest of this skill. Do not run a full onboarding interview.
+`chat.messages` is optional. Absent, empty, a value that starts with `REPLACE_WITH`, or `"via": "none"` means skip chat. Do not ask for it.
 
-If the file is present and a required field is missing or still a placeholder, ask only for those fields, write them, and continue. A placeholder is an empty value or any value that starts with `REPLACE_WITH`, including inside nested objects and lists.
+Turn today's inputs into a short day. Empty what came in, take three tasks from this week's ranked list, protect the top one, hand an agent what it can run, and leave every other ranked priority where it is.
 
-If `slack_source` is absent, empty, or a placeholder, skip Slack and continue. Do not ask for it.
+Portable across agents. The inbox, chat, ranked list, calendar, and agent queue are source kinds in `workspace.json`.
 
 ## Principle
 
@@ -29,10 +27,10 @@ The week already decided what matters. The day takes a slice of that list, one t
 
 ## Inputs
 
-- Email inbox named by `inbox_source`. Gmail is the example. When the value is `paste`, use the items supplied in the conversation.
-- Slack named by `slack_source`, when that field is set. Use the same dispositions as email.
-- This week's ranked list named by `priorities_source`. Read the section weekly-plan writes, "Next week (large priorities, ranked)": about three to five items, already in rank order. When "Parked next actions" has a matching line (`Item - next action`), that next action is the concrete task. When the value is `paste`, use the pasted weekly plan.
-- Today's calendar named by `calendar_source`: meetings, fixed commitments, and open time. When the value is `paste`, use the pasted day.
+- Email inbox `email.inbox`. A `paste` binding means use the items supplied in the conversation.
+- Chat `chat.messages`, when that kind is bound to something other than `none`. Use the same dispositions as email. When the entry was skipped, skip chat.
+- This week's ranked list `tasks.priorities`. Read the section weekly-plan writes, "Next week (large priorities, ranked)": about three to five items, already in rank order. When "Parked next actions" has a matching line (`Item - next action`), that next action is the concrete task. A `paste` binding means use the pasted weekly plan.
+- Today's calendar `calendar.events`: meetings, fixed commitments, and open time. A `paste` binding means use the pasted day.
 
 If the ranked list is still missing after config is filled, ask once for it before picking tasks.
 
@@ -47,7 +45,7 @@ If the ranked list is still missing after config is filled, ask once for it befo
 
 ## Steps
 
-1. **Empty the inbox.** Take the email inbox one item at a time until nothing is left. When `slack_source` is set, take those items the same way until nothing is left. Give each item exactly one disposition:
+1. **Empty the inbox.** Take the email inbox one item at a time until nothing is left. When `chat.messages` is bound, take those items the same way until nothing is left. Give each item exactly one disposition:
    - **Delete.** No action and no future value.
    - **File.** Keep it where reference lives. When it names a date, put that date on the calendar.
    - **Do.** It takes two minutes or less. Do it now, in this pass.
@@ -55,7 +53,7 @@ If the ranked list is still missing after config is filled, ask once for it befo
    - **Defer.** It takes longer than two minutes, and a person still owns it. Capture it off the inbox.
 2. **Pick three tasks.** Read "Next week (large priorities, ranked)" from top to bottom. Take the first three. For each, use the parked next action when weekly-plan wrote one, and the priority itself when it did not. Keep each task tied to the priority it came from. When the list has fewer than three, take every item and say the list is short. Today's three come only from that ranked list and its parked next actions.
 3. **Place the top task.** Read today's calendar. Put task 1 in a deep-work block: one long stretch with no meeting inside it. When weekly-plan's "Structure notes" name a protected window and that window is still open today, use that window. Name the time range. Tasks 2 and 3 stay on today's plan. Leave the rest of the calendar as it stands.
-4. **Hand off to the agent queue.** Send anything an agent can do to `agent_queue_source`. An agent can do it when the outcome is clear and the resources can be named. Send inbox items delegated to an agent, and any of today's three an agent can complete. The top task keeps its deep-work block either way: the block is the person's focus, or the window for the agent's handoff. Write each handoff the way gated-work reads it:
+4. **Hand off to the agent queue.** Send anything an agent can do to `tasks.agent-queue`. An agent can do it when the outcome is clear and the resources can be named. Send inbox items delegated to an agent, and any of today's three an agent can complete. The top task keeps its deep-work block either way: the block is the person's focus, or the window for the agent's handoff. Write each handoff the way gated-work reads it:
    - **Desired result.** The outcome, not just the task.
    - **Guidelines.** Constraints, standards, and what not to do.
    - **Resources.** Access, files, context, and people needed.
@@ -71,7 +69,7 @@ If the ranked list is still missing after config is filled, ask once for it befo
 
 ### Inbox
 - Delete / File / Do / Delegate / Defer: counts
-- Slack: the same counts, or skipped
+- Chat: the same counts, or skipped
 - Delegated to a person: who, and the result
 - Deferred with the person: the item
 

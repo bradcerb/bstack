@@ -29,7 +29,7 @@ Skip an optional entry when it is absent, or when a source binding is `{ "via": 
 
 ## Alias
 
-If the v2 entry is missing, look up the old flat name in the alias table in this plugin's README. Those rows move to SOURCES.md later. Read that table. Do not hardcode a second copy.
+If the v2 entry is missing, look up the old flat name in the alias table in repo-root SOURCES.md. Read that table. Do not hardcode a second copy.
 
 A filled old value means the entry is present. When you write, write the v2 shape and delete the old key. Leave sibling keys in place. `leadership.coaching_state` and `leadership.coaching_briefs_dir` are already the v2 paths.
 

@@ -4,18 +4,16 @@ description: >-
   Use when processing a work queue (tickets, issues, tasks, PRs) in capped runs:
   intake, classify, hand off with a clear checklist, human gate, execute,
   verify, close with evidence. Draft and stop before irreversible actions.
+metadata:
+  bstack-config: "sources: tasks.work-queue"
 ---
 # Gated work
 
-Run a small batch from a named source through a safe agent loop: intake, classify, prepare a handoff, human gate when needed, execute, verify, close with evidence. Quiet when the queue is empty.
-
-Portable across agent hosts. Source adapters (which board, repo, or inbox) and schedules live in the adapter, routine, or prompt that calls this skill, not in this recipe.
-
 ## Config check
 
-Do this before any other step. Read the user-owned `workspace.json` in the active workspace. This skill requires `work_queue_source`.
+Do this before any other step. Find `workspace.json`: the path the caller gave, else the active workspace root, else ask once. Read this skill's `bstack-config` line in the frontmatter. For each required source kind look up `sources.<kind>`; for each required setting look up its dotted path. If an entry is absent, empty, or starts with `REPLACE_WITH` (including inside nested objects and lists), ask only for that entry, write it into `workspace.json` in the v2 shape, and continue. Entries marked `?` that are absent or `"via": "none"` are skipped without asking. If a source is bound to a connector this host does not have, stop and say "`<kind>` is bound to `<connector>`, which is not connected here." Do not swap in another tool, a cached copy, or a guess. Old flat field names still count through the alias table in SOURCES.md. Do not run a full onboarding interview.
 
-If `workspace.json` is missing, or any required field is missing or still a placeholder, pause. A placeholder is an empty value or any value that starts with `REPLACE_WITH`, including inside nested objects and lists. Ask only for those missing fields. Write the answers into `workspace.json`. Then continue with the rest of this skill. Do not run a full onboarding interview.
+Run a small batch from `tasks.work-queue` through a safe agent loop: intake, classify, prepare a handoff, human gate when needed, execute, verify, close with evidence. Quiet when the queue is empty.
 
 ## Principle
 
@@ -23,7 +21,7 @@ Draft and verify before irreversible action. Human gate on send, spend, merge, p
 
 ## Inputs
 
-- Named source or pasted items (issue/PR/task list, board slice, inbox slice)
+- `tasks.work-queue`: tickets, issues, tasks, or pull requests. A `paste` binding means the caller supplies the items.
 - Run cap: max items this run (default 5; configurable)
 - What "done" and "verified" mean for this lane (test, screenshot, status check, paste-ready draft)
 - Standing human gates for this environment (defaults below if unset)
@@ -67,7 +65,7 @@ For each Do now or Draft for gate item, write:
 
 ## Steps
 
-1. **Intake** - Pull or accept the named source. List items plainly. If empty, stop quiet.
+1. **Intake** - Pull or accept `tasks.work-queue`. List items plainly. If empty, stop quiet.
 2. **Classify** - Tag each item Do now, Draft for gate, Defer, Eliminate, or Skip. Apply the run cap.
 3. **Prepare** - Write the handoff checklist for each kept item.
 4. **Gate** - For Draft for gate items (and any default gate above): show the draft or plan and wait for an explicit go. Do not execute past the gate on implied consent.

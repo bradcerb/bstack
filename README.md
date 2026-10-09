@@ -22,9 +22,7 @@ Pick a plugin under `plugins/<name>/`:
 - Copy each plugin folder as a **real directory** (not an out-of-tree symlink) to `~/.cursor/plugins/local/<plugin-name>`, where `<plugin-name>` matches that plugin's root `plugin.json` `name` (for example `knowledge-intake`, `thinking`, `money`, `relationships`, `agent-ops`, `leadership`).
 - A whole-repo checkout is optional and fine for browsing. Loaders expect per-plugin directories with a root `plugin.json`.
 
-Copy `examples/workspace.json.example` to `workspace.json` in the workspace where you run skills. That file is the one config you own, and it is gitignored. Skills that read a source, a roster, or a schedule check it first. If one of their fields is missing or still a `REPLACE_WITH_` placeholder, they ask only for those fields, write them into `workspace.json`, and continue. Skills that only think from what you bring do not read it.
-
-`plugins/knowledge-intake/examples/workspace.json.example` is the same kind of file for that plugin's fields. The root example lists every field. The file at `plugins/knowledge-intake/skills/knowledge-intake/references/workspace.json` is a pointer only. Never commit secrets or real Notion IDs.
+Copy `examples/workspace.json.example` to `workspace.json` in the workspace where you run skills. That file is the only config you own, and it is gitignored. [SOURCES.md](./SOURCES.md) is the vocabulary: source kinds, settings, bindings, and the alias table from older field names. Skills that declare `metadata.bstack-config` check that file first. If one of their required entries is missing or still a `REPLACE_WITH_` placeholder, they ask only for those entries, write them in the v2 shape, and continue. Skills that declare nothing do not read it. Never commit the file, and never put a secret in it.
 
 ## Keepers
 
@@ -35,7 +33,7 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map.
 | `knowledge-intake` | Capture → raw → wiki |
 | `thinking` | POV, alignment, fluency, Action Method |
 | `money` | Principle-based personal money skills. Optional CFO seat. Plaid for live balances; optional fiscal.sh; Tiller only if still the plan sheet. No secrets. |
-| `relationships` | Sharp reusable jobs only: `conference-who-to-meet`, `thank-you-note`. Seats keep lane/voice/tools. |
+| `relationships` | Sharp reusable jobs only: `conference-who-to-meet`, `thank-you-note`. Lane and skip list are optional settings in `workspace.json`. Voice stays outside the skill. |
 | `agent-ops` | Planning plus gated execution: `project-brief`, `weekly-plan`, `daily-plan`, `gated-work` (capped runs, handoff checklist, human gate) |
 | `leadership` | Coaching prep: `coaching-angles`, `personality`, `one-on-one-prep`, `open-items`, `onboarding`. Draft only. Nothing is sent. |
 

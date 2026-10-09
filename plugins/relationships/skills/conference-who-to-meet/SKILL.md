@@ -6,8 +6,16 @@ description: >-
   pre-trip reach-outs, on-site openers, and 24–48h follow-ups. Do not use for
   producing the author's own event (run-of-show, vendors, dietary) or for
   standing CRM ownership outside a named trip.
+metadata:
+  bstack-config: "settings: relationships.author_lane? relationships.skip_list?"
 ---
 # Conference who-to-meet
+
+## Config check
+
+Do this before any other step. Find `workspace.json`: the path the caller gave, else the active workspace root, else ask once. Read this skill's `bstack-config` line in the frontmatter. For each required source kind look up `sources.<kind>`; for each required setting look up its dotted path. If an entry is absent, empty, or starts with `REPLACE_WITH` (including inside nested objects and lists), ask only for that entry, write it into `workspace.json` in the v2 shape, and continue. Entries marked `?` that are absent or `"via": "none"` are skipped without asking. If a source is bound to a connector this host does not have, stop and say "`<kind>` is bound to `<connector>`, which is not connected here." Do not swap in another tool, a cached copy, or a guess. Old flat field names still count through the alias table in SOURCES.md. Do not run a full onboarding interview.
+
+`relationships.author_lane` and `relationships.skip_list` are optional. Absent, empty, or a value that starts with `REPLACE_WITH` means this trip supplies them. Do not ask for the settings and do not stop.
 
 One named trip → ranked list + paste-ready drafts. Draft only until the author explicitly says to send.
 
@@ -15,8 +23,8 @@ One named trip → ranked list + paste-ready drafts. Draft only until the author
 
 - Conference name, dates, venue
 - Official hub URLs (speakers, schedule, partners/exhibitors)
-- Author's lane (who they want to meet and why)
-- People to skip or prioritize
+- Author's lane (who they want to meet and why). A filled `relationships.author_lane` is the lane unless the caller names a different one for this trip. When the setting was skipped, take the lane from this trip.
+- People to skip or prioritize. A filled `relationships.skip_list` is the skip list unless the caller adds names for this trip. When the setting was skipped, take the skip list from this trip.
 
 ## Networking bar (operational preferences)
 

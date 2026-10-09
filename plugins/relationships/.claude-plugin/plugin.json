@@ -1,7 +1,7 @@
 {
   "name": "relationships",
   "description": "Sharp reusable relationship jobs: conference who-to-meet and thank-you notes. Draft only; judgment stays human.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "Brad",
     "url": "https://github.com/bradcerb"

@@ -4,8 +4,16 @@ description: >-
   Use when drafting a short thank-you after help, a meeting, hospitality, or an
   intro. Forces one specific memory plus one concrete offer or next step. Draft
   only until the author says to send.
+metadata:
+  bstack-config: "sources: voice.style-guide?"
 ---
 # Thank-you note
+
+## Config check
+
+Do this before any other step. Find `workspace.json`: the path the caller gave, else the active workspace root, else ask once. Read this skill's `bstack-config` line in the frontmatter. For each required source kind look up `sources.<kind>`; for each required setting look up its dotted path. If an entry is absent, empty, or starts with `REPLACE_WITH` (including inside nested objects and lists), ask only for that entry, write it into `workspace.json` in the v2 shape, and continue. Entries marked `?` that are absent or `"via": "none"` are skipped without asking. If a source is bound to a connector this host does not have, stop and say "`<kind>` is bound to `<connector>`, which is not connected here." Do not swap in another tool, a cached copy, or a guess. Old flat field names still count through the alias table in SOURCES.md. Do not run a full onboarding interview.
+
+`voice.style-guide` is optional. Absent, empty, a value that starts with `REPLACE_WITH`, or `"via": "none"` is skipped. Do not ask for it. When it is skipped, match a style guide the author supplies in the conversation, otherwise write plain and warm.
 
 Draft a short thank-you that names what happened and moves the relationship one step.
 
@@ -15,7 +23,7 @@ Draft a short thank-you that names what happened and moves the relationship one 
 - Include **one specific memory** (what they did, said, or shared).
 - Include **one concrete offer or next step** (intro, resource, time, follow-up). If none fits honestly, say so and stop at thanks — do not invent an ask.
 - Draft only. Do not send.
-- Match the author's voice when a style guide exists; otherwise plain and warm.
+- If `voice.style-guide` is bound and that file is there, match it. If the entry was skipped or the file is missing, match a style guide supplied in the conversation, otherwise write plain and warm. Do not stop to ask for a guide.
 - Never invent mutuals, meetings, or promises the author did not make.
 
 ## Inputs
