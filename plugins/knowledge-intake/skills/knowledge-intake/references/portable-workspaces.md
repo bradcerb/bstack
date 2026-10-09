@@ -1,87 +1,41 @@
-# Portable Workspaces
+# Portable workspaces
 
-These skills are **Notion-first**: curated wiki pages live in Notion; raw Markdown blobs live outside Notion (`raw_dir`). Local `learnings/wiki` layouts in older scripts are optional mirrors only  -  follow the SKILL.md Notion workflow when Notion DBs are configured.
+Raw Markdown lives under `knowledge.raw_dir`. Curated pages live in `kb.wiki`. The index is `kb.raw-index`. The log is `kb.wiki-log`. A connector is one way to bind those kinds. The binding is in `workspace.json`, not in this plugin.
 
+Use this reference when running the intake skills from a new machine or a workspace that is not already obvious from the conversation.
 
-Use this reference when running the intake skills from a new machine, a Claude export, or a workspace that is not already obvious from the conversation.
+## Finding the workspace
 
-## Workspace Root
+Ask which workspace to use when the task does not name one. The workspace root is the folder that holds `workspace.json`.
 
-Ask the user which workspace to use when the task does not clearly name or open one. Do not assume a personal Documents path; ask which workspace root to use.
-
-The selected workspace should contain:
-
-```text
-skills/
-  knowledge-intake/
-  capture-podcasts/
-  capture-youtube/
-  capture-articles/
-learnings/
-  raw/
-  wiki/
-```
-
-Resolve relative paths from that workspace root. Prefer one of these patterns:
+Pass that file as `--config`. If the flag is omitted, scripts walk upward from the working directory until they find `workspace.json`.
 
 ```bash
 python3 skills/capture-youtube/scripts/capture_youtube.py \
-  --workspace-root "/path/to/workspace" \
-  --url "https://www.youtube.com/watch?v=VIDEO_ID" \
-  --raw-dir learnings/raw
+  --config workspace.json \
+  --url "https://www.youtube.com/watch?v=VIDEO_ID"
 ```
 
-or:
+Relative paths in the command resolve from the workspace root. `--raw-dir` overrides `knowledge.raw_dir` for one run.
 
-```bash
-export KNOWLEDGE_WORKSPACE_ROOT="/path/to/workspace"
-python3 skills/capture-youtube/scripts/capture_youtube.py \
-  --url "https://www.youtube.com/watch?v=VIDEO_ID" \
-  --raw-dir learnings/raw
-```
+## Local tool bootstrap
 
-On Windows PowerShell:
-
-```powershell
-$env:KNOWLEDGE_WORKSPACE_ROOT = "C:\Users\You\Documents\Workspace"
-py skills\capture-youtube\scripts\capture_youtube.py `
-  --url "https://www.youtube.com/watch?v=VIDEO_ID" `
-  --raw-dir learnings\raw
-```
-
-## Local Tool Bootstrap
-
-Use `skills/knowledge-intake/scripts/prepare_local_transcription.py` when local audio/video capture needs `yt-dlp`, `ffmpeg`, or `whisper.cpp`.
+Use `skills/knowledge-intake/scripts/prepare_local_transcription.py` when local audio or video capture needs a downloader, ffmpeg, or the local transcriber. Tools install under `knowledge.transcription.tools_dir`. The model path is `knowledge.transcription.whisper_cpp_model`.
 
 Check the current machine:
 
 ```bash
 python3 skills/knowledge-intake/scripts/prepare_local_transcription.py \
-  --workspace-root "/path/to/workspace" \
+  --config workspace.json \
   --check
 ```
 
-Install missing workspace-local tools after user approval:
+Install missing workspace-local tools after the caller agrees:
 
 ```bash
 python3 skills/knowledge-intake/scripts/prepare_local_transcription.py \
-  --workspace-root "/path/to/workspace" \
+  --config workspace.json \
   --yes
 ```
 
-On Windows PowerShell:
-
-```powershell
-py skills\knowledge-intake\scripts\prepare_local_transcription.py `
-  --workspace-root "C:\Users\You\Documents\Workspace" `
-  --yes
-```
-
-The bootstrap keeps artifacts under the selected workspace:
-
-- `tools/bin`
-- `tools/youtube/venv`
-- `tools/ffmpeg/venv`
-- `tools/whisper.cpp`
-
-It avoids global package managers. It may require network access, Python venv support, `git`, and `cmake` to build `whisper.cpp` when a preexisting `whisper-cli` is unavailable.
+The bootstrap keeps artifacts under the tools directory from config. It does not use a global package manager for those tools. It may need network access, a Python virtual environment, git, and cmake to build the transcriber when a binary is not already present.

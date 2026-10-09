@@ -1,55 +1,57 @@
 ---
 name: capture-podcasts
 description: >-
-  Use when monitoring a public podcast RSS feed, initializing a podcast without
-  backfill, transcribing new episodes, or resolving a Spotify/episode link
-  through its public RSS source into raw Markdown for a Notion-first KB.
+  Use when monitoring a public podcast feed, initializing a podcast without
+  backfill, transcribing new episodes, or resolving an episode link through its
+  public feed into raw Markdown and a kb.raw-index row.
+metadata:
+  bstack-config: "sources: kb.raw-index | settings: knowledge.raw_dir knowledge.loop_state knowledge.podcast_feeds knowledge.guardrails"
 ---
-# Capture Podcasts (Notion-first)
+# Capture podcasts
 
 ## Config check
 
-Do this before any other step. Read the user-owned `workspace.json` in the active workspace. This skill requires `raw_dir`, `podcast_feeds`, `loop_state`, and `notion_raw_db`.
-
-If `workspace.json` is missing, or any required field is missing or still a placeholder, pause. A placeholder is an empty value or any value that starts with `REPLACE_WITH`, including inside nested objects and lists. Ask only for those missing fields. Write the answers into `workspace.json`. Then continue with the rest of this skill. Do not run a full onboarding interview.
+Do this before any other step. Find `workspace.json`: the path the caller gave, else the active workspace root, else ask once. Read this skill's `bstack-config` line in the frontmatter. For each required source kind look up `sources.<kind>`; for each required setting look up its dotted path. If an entry is absent, empty, or starts with `REPLACE_WITH` (including inside nested objects and lists), ask only for that entry, write it into `workspace.json` in the v2 shape, and continue. Entries marked `?` that are absent or `"via": "none"` are skipped without asking. If a source is bound to a connector this host does not have, stop and say "`<kind>` is bound to `<connector>`, which is not connected here." Do not swap in another tool, a cached copy, or a guess. Old flat field names still count through the alias table in SOURCES.md. Do not run a full onboarding interview.
 
 ## Prerequisites
 
-Require workspace config: `raw_dir`, podcast feed registry path, loop state, and configured Notion Raw DB. If Raw DB is missing, stop and ask. Do not create databases.
+Write raw Markdown under `knowledge.raw_dir` and one index row in `kb.raw-index`. The feed list is the file at `knowledge.podcast_feeds`. A missing file is an empty list. Cursors live in `knowledge.loop_state`. Caps live in `knowledge.guardrails`. Do not create a database.
 
-If local transcription tools (`ffmpeg`, Whisper) are missing when needed, ask for approval to bootstrap  -  do not assume a machine-specific install path.
+If local transcription tools are missing when an episode needs them, ask before bootstrapping. Do not assume a machine-specific install path. Model and tools paths are `knowledge.transcription.whisper_cpp_model` and `knowledge.transcription.tools_dir`. See `references/local-transcription.md`.
 
 ## Feed review
 
-1. Read feed registry and loop state.
-2. Fetch each active public RSS feed (conditional headers when ETag / Last-Modified exist).
-3. Identify episodes by RSS GUID (fallback: canonical episode URL).
-4. **First initialization:** record every current GUID as seen and process **none** (no accidental backfill).
-5. Later runs: queue only unseen episodes newer than the cursor; apply exclusions and duration limits.
-6. Honor orchestration max-items / max-audio-minutes guardrails.
+1. Read `knowledge.podcast_feeds` and `knowledge.loop_state`.
+2. Fetch each active public feed. Send conditional headers when an ETag or Last-Modified value exists.
+3. Identify episodes by feed GUID. Fall back to the canonical episode URL.
+4. On first initialization, record every current GUID as seen and process none.
+5. Later runs queue only unseen episodes newer than the cursor. Apply exclusions and duration limits.
+6. Honor `knowledge.guardrails.max_podcast_items_per_run` and `knowledge.guardrails.max_audio_minutes_per_run`.
+
+Run the capture script with `--config`. Flags on that command override one run.
 
 ## Submitted links
 
-Accept Spotify episode URLs, publisher pages, Apple Podcasts, RSS item URLs, and direct audio URLs. Resolve to public RSS + GUID. Use unauthenticated oEmbed title only for matching when needed. Require high-confidence match or defer.
+Accept episode pages, feed item URLs, and direct audio URLs. Resolve them to a public feed and a GUID. Use an unauthenticated title lookup only for matching. Require a high-confidence match or defer.
 
 ## Transcript priority
 
-1. Prefer Podcasting 2.0 `<podcast:transcript>` when valid.
-2. Otherwise download enclosure temporarily and transcribe with local Whisper.
-3. Preserve timestamps/speaker labels when present; never invent speakers.
-4. Delete temp audio only after a non-empty transcript is atomically written.
-5. If dependencies are missing, report them and leave the episode pending  -  do not mark handled.
+1. Prefer a publisher transcript attached to the feed item when it is valid.
+2. Otherwise download the enclosure temporarily and transcribe with the local engine.
+3. Preserve timestamps and speaker labels when they are present. Never invent speakers.
+4. Delete temporary audio only after a non-empty transcript is written.
+5. If a dependency is missing, report it and leave the episode pending. Do not mark it handled.
 
-## Raw write + Notion index
+## Raw write and index
 
-Write one immutable Markdown per episode under `raw_dir` (slug + short hash). Frontmatter should include `source_type: podcast` (or `type: podcast`), `external_id`, `title`, `show`, `published_at`, `captured_at`, `duration_minutes`, `rss_feed`, `source_url` / episode URL, `audio_url`, `transcript_source`, `visibility: private`, `status: raw`, `raw_path`.
+Write one immutable Markdown file per episode under `knowledge.raw_dir` (slug plus a short hash). Frontmatter includes `source_type: podcast`, `external_id`, `title`, `show`, `published_at`, `captured_at`, `duration_minutes`, `rss_feed`, `source_url`, `audio_url`, `transcript_source`, `visibility: private`, `status: raw`, and `raw_path`.
 
 Include show notes before the transcript body.
 
-Upsert Notion Raw DB row pointing at the blob path / Git path / Drive id. Index metadata only when the transcript is large.
+Upsert a `kb.raw-index` row pointing at the blob. Index metadata only when the transcript is large.
 
-Advance feed cursor / handled GUID only after verified raw write + Raw DB upsert.
+Advance the feed cursor only after the raw write and the index upsert both succeed.
 
 ## Result
 
-Return structured counts and exact raw filenames / Raw row refs. Never invoke the parent orchestrator or wiki-ingest from this skill. Explicit historical backfill only when the user requests it.
+Return counts and exact raw filenames and index row refs. Do not invoke the parent orchestrator or wiki-ingest. Historical backfill only when the caller requests it.

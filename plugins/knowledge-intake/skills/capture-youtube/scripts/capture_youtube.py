@@ -16,24 +16,28 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-def looks_like_workspace(path: Path) -> bool:
-    return (path / "skills" / "knowledge-intake" / "references" / "workspace.json").exists()
+_PLUGIN_ROOT = Path(__file__).resolve().parents[3]
+if str(_PLUGIN_ROOT) not in sys.path:
+    sys.path.append(str(_PLUGIN_ROOT))
+
+import workspace_config
+
+WORKSPACE_ROOT = Path(".")
+TOOLS_BIN = Path("tools") / "bin"
+CONFIG_PATH: Path | None = None
+MODEL_PATH: Path | None = None
 
 
-def resolve_workspace_root(value: str | None = None) -> Path:
-    if value:
-        return Path(value).expanduser().resolve()
-    env_value = os.environ.get("KNOWLEDGE_WORKSPACE_ROOT")
-    if env_value:
-        return Path(env_value).expanduser().resolve()
-    for start in [Path.cwd().resolve(), Path(__file__).resolve()]:
-        for candidate in [start, *start.parents]:
-            if looks_like_workspace(candidate):
-                return candidate
-    return Path(__file__).resolve().parents[3]
-
-
-WORKSPACE_ROOT = resolve_workspace_root()
+def bind_workspace(config: str | None, root_override: str | None) -> dict:
+    global WORKSPACE_ROOT, TOOLS_BIN, CONFIG_PATH, MODEL_PATH
+    config_path, root, data = workspace_config.open_workspace(config, root_override)
+    CONFIG_PATH = config_path
+    WORKSPACE_ROOT = root
+    tools_dir = workspace_config.transcription_value(data, "tools_dir", workspace_config.DEFAULT_TOOLS_DIR)
+    TOOLS_BIN = workspace_config.under(root, Path(tools_dir) / "bin")
+    model = workspace_config.transcription_value(data, "whisper_cpp_model", workspace_config.DEFAULT_WHISPER_MODEL)
+    MODEL_PATH = workspace_config.under(root, model)
+    return data
 
 
 def executable_names(name: str) -> list[str]:
@@ -54,19 +58,15 @@ def local_tool(name: str) -> str | None:
         if path_tool:
             return path_tool
     for candidate in executable_names(name):
-        workspace_tool = WORKSPACE_ROOT / "tools" / "bin" / candidate
+        workspace_tool = TOOLS_BIN / candidate
         if workspace_tool.exists():
             return str(workspace_tool)
     return None
 
 
 def local_whisper_cpp_model() -> str | None:
-    env_model = os.environ.get("WHISPER_CPP_MODEL")
-    if env_model:
-        return env_model
-    workspace_model = WORKSPACE_ROOT / "tools" / "whisper.cpp" / "models" / "ggml-base.en.bin"
-    if workspace_model.exists():
-        return str(workspace_model)
+    if MODEL_PATH is not None and MODEL_PATH.is_file():
+        return str(MODEL_PATH)
     return None
 
 
@@ -88,7 +88,7 @@ def dependency_report() -> dict[str, object]:
                 "yt-dlp": bool(yt_dlp),
                 "ffmpeg": bool(ffmpeg),
                 "whisper-cli": bool(whisper_cli),
-                "WHISPER_CPP_MODEL or workspace ggml-base.en.bin": bool(model),
+                "configured whisper.cpp model": bool(model),
             }.items()
             if not present
         ],
@@ -96,19 +96,13 @@ def dependency_report() -> dict[str, object]:
 
 
 def prepare_dependencies() -> None:
-    script = WORKSPACE_ROOT / "skills" / "knowledge-intake" / "scripts" / "prepare_local_transcription.py"
+    script = _PLUGIN_ROOT / "skills" / "knowledge-intake" / "scripts" / "prepare_local_transcription.py"
     if not script.exists():
         raise RuntimeError(f"Missing dependency bootstrap script: {script}")
-    subprocess.run(
-        [
-            sys.executable,
-            str(script),
-            "--workspace-root",
-            str(WORKSPACE_ROOT),
-            "--yes",
-        ],
-        check=True,
-    )
+    command = [sys.executable, str(script), "--workspace-root", str(WORKSPACE_ROOT), "--yes"]
+    if CONFIG_PATH is not None:
+        command[2:2] = ["--config", str(CONFIG_PATH)]
+    subprocess.run(command, check=True)
 
 
 def run_json(command: list[str]) -> dict:
@@ -297,20 +291,29 @@ def atomic_write(path: Path, content: str) -> None:
 
 
 def main() -> int:
-    global WORKSPACE_ROOT
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--config", help="Path to workspace.json. Defaults to a walk upward from the working directory.")
     parser.add_argument("--check-dependencies", action="store_true")
     parser.add_argument("--prepare-dependencies", action="store_true")
-    parser.add_argument("--workspace-root")
+    parser.add_argument("--workspace-root", help="Override the workspace root for this run.")
     parser.add_argument("--url")
-    parser.add_argument("--raw-dir", type=Path, default=Path("learnings/raw"))
+    parser.add_argument("--raw-dir", type=Path, help="Override knowledge.raw_dir for this run.")
     parser.add_argument("--threads", type=int, default=4)
     parser.add_argument("--allow-playlist", action="store_true")
-    parser.add_argument("--whisper-cpp-model")
+    parser.add_argument("--whisper-cpp-model", help="Override knowledge.transcription.whisper_cpp_model for this run.")
     args = parser.parse_args()
-    WORKSPACE_ROOT = resolve_workspace_root(args.workspace_root)
-    args.raw_dir = resolve_under_workspace(args.raw_dir)
-    if not args.whisper_cpp_model:
+    data = bind_workspace(args.config, args.workspace_root)
+    if args.raw_dir is None:
+        args.raw_dir = workspace_config.under(
+            WORKSPACE_ROOT,
+            workspace_config.knowledge_value(data, "raw_dir", workspace_config.DEFAULT_RAW_DIR),
+        )
+    else:
+        args.raw_dir = resolve_under_workspace(args.raw_dir)
+    if args.whisper_cpp_model:
+        model_path = Path(args.whisper_cpp_model).expanduser()
+        args.whisper_cpp_model = str(model_path if model_path.is_absolute() else resolve_under_workspace(model_path))
+    else:
         args.whisper_cpp_model = local_whisper_cpp_model()
 
     if args.prepare_dependencies:

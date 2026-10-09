@@ -14,6 +14,12 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
 
+_PLUGIN_ROOT = Path(__file__).resolve().parents[3]
+if str(_PLUGIN_ROOT) not in sys.path:
+    sys.path.append(str(_PLUGIN_ROOT))
+
+import workspace_config
+
 
 USER_AGENT = "LocalKnowledgeIntake/1.0 (+private RSS reader)"
 
@@ -177,11 +183,28 @@ def review_one(feed: dict, loop_state: dict, initialize: bool) -> dict[str, obje
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--registry", required=True, type=Path)
-    parser.add_argument("--state", required=True, type=Path)
+    parser.add_argument("--config", help="Path to workspace.json. Defaults to a walk upward from the working directory.")
+    parser.add_argument("--workspace-root", help="Override the workspace root for this run.")
+    parser.add_argument("--registry", type=Path, help="Override knowledge.podcast_feeds for this run.")
+    parser.add_argument("--state", type=Path, help="Override knowledge.loop_state for this run.")
     parser.add_argument("--initialize", action="store_true", help="Seed current feed heads and process no history")
     parser.add_argument("--write-state", action="store_true", help="Persist feed metadata and cursors")
     args = parser.parse_args()
+    _, workspace_root, data = workspace_config.open_workspace(args.config, args.workspace_root)
+    if args.registry is None:
+        args.registry = workspace_config.under(
+            workspace_root,
+            workspace_config.knowledge_value(data, "podcast_feeds", workspace_config.DEFAULT_PODCAST_FEEDS),
+        )
+    else:
+        args.registry = workspace_config.under(workspace_root, args.registry)
+    if args.state is None:
+        args.state = workspace_config.under(
+            workspace_root,
+            workspace_config.knowledge_value(data, "loop_state", workspace_config.DEFAULT_LOOP_STATE),
+        )
+    else:
+        args.state = workspace_config.under(workspace_root, args.state)
 
     registry = load_json(args.registry)
     loop_state = load_json(args.state)

@@ -1,43 +1,47 @@
 ---
 name: capture-youtube
 description: >-
-  Use when transcribing a YouTube video, processing a YouTube URL, monitoring a
-  YouTube channel RSS feed, or preparing YouTube transcripts as raw Markdown for
-  a Notion-first KB using local Whisper (not captions).
+  Use when transcribing a video, processing a video URL, monitoring a channel
+  feed, or preparing a transcript as raw Markdown with a kb.raw-index row.
+  Transcription is local. Captions are not the source of truth.
+metadata:
+  bstack-config: "sources: kb.raw-index | settings: knowledge.raw_dir knowledge.loop_state knowledge.youtube_channels? knowledge.guardrails"
 ---
-# Capture YouTube (Notion-first)
+# Capture YouTube
 
 ## Config check
 
-Do this before any other step. Read the user-owned `workspace.json` in the active workspace. This skill requires `raw_dir`, `loop_state`, and `notion_raw_db`.
+Do this before any other step. Find `workspace.json`: the path the caller gave, else the active workspace root, else ask once. Read this skill's `bstack-config` line in the frontmatter. For each required source kind look up `sources.<kind>`; for each required setting look up its dotted path. If an entry is absent, empty, or starts with `REPLACE_WITH` (including inside nested objects and lists), ask only for that entry, write it into `workspace.json` in the v2 shape, and continue. Entries marked `?` that are absent or `"via": "none"` are skipped without asking. If a source is bound to a connector this host does not have, stop and say "`<kind>` is bound to `<connector>`, which is not connected here." Do not swap in another tool, a cached copy, or a guess. Old flat field names still count through the alias table in SOURCES.md. Do not run a full onboarding interview.
 
-If `workspace.json` is missing, or any required field is missing or still a placeholder, pause. A placeholder is an empty value or any value that starts with `REPLACE_WITH`, including inside nested objects and lists. Ask only for those missing fields. Write the answers into `workspace.json`. Then continue with the rest of this skill. Do not run a full onboarding interview.
+`knowledge.youtube_channels` is optional. Absent, empty, a value that starts with `REPLACE_WITH`, or a missing file means there is no channel list. A submitted video URL still runs. Do not ask for the setting.
 
 ## Prerequisites
 
-Require workspace config: `raw_dir`, optional channel registry, loop state, and configured Notion Raw DB. If Raw DB is missing, stop and ask. Do not create databases.
+Write raw Markdown under `knowledge.raw_dir` and one index row in `kb.raw-index`. Cursors live in `knowledge.loop_state`. Do not create a database.
 
-This skill **skips YouTube captions as source of truth** and always uses local Whisper. If `yt-dlp`, `ffmpeg`, or Whisper are missing, ask for approval to bootstrap.
+Skip platform captions as the source of truth. Transcribe locally. If the downloader, ffmpeg, or the local engine is missing, ask before bootstrapping. The model and tools directory are `knowledge.transcription.whisper_cpp_model` and `knowledge.transcription.tools_dir`.
 
 ## Submitted link
 
-1. Resolve metadata with `yt-dlp`.
+1. Resolve metadata with the downloader.
 2. Download temporary best-audio.
-3. Convert to 16 kHz mono WAV with local `ffmpeg`.
-4. Transcribe with local Whisper.
-5. Write one immutable Markdown under `raw_dir`.
-6. Delete temp audio after a non-empty raw transcript exists.
+3. Convert to 16 kHz mono WAV with local ffmpeg.
+4. Transcribe with the local engine.
+5. Write one immutable Markdown file under `knowledge.raw_dir`.
+6. Delete temporary audio after a non-empty raw transcript exists.
+
+Run the capture script with `--config`. A flag overrides one run.
 
 ## Channel review
 
-For configured public YouTube channel RSS feeds: on first initialization record current video IDs as seen and process none. Later runs process unseen videos oldest-first. Advance cursor only after verified raw writes + Notion Raw upserts. Honor max-items guardrails.
+For each active channel in `knowledge.youtube_channels`: on first initialization record current video ids as seen and process none. Later runs process unseen videos oldest-first. Advance the cursor in `knowledge.loop_state` only after the raw write and the `kb.raw-index` upsert both succeed. Honor `knowledge.guardrails` for how many items this run may take.
 
-## Raw write + Notion index
+## Raw write and index
 
 Frontmatter: `source_type: youtube`, `platform: youtube`, `external_id` (video id), `title`, `channel`, `published_at`, `captured_at`, `duration_minutes`, `source_url`, `transcript_source`, `visibility: private`, `status: raw`, `raw_path`.
 
-Upsert Notion Raw DB row pointing at blob path / Git path / Drive id. Do not paste full transcripts into Notion when large.
+Upsert a `kb.raw-index` row pointing at the blob. Do not paste a full transcript into the index when it is large.
 
 ## Result
 
-Return counts and exact filenames / Raw row refs. Do not invoke wiki-ingest; return control to the orchestrator.
+Return counts and exact filenames and index row refs. Do not invoke wiki-ingest. Return control to the orchestrator.

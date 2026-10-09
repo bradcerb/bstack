@@ -1,65 +1,57 @@
-# Scheduled Task
+# Scheduled task
 
-## Recommended Cadence
+The host routine owns the clock. Do not store a cadence here. When the routine needs a zone, read `workspace.timezone`.
 
-- Daily at 2:00 AM America/New_York.
-- Run from the selected workspace root, or pass `--workspace-root` explicitly.
-- Keep the first runs conservative: at most two podcast episodes, two meeting artifacts, and 180 audio minutes per run.
+Caps are `knowledge.guardrails` (`max_podcast_items_per_run`, `max_meeting_artifacts_per_run`, `max_audio_minutes_per_run`). Paths are the settings in `workspace.json`. Pass `--config` so the scripts read them. A flag on the command overrides one run.
 
-## Task Prompt
+## Task prompt
 
-Use `$knowledge-intake` in the current workspace. Read `AGENTS.md`, `examples/workspace.json.example (copy to your workspace as workspace.json)`, the configured wiki schema, and `.agents/loops/knowledge-intake.json`. Review approved newsletter sources, queued article URLs, configured public podcast feeds, and authorized completed-meeting artifacts. Initialize new podcast feeds without historical backfill. Write only verified, immutable sources into the configured `learnings/raw` directory, then invoke `$wiki-ingest` only for the raw files created in this run. Respect workspace routing boundaries, leave recoverable failures pending, update loop state atomically, and report discovered, written, ingested, deferred, skipped, and failed counts with filenames.
+Use `knowledge-intake` in the current workspace. Read `workspace.json` (copy `examples/workspace.json.example` once, then fill the entries this run needs). Review `email.newsletters`, the queue at `knowledge.monitored_pages`, the feeds at `knowledge.podcast_feeds`, and authorized completed meetings from `calendar.events`. Initialize new podcast feeds without historical backfill. Write only verified, immutable sources under `knowledge.raw_dir`, then invoke the skill named by `knowledge.wiki_ingest_skill` only for the raw files created in this run. Respect `knowledge.routing_policy`. Leave recoverable failures pending. Update `knowledge.loop_state` atomically. Report discovered, written, ingested, deferred, skipped, and failed counts with filenames.
 
-## Dependency Behavior
+## Dependency behavior
 
-If a provider transcript is unavailable and local Whisper or FFmpeg is not installed, ask for approval to run `skills/knowledge-intake/scripts/prepare_local_transcription.py --yes` for the selected workspace. If setup is not approved or fails, defer that item and report the exact missing dependency. Do not advance its handled cursor.
+If a provider transcript is unavailable and the local transcriber or ffmpeg is not installed, ask before running:
 
-## Podcast Capture Command
+```bash
+python3 skills/knowledge-intake/scripts/prepare_local_transcription.py \
+  --config workspace.json \
+  --yes
+```
 
-Until a Codex app scheduled task is created, the podcast portion can be run locally from the selected workspace:
+If setup is not approved or fails, defer that item and report the missing dependency. Do not advance its handled cursor.
+
+## Podcast capture command
 
 ```bash
 python3 skills/capture-podcasts/scripts/run_podcast_capture.py \
-  --workspace-root "/path/to/workspace" \
-  --registry skills/capture-podcasts/references/feeds.json \
-  --state .agents/loops/knowledge-intake.json \
-  --raw-dir learnings/raw \
-  --runner skills/capture-podcasts/scripts/transcribe_episode.py \
-  --max-items 2 \
-  --max-audio-minutes 180 \
+  --config workspace.json \
   --write-state
 ```
 
-New podcast and YouTube channel feeds initialize without historical backfill; historical backfills should be explicit one-off runs.
+New podcast and channel feeds initialize without historical backfill. A historical backfill is an explicit one-off run.
 
-## YouTube Capture Command
+## Video capture commands
 
-Submitted YouTube links should use local Whisper from the start rather than YouTube captions:
+A submitted video uses local transcription. Captions are not the source of truth.
 
 ```bash
 python3 skills/capture-youtube/scripts/capture_youtube.py \
-  --workspace-root "/path/to/workspace" \
-  --url "https://www.youtube.com/watch?v=VIDEO_ID" \
-  --raw-dir learnings/raw
+  --config workspace.json \
+  --url "https://www.youtube.com/watch?v=VIDEO_ID"
 ```
 
-Configured YouTube channels can be checked with:
+Configured channels:
 
 ```bash
 python3 skills/capture-youtube/scripts/run_youtube_capture.py \
-  --workspace-root "/path/to/workspace" \
-  --registry skills/capture-youtube/references/channels.json \
-  --state .agents/loops/knowledge-intake.json \
-  --raw-dir learnings/raw \
-  --runner skills/capture-youtube/scripts/capture_youtube.py \
-  --max-items 2 \
+  --config workspace.json \
   --write-state
 ```
 
-On Windows, use `py` and backslashes if preferred:
+Check local tools:
 
-```powershell
-py skills\knowledge-intake\scripts\prepare_local_transcription.py `
-  --workspace-root "C:\Users\You\Documents\Workspace" `
+```bash
+python3 skills/knowledge-intake/scripts/prepare_local_transcription.py \
+  --config workspace.json \
   --check
 ```

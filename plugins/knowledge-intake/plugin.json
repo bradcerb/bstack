@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "knowledge-intake",
-  "version": "1.0.1",
-  "description": "Portable Notion-first knowledge capture and wiki ingest skills (newsletters, articles, podcasts, YouTube, meetings).",
+  "version": "1.1.0",
+  "description": "Portable knowledge capture and wiki ingest skills (newsletters, articles, podcasts, YouTube, meetings). The knowledge base is kb.raw-index, kb.wiki, and kb.wiki-log.",
   "author": {
     "name": "Brad",
     "url": "https://github.com/bradcerb"
@@ -11,7 +11,7 @@
   "license": "MIT",
   "keywords": [
     "knowledge",
-    "notion",
+    "capture",
     "skills",
     "ingest",
     "bstack"

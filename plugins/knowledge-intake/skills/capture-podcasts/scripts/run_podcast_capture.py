@@ -5,34 +5,17 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+_PLUGIN_ROOT = Path(__file__).resolve().parents[3]
+if str(_PLUGIN_ROOT) not in sys.path:
+    sys.path.append(str(_PLUGIN_ROOT))
+
 import review_feed
-
-
-def looks_like_workspace(path: Path) -> bool:
-    return (path / "skills" / "knowledge-intake" / "references" / "workspace.json").exists()
-
-
-def resolve_workspace_root(value: str | None = None) -> Path:
-    if value:
-        return Path(value).expanduser().resolve()
-    env_value = os.environ.get("KNOWLEDGE_WORKSPACE_ROOT")
-    if env_value:
-        return Path(env_value).expanduser().resolve()
-    for start in [Path.cwd().resolve(), Path(__file__).resolve()]:
-        for candidate in [start, *start.parents]:
-            if looks_like_workspace(candidate):
-                return candidate
-    return Path(__file__).resolve().parents[3]
-
-
-def resolve_under_workspace(workspace_root: Path, path: Path) -> Path:
-    return path if path.is_absolute() else workspace_root / path
+import workspace_config
 
 
 def duration_minutes(value: str | None) -> float:
@@ -54,10 +37,20 @@ def duration_minutes(value: str | None) -> float:
     return hours * 60 + minutes + seconds / 60
 
 
-def run_transcription(runner: Path, raw_dir: Path, rss_feed: str, show: str, item: dict[str, object], threads: int) -> dict:
+def run_transcription(
+    config_path: Path,
+    runner: Path,
+    raw_dir: Path,
+    rss_feed: str,
+    show: str,
+    item: dict[str, object],
+    threads: int,
+) -> dict:
     command = [
         sys.executable,
         str(runner),
+        "--config",
+        str(config_path),
         "--raw-dir",
         str(raw_dir),
         "--threads",
@@ -92,22 +85,50 @@ def run_transcription(runner: Path, raw_dir: Path, rss_feed: str, show: str, ite
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--workspace-root")
-    parser.add_argument("--registry", required=True, type=Path)
-    parser.add_argument("--state", required=True, type=Path)
-    parser.add_argument("--raw-dir", required=True, type=Path)
-    parser.add_argument("--runner", required=True, type=Path)
-    parser.add_argument("--max-items", type=int, default=2)
-    parser.add_argument("--max-audio-minutes", type=float, default=180)
+    parser.add_argument("--config", help="Path to workspace.json. Defaults to a walk upward from the working directory.")
+    parser.add_argument("--workspace-root", help="Override the workspace root for this run.")
+    parser.add_argument("--registry", type=Path, help="Override knowledge.podcast_feeds for this run.")
+    parser.add_argument("--state", type=Path, help="Override knowledge.loop_state for this run.")
+    parser.add_argument("--raw-dir", type=Path, help="Override knowledge.raw_dir for this run.")
+    parser.add_argument("--runner", type=Path, help="Override the episode transcriber for this run.")
+    parser.add_argument("--max-items", type=int, help="Override knowledge.guardrails.max_podcast_items_per_run for this run.")
+    parser.add_argument("--max-audio-minutes", type=float, help="Override knowledge.guardrails.max_audio_minutes_per_run for this run.")
     parser.add_argument("--workers", type=int, default=1, help="Reserved for future use; daily capture is serial for cursor safety")
     parser.add_argument("--threads", type=int, default=4)
     parser.add_argument("--write-state", action="store_true")
     args = parser.parse_args()
-    workspace_root = resolve_workspace_root(args.workspace_root)
-    args.registry = resolve_under_workspace(workspace_root, args.registry)
-    args.state = resolve_under_workspace(workspace_root, args.state)
-    args.raw_dir = resolve_under_workspace(workspace_root, args.raw_dir)
-    args.runner = resolve_under_workspace(workspace_root, args.runner)
+    config_path, workspace_root, data = workspace_config.open_workspace(args.config, args.workspace_root)
+    if args.registry is None:
+        args.registry = workspace_config.under(
+            workspace_root,
+            workspace_config.knowledge_value(data, "podcast_feeds", workspace_config.DEFAULT_PODCAST_FEEDS),
+        )
+    else:
+        args.registry = workspace_config.under(workspace_root, args.registry)
+    if args.state is None:
+        args.state = workspace_config.under(
+            workspace_root,
+            workspace_config.knowledge_value(data, "loop_state", workspace_config.DEFAULT_LOOP_STATE),
+        )
+    else:
+        args.state = workspace_config.under(workspace_root, args.state)
+    if args.raw_dir is None:
+        args.raw_dir = workspace_config.under(
+            workspace_root,
+            workspace_config.knowledge_value(data, "raw_dir", workspace_config.DEFAULT_RAW_DIR),
+        )
+    else:
+        args.raw_dir = workspace_config.under(workspace_root, args.raw_dir)
+    if args.runner is None:
+        args.runner = Path(__file__).resolve().with_name("transcribe_episode.py")
+    else:
+        args.runner = workspace_config.under(workspace_root, args.runner)
+    if args.max_items is None:
+        args.max_items = int(workspace_config.guardrail_value(data, "max_podcast_items_per_run", workspace_config.DEFAULT_MAX_PODCAST_ITEMS))
+    if args.max_audio_minutes is None:
+        args.max_audio_minutes = float(
+            workspace_config.guardrail_value(data, "max_audio_minutes_per_run", workspace_config.DEFAULT_MAX_AUDIO_MINUTES)
+        )
 
     registry = review_feed.load_json(args.registry)
     loop_state = review_feed.load_json(args.state)
@@ -163,7 +184,7 @@ def main() -> int:
 
             feed_successes: list[dict[str, object]] = []
             for item in selected:
-                result = run_transcription(args.runner, args.raw_dir, url, show, item, args.threads)
+                result = run_transcription(config_path, args.runner, args.raw_dir, url, show, item, args.threads)
                 if result["status"] == "written":
                     written.append(result)
                     feed_successes.append(item)

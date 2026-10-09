@@ -1,17 +1,17 @@
-# Knowledge Intake Portability
+# Knowledge intake portability
 
-Each skill owns its deterministic scripts and supporting references. Machine-level programs such as FFmpeg and Python environments are dependencies, not workspace tools.
+Each skill owns its deterministic scripts and supporting references. Machine-level programs such as ffmpeg and Python environments are dependencies, not workspace tools.
 
 ## Portability
 
-Keep skill names and scripts workspace-neutral. Each workspace supplies its own config (see `examples/workspace.json.example` at the plugin root, or a local `workspace.json` the user points to), feed registry, loop state, routing policy, and `wiki-ingest` behavior. Relative paths resolve from that workspace's root.
+Keep skill names and scripts workspace-neutral. Each workspace supplies its own `workspace.json`. Kinds, settings, the feed files, `knowledge.loop_state`, `knowledge.routing_policy`, and the wiki-ingest skill name all live there. Relative paths resolve from `workspace.root`.
 
-For a second workspace (for example work vs personal), use a distinct `workspace_id`, its own `raw_dir` / Notion DB targets, and a routing policy that rejects the other boundary. Never share state files or raw output directories between workspaces.
+For a second workspace, use a distinct `workspace.id`, its own `knowledge.raw_dir`, its own `kb.*` bindings, and a routing policy that rejects the other boundary. Never share state files or raw output directories between workspaces.
 
-## Runtime Data
+## Runtime data
 
-- Store durable cursors in `.agents/loops/knowledge-intake.json` (or the path in workspace config).
+- Store durable cursors at `knowledge.loop_state`.
 - Store temporary audio outside the wiki and delete it only after a transcript is verified.
-- Keep secrets out of this directory. Use the operating-system credential store or ignored environment files.
-- A workspace Python environment may live at `.venv/` and should remain ignored by version control.
-- Install FFmpeg with the machine package manager. Install Whisper and extraction libraries into the workspace environment. Keep model caches in their normal user cache location.
+- Keep secrets out of the workspace file. Use host connector auth or the host secret store.
+- A workspace Python environment may live at `.venv/` and should stay ignored by version control.
+- Install ffmpeg with the machine package manager. Install the local transcriber into the workspace tools directory from `knowledge.transcription.tools_dir`.

@@ -281,11 +281,12 @@ class DocsContractTests(unittest.TestCase):
         text = SKILL.read_text(encoding="utf-8")
         self.assertIn("## Config check", text)
         for field in (
-            "raw_dir",
-            "loop_state",
-            "notion_raw_db",
-            "calendar_source",
-            "meeting_lookback",
+            "knowledge.raw_dir",
+            "knowledge.loop_state",
+            "kb.raw-index",
+            "calendar.events",
+            "knowledge.meeting_lookback",
+            "workspace.timezone",
         ):
             self.assertIn(field, text)
         self.assertIn("REPLACE_WITH", text)
