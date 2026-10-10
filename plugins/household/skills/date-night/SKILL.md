@@ -2,11 +2,12 @@
 name: date-night
 description: >-
   Use to suggest and plan one recurring date-night rhythm: a cadence, a few
-  simple ideas, a budget, and a prep and childcare checklist. Writes a calendar
-  prompt or a task. Does not send invitations or messages.
+  simple ideas, a budget, and a prep and childcare checklist. Reads and updates
+  the date-night row on household.rhythms and files a reminder on the tasks
+  source. Does not send invitations or messages.
 metadata:
-  bstack-config: "sources: calendar.events? tasks.commitments?"
-  bstack-sources: "calendar.events: read-write; tasks.commitments: write"
+  bstack-config: "sources: household.rhythms tasks.commitments calendar.events?"
+  bstack-sources: "household.rhythms: read-write; tasks.commitments: write; calendar.events: read-write"
 ---
 
 # Date night
@@ -15,7 +16,7 @@ metadata:
 
 Do this before any other step. Find `workspace.json`: the path the caller gave, else the active workspace root, else ask once. Read this skill's `bstack-config` line in the frontmatter. For each required source kind look up `sources.<kind>`; for each required setting look up its dotted path. If an entry is absent, empty, or starts with `REPLACE_WITH` (including inside nested objects and lists), ask only for that entry, write it into `workspace.json` in the v2 shape, and continue. Entries marked `?` that are absent or `"via": "none"` are skipped without asking. If a source is bound to a connector this host does not have, stop and say "`<kind>` is bound to `<connector>`, which is not connected here." Do not swap in another tool, a cached copy, or a guess. Old flat field names still count through the alias table in SOURCES.md. Do not run a full onboarding interview.
 
-`calendar.events` and `tasks.commitments` are optional. Absent, empty, a value that starts with `REPLACE_WITH`, or `"via": "none"` is skipped. Do not ask for either. The plan is still produced.
+`calendar.events` is optional. Absent, empty, a value that starts with `REPLACE_WITH`, or `"via": "none"` is skipped. Do not ask for it. The rhythm row is still updated, and the reminder is still filed on `tasks.commitments`.
 
 Plan one repeating date night. A missed one is not a debt. The next date on the cadence is enough.
 
@@ -48,13 +49,37 @@ Do not interview the rest of the household.
 
 Confirm the cadence and the one idea before writing. If they already named both and asked you to plan it, write that one. If they say to pick, pick the no-cost idea on the proposed cadence.
 
-## Where it goes
+## Rhythm row
 
-Write one plan.
+Read `household.rhythms` before writing. The row shape is in SOURCES.md. `type` for this skill is `date night`.
 
-- When `calendar.events` is bound, append one draft event: title, cadence, next date, duration, the chosen idea, and the two lists in the notes. Do not invite anyone and do not send.
-- When that kind was skipped and `tasks.commitments` is bound, append one task to the first binding only. Put the same plan on the task. A JSON array gets one object. A missing or empty file becomes a one-element JSON array. Another shape: show the task and ask once.
-- When both were skipped, return the same text as a paste-ready calendar prompt.
+Match that type. If several rows match, ask which one. If none exists, create one when they confirm the plan. Storage follows the binding: a file is a JSON array (create the array if the file is missing), a connector is a row in that target, and `paste` means return the row. Do not name a product, and do not swap the binding for a different tool.
+
+- `frequency` is the cadence they confirmed.
+- `who` is who the date is for.
+- `notes` holds the chosen idea, the prep list, and the childcare list.
+- `next_date` is the next occurrence. Set it when the plan is confirmed, and move it forward by the frequency after a date happens.
+- `how_it_went` is written only from what they report about the last time. Leave it unchanged when they do not say. Do not invent it.
+- `status` `active` means keep it and file a reminder. `paused` means do not move `next_date` and do not file a reminder unless they ask to resume. `idea` means store the proposal and do not file a reminder until they set it `active`.
+
+## Reminder
+
+When the row is `active`, append one reminder to the first binding of `tasks.commitments`. Leave later bindings unchanged. One reminder for the next date, not one per checklist line.
+
+```json
+{
+  "title": "Date night",
+  "due": "",
+  "who": "",
+  "notes": "",
+  "source": "household.rhythms",
+  "status": "open"
+}
+```
+
+Fill `due` from `next_date`, `who` from the row, and `notes` with the idea plus the two lists. A JSON array gets the object appended. A missing or empty file becomes a one-element JSON array. A connector creates one row in that target. Another shape: show the reminder and ask once before writing.
+
+When `calendar.events` is bound, also append one draft event for that same next date. Do not invite anyone and do not send. If the day is taken, say so and still keep the rhythm row and the reminder.
 
 ## Output
 
@@ -66,7 +91,8 @@ Idea:
 Budget:
 Prep:
 Childcare:
-Where it went: draft event, task, or paste-ready prompt
+Rhythm: type, status, next date, how it went (or unchanged)
+Reminder: the task filed, or skipped because the row is paused or an idea
 ```
 
 A missed date does not need a makeup marathon.

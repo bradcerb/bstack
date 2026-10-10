@@ -1,8 +1,8 @@
 {
   "name": "household",
   "displayName": "Household",
-  "description": "Household rhythm skills: a recurring date night, one weeknight practice, and a light weekend with kids. Calendar prompts or tasks. Nothing is sent.",
-  "version": "1.0.0",
+  "description": "Household rhythm skills: a recurring date night, one weeknight practice, and a light weekend with kids. Each one updates household.rhythms and files a task reminder. Nothing is sent.",
+  "version": "1.0.1",
   "author": {
     "name": "Brad",
     "url": "https://github.com/bradcerb"

@@ -83,7 +83,7 @@ A source value is one binding, or a list of bindings when the skill reads severa
 | `tasks.week-snapshot` | read | done, in flight, coming up, stuck | weekly-plan |
 | `tasks.work-queue` | read and update | tickets, issues, tasks, pull requests | gated-work |
 | `tasks.agent-queue` | write | gated-work handoff items | daily-plan |
-| `tasks.commitments` | read (list of bindings). touch-note and the household skills may append one task to the first binding | candidate commitments, plus a promise or a household task when a skill files one | open-items; touch-note; circle-rotation, date-night, evening-activities, weekend-with-kids (optional) |
+| `tasks.commitments` | read (list of bindings). touch-note may append a promise, and the household skills append one reminder, to the first binding | candidate commitments, a promise, or a household reminder | open-items; touch-note; date-night, evening-activities, weekend-with-kids; circle-rotation (optional) |
 | `transcripts.meetings` | read | team-call transcripts in a window | coaching-angles, one-on-one-prep; capture-meetings when a transcript tool is the source (optional) |
 | `transcripts.one-on-ones` | read | past one-on-one notes or transcripts | one-on-one-prep |
 | `people.roster` | read | names, and emails, on the team | coaching-angles |
@@ -92,6 +92,7 @@ A source value is one binding, or a list of bindings when the skill reads severa
 | `people.circles` | read and write | one row per person. Fields below | circle-rotation (read), touch-note (read, and write `last_touched`) |
 | `log.open-items` | read and write | open-items log | open-items |
 | `log.touches` | append | one touch record. Fields below | touch-note (append); circle-rotation (optional read) |
+| `household.rhythms` | read and write | one row per rhythm. Fields below | date-night, evening-activities, weekend-with-kids |
 | `kb.raw-index` | write | one index row per raw blob | knowledge-intake and the capture skills |
 | `kb.wiki` | read and write | curated pages by schema category | knowledge-intake, wiki-ingest |
 | `kb.wiki-log` | append | dated ingest log | knowledge-intake, wiki-ingest |
@@ -187,6 +188,24 @@ Not in `workspace.json`:
 
 A file binding for circles is a JSON array of rows. A file binding for touches is one JSON object per line. Do not rewrite earlier touch lines.
 
+## Household rhythms
+
+`household.rhythms` is one row per rhythm. `type` is `date night`, `weeknight`, or `weekend`. `status` is `active`, `paused`, or `idea`.
+
+```json
+{
+  "type": "date night",
+  "frequency": "twice a month",
+  "next_date": "2026-02-06",
+  "who": "the couple",
+  "status": "active",
+  "how_it_went": "",
+  "notes": ""
+}
+```
+
+`frequency` is the cadence in words or a simple interval. `next_date` is `YYYY-MM-DD`. `who` is who the rhythm is for. `how_it_went` is what they reported after the last time. `notes` holds the current plan. A file binding is a JSON array of these rows. Update the matching row in place. Do not name a product. The binding's `via` is the only storage.
+
 ## Feed files
 
 `knowledge.podcast_feeds`, `knowledge.youtube_channels`, and `knowledge.monitored_pages` are paths to files the workspace owns. Nothing in the plugin folder is the registry. A missing file means an empty list.
@@ -233,7 +252,7 @@ YouTube channels (`{"channels": [...]}`):
 
 Check the v2 path first. If it is missing, the old flat field still counts. When a skill writes, it writes the v2 shape and deletes the old key. Leave sibling keys in place. Old files keep working until something writes them.
 
-`people.circles`, `log.touches`, `relationships.circle_cadences`, and `relationships.weekly_touches` are new. They have no old field.
+`people.circles`, `log.touches`, `household.rhythms`, `relationships.circle_cadences`, and `relationships.weekly_touches` are new. They have no old field.
 
 | Old field | New home |
 | --- | --- |

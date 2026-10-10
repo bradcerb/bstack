@@ -82,6 +82,10 @@
       "via": "file",
       "path": "relationships/touches.jsonl"
     },
+    "household.rhythms": {
+      "via": "file",
+      "path": "household/rhythms.json"
+    },
     "kb.raw-index": {
       "via": "connector",
       "connector": "REPLACE_WITH_KB_CONNECTOR",

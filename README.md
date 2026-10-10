@@ -34,7 +34,7 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map.
 | `thinking` | POV, alignment, fluency, Action Method |
 | `money` | Principle-based personal money skills. Optional CFO seat. Plaid for live balances; optional fiscal.sh; Tiller only if still the plan sheet. No secrets. |
 | `relationships` | Sharp reusable jobs: `conference-who-to-meet`, `thank-you-note`, `circle-rotation`, `touch-note`. Draft only. Nothing is sent. Lane, skip list, circle cadences, and the weekly touch count are settings in `workspace.json`. Voice stays outside the skill. |
-| `household` | Three rhythms: `date-night`, `evening-activities`, `weekend-with-kids`. A calendar prompt or tasks. Not outreach. |
+| `household` | Three rhythms: `date-night`, `evening-activities`, `weekend-with-kids`. Updates `household.rhythms` and files a task reminder. Not outreach. |
 | `agent-ops` | Planning plus gated execution: `project-brief`, `weekly-plan`, `daily-plan`, `gated-work` (capped runs, handoff checklist, human gate) |
 | `leadership` | Coaching prep: `coaching-angles`, `personality`, `one-on-one-prep`, `open-items`, `onboarding`. Draft only. Nothing is sent. |
 
@@ -59,7 +59,7 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map.
 
 - No bank credentials, tokens, or client PII in this repo.
 - Money skills are educational planning aids, not advice.
-- Relationship skills draft only. They do not send. Household skills write a calendar prompt or tasks. They do not send outreach.
+- Relationship skills draft only. They do not send. Household skills update a rhythm row and file a task reminder. They do not send outreach.
 - Human judgment for money, outbound send, and irreversible agent actions.
 
 ## License

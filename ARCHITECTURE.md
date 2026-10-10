@@ -41,7 +41,7 @@ A skill with no `bstack-config` line does not read this file.
 | settings `relationships.author_lane?`, `relationships.skip_list?` | `conference-who-to-meet` |
 | `people.circles`, `log.touches?`, `calendar.events?`, `tasks.commitments?`; settings `relationships.circle_cadences`, `relationships.weekly_touches`, `relationships.skip_list?` | `circle-rotation` |
 | `log.touches`, `people.circles`, `tasks.commitments`; setting `workspace.timezone?` | `touch-note` |
-| `calendar.events?`, `tasks.commitments?` | `date-night`, `evening-activities`, `weekend-with-kids` |
+| `household.rhythms`, `tasks.commitments`, `calendar.events?` | `date-night`, `evening-activities`, `weekend-with-kids` |
 
 Knowledge-intake skills declare `kb.raw-index`, `kb.wiki`, `kb.wiki-log`, and the `knowledge.*` settings they use. A connector such as Notion is one way to bind the `kb.*` kinds. Older flat names still resolve through the alias table in SOURCES.md.
 
@@ -53,7 +53,7 @@ Knowledge-intake skills declare `kb.raw-index`, `kb.wiki`, `kb.wiki-log`, and th
 | **thinking** | `form-my-point-of-view`, `examine-my-alignment`, `build-fluency`, `action-method` | Beliefs, understanding, deciding |
 | **money** | `money-check`, `bill-triage`, `margin-plan`, `debt-order`, `cash-cushion`, `purchase-pause`, `money-date`, `step-status` | Personal money procedures. Optional CFO seat. No bank secrets in the repo. |
 | **relationships** | `conference-who-to-meet`, `thank-you-note`, `circle-rotation`, `touch-note` | Sharp reusable jobs. Draft only. Nothing is sent. Lane, skip list, circle cadences, and the weekly touch count are settings. Voice stays outside the skill. |
-| **household** | `date-night`, `evening-activities`, `weekend-with-kids` | Three household rhythms. A calendar prompt or tasks. Not outreach. |
+| **household** | `date-night`, `evening-activities`, `weekend-with-kids` | Three household rhythms. Each one updates `household.rhythms` and files a task reminder. Not outreach. |
 | **agent-ops** | `project-brief`, `weekly-plan`, `daily-plan`, `gated-work` | Open a project, plan the week, plan the day, then move queue items safely in capped, gated runs |
 | **leadership** | `coaching-angles`, `personality`, `one-on-one-prep`, `open-items`, `onboarding` | Prep a manager. One moment, a DISC read, a one-on-one brief, commitment tracking, one-skill config. Nothing is sent. |
 
@@ -77,7 +77,7 @@ Knowledge-intake skills declare `kb.raw-index`, `kb.wiki`, `kb.wiki-log`, and th
 
 **Relationships** → `relationships` for method (conference who-to-meet, thank-you, circle rotation, touch notes). Lane, skip list, circle cadences, and the weekly touch count live in `relationships` settings in `workspace.json`. Voice and CRM stay outside the skill. Nothing is sent.
 
-**Household rhythms** → `household` (`date-night`, `evening-activities`, `weekend-with-kids`). One plan becomes a calendar prompt or tasks. Nothing is sent.
+**Household rhythms** → `household` (`date-night`, `evening-activities`, `weekend-with-kids`). Each skill reads and updates `household.rhythms` and files a reminder on `tasks.commitments`. Nothing is sent.
 
 **Writing / voice** → Triumph plugins and Writer / Public Posts seats. Not bstack.
 
@@ -131,7 +131,7 @@ Pick one plan ledger long-term. Do not run three books forever.
 
 ## Household procedures
 
-`plugins/household` is three rhythms, not a family domain pack. The principles are paraphrased: repeated patterns form a household, grace comes before the habit, something beats nothing, start with one small practice, and the table and hospitality are the keystone. Each skill writes a calendar prompt or tasks through source kinds. None of them sends a message or an invitation.
+`plugins/household` is three rhythms, not a family domain pack. The principles are paraphrased: repeated patterns form a household, grace comes before the habit, something beats nothing, start with one small practice, and the table and hospitality are the keystone. Each skill reads and updates one `household.rhythms` row (next date and how it went) and files a reminder on `tasks.commitments`. A bound `calendar.events` may also receive one draft event. None of them sends a message or an invitation.
 
 - `date-night` - one recurring date-night rhythm: cadence, simple ideas, budget, prep and childcare checklist
 - `evening-activities` - one weeknight practice (table, bedtime, screens off, one activity) for the season and the kids' ages, plus a check-in date
