@@ -45,6 +45,8 @@ The double-quoted string is the whole list. Split on `|`. Each piece is `sources
 
 A skill with no `bstack-config` line declares nothing and does not read `workspace.json`.
 
+`metadata.bstack-sources` is a second frontmatter string. It names the access for kinds already listed in `bstack-config`: `read`, `write`, `read-write`, or `append`, separated by semicolons. It does not add a kind, and the config check does not read it. A skill with no `bstack-sources` line is unchanged.
+
 An optional entry never blocks. Absent, empty, `"via": "none"`, or a value that starts with `REPLACE_WITH` is skipped. The skill keeps the behavior it had when that entry did not exist. Do not ask for it.
 
 ## Binding
@@ -76,18 +78,20 @@ A source value is one binding, or a list of bindings when the skill reads severa
 | `email.inbox` | read, plus archive and label | message list | daily-plan |
 | `email.newsletters` | read | label, sender list, or feed list | capture-newsletters |
 | `chat.messages` | read | message list | daily-plan (optional) |
-| `calendar.events` | read | events with attendees and attachments | daily-plan, capture-meetings |
+| `calendar.events` | read; household skills may append one draft event and must not send invitations | events with attendees and attachments. A draft event is a prompt, not an invitation | daily-plan, capture-meetings; date-night, evening-activities, weekend-with-kids (optional) |
 | `tasks.priorities` | read | the weekly-plan section "Next week (large priorities, ranked)" | daily-plan |
 | `tasks.week-snapshot` | read | done, in flight, coming up, stuck | weekly-plan |
 | `tasks.work-queue` | read and update | tickets, issues, tasks, pull requests | gated-work |
 | `tasks.agent-queue` | write | gated-work handoff items | daily-plan |
-| `tasks.commitments` | read (list of bindings) | candidate commitments | open-items |
+| `tasks.commitments` | read (list of bindings). touch-note and the household skills may append one task to the first binding | candidate commitments, plus a promise or a household task when a skill files one | open-items; touch-note; circle-rotation, date-night, evening-activities, weekend-with-kids (optional) |
 | `transcripts.meetings` | read | team-call transcripts in a window | coaching-angles, one-on-one-prep; capture-meetings when a transcript tool is the source (optional) |
 | `transcripts.one-on-ones` | read | past one-on-one notes or transcripts | one-on-one-prep |
 | `people.roster` | read | names, and emails, on the team | coaching-angles |
 | `people.assessments` | read | growth area per person | coaching-angles, one-on-one-prep |
 | `people.profiles` | read, never cached | profile per person | personality |
+| `people.circles` | read and write | one row per person. Fields below | circle-rotation (read), touch-note (read, and write `last_touched`) |
 | `log.open-items` | read and write | open-items log | open-items |
+| `log.touches` | append | one touch record. Fields below | touch-note (append); circle-rotation (optional read) |
 | `kb.raw-index` | write | one index row per raw blob | knowledge-intake and the capture skills |
 | `kb.wiki` | read and write | curated pages by schema category | knowledge-intake, wiki-ingest |
 | `kb.wiki-log` | append | dated ingest log | knowledge-intake, wiki-ingest |
@@ -134,14 +138,54 @@ Settings are not sources. They are dotted paths on the top-level objects below.
 | `leadership.coaching_state` | `.agents/loops/coaching-angles.json` | coaching-angles |
 | `leadership.coaching_briefs_dir` | `""` means do not save a file | coaching-angles (optional) |
 | `relationships.author_lane` | absent | conference-who-to-meet (optional) |
-| `relationships.skip_list` | absent | conference-who-to-meet (optional) |
+| `relationships.skip_list` | absent | conference-who-to-meet (optional), circle-rotation (optional) |
+| `relationships.circle_cadences` | family-outer 21-28 days, friends-inner 14-21, friends-outer 90, professional-inner 30, professional-outer 90-180. The score divides by `min_days`. family-inner is not a key | circle-rotation |
+| `relationships.weekly_touches` | `5` | circle-rotation |
 
 Not in `workspace.json`:
 
-- A cadence, a cron expression, or a routine id. The host owns the clock. `workspace.timezone` is the only time fact here.
+- A schedule cadence, a cron expression, or a routine id. The host owns the clock. `workspace.timezone` is the only clock fact here. Touch windows in `relationships.circle_cadences` are settings, not a schedule.
 - An `exercises` block. Exercise files are outputs.
 - `drafting.work_dir` and `drafting.personal_dir`. Saved drafting skills only. Not in the bstack example.
 - `retainer.drafts_dir`, `retainer.outlook_capture_dir`, and `retainer.send_day`. Saved retainer skill only. Not in the bstack example.
+
+## Circle rows and touch entries
+
+`people.circles` is one row per person. `circle` is one of `family-inner`, `family-outer`, `friends-inner`, `friends-outer`, `professional-inner`, `professional-outer`. `status` is `active`, `snoozed`, or `archived`. A missing status means active.
+
+```json
+{
+  "name": "Example Person",
+  "circle": "friends-inner",
+  "channel": "text",
+  "last_touched": "2026-01-01",
+  "cadence_days": null,
+  "birthday": "03-14",
+  "notes": "",
+  "status": "active",
+  "snooze_until": null
+}
+```
+
+`cadence_days` is an optional positive integer. It replaces that person's circle window. `birthday` is `MM-DD` or `YYYY-MM-DD`. `notes` is optional context, including a trigger such as a job change. `channel` is that person's channel preference.
+
+`log.touches` is append-only. `sentiment` is `warm`, `neutral`, or `cooling`.
+
+```json
+{
+  "date": "2026-01-08",
+  "person": "Example Person",
+  "channel": "text",
+  "talked_about": "a short recap",
+  "whats_new": "",
+  "promised": "",
+  "next_step": "",
+  "next_step_date": null,
+  "sentiment": "warm"
+}
+```
+
+A file binding for circles is a JSON array of rows. A file binding for touches is one JSON object per line. Do not rewrite earlier touch lines.
 
 ## Feed files
 
@@ -188,6 +232,8 @@ YouTube channels (`{"channels": [...]}`):
 ## Alias table
 
 Check the v2 path first. If it is missing, the old flat field still counts. When a skill writes, it writes the v2 shape and deletes the old key. Leave sibling keys in place. Old files keep working until something writes them.
+
+`people.circles`, `log.touches`, `relationships.circle_cadences`, and `relationships.weekly_touches` are new. They have no old field.
 
 | Old field | New home |
 | --- | --- |
