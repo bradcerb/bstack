@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "relationships",
-  "version": "1.0.1",
-  "description": "Sharp reusable relationship jobs: conference who-to-meet and thank-you notes. Draft only; judgment stays human.",
+  "version": "1.1.0",
+  "description": "Sharp reusable relationship jobs: conference who-to-meet, thank-you notes, weekly circle rotation, and touch notes. Draft only; judgment stays human.",
   "author": {
     "name": "Brad",
     "url": "https://github.com/bradcerb"
@@ -12,6 +12,8 @@
   "keywords": [
     "relationships",
     "conference",
+    "circle-rotation",
+    "touch-note",
     "skills",
     "bstack"
   ]

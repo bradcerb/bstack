@@ -1,8 +1,8 @@
 {
   "name": "relationships",
   "displayName": "Relationships",
-  "description": "Sharp reusable relationship jobs: conference who-to-meet and thank-you notes. Draft only; judgment stays human.",
-  "version": "1.0.1",
+  "description": "Sharp reusable relationship jobs: conference who-to-meet, thank-you notes, weekly circle rotation, and touch notes. Draft only; judgment stays human.",
+  "version": "1.1.0",
   "author": {
     "name": "Brad",
     "url": "https://github.com/bradcerb"
@@ -13,6 +13,8 @@
   "keywords": [
     "relationships",
     "conference",
+    "circle-rotation",
+    "touch-note",
     "bstack",
     "skills"
   ]

@@ -1,6 +1,6 @@
 # bstack
 
-High-value portable skill plugins: knowledge intake, thinking, personal money procedures, sharp relationship jobs, agent ops (planning plus gated execution), and leadership (coaching prep).
+High-value portable skill plugins: knowledge intake, thinking, personal money procedures, sharp relationship jobs, agent ops (planning plus gated execution), leadership (coaching prep), and household rhythms.
 
 **pstack** is the coding floor. **bstack** is only what is worth downloading and reusing. Not a life-domain matrix.
 
@@ -19,7 +19,7 @@ Pick a plugin under `plugins/<name>/`:
 
 `InstallPlugin` marketplace id is N/A until a plugin is published. The prove path is local:
 
-- Copy each plugin folder as a **real directory** (not an out-of-tree symlink) to `~/.cursor/plugins/local/<plugin-name>`, where `<plugin-name>` matches that plugin's root `plugin.json` `name` (for example `knowledge-intake`, `thinking`, `money`, `relationships`, `agent-ops`, `leadership`).
+- Copy each plugin folder as a **real directory** (not an out-of-tree symlink) to `~/.cursor/plugins/local/<plugin-name>`, where `<plugin-name>` matches that plugin's root `plugin.json` `name` (for example `knowledge-intake`, `thinking`, `money`, `relationships`, `agent-ops`, `leadership`, `household`).
 - A whole-repo checkout is optional and fine for browsing. Loaders expect per-plugin directories with a root `plugin.json`.
 
 Copy `examples/workspace.json.example` to `workspace.json` in the workspace where you run skills. That file is the only config you own, and it is gitignored. [SOURCES.md](./SOURCES.md) is the vocabulary: source kinds, settings, bindings, and the alias table from older field names. Skills that declare `metadata.bstack-config` check that file first. If one of their required entries is missing or still a `REPLACE_WITH_` placeholder, they ask only for those entries, write them in the v2 shape, and continue. Skills that declare nothing do not read it. Never commit the file, and never put a secret in it.
@@ -33,7 +33,8 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map.
 | `knowledge-intake` | Capture → raw → wiki |
 | `thinking` | POV, alignment, fluency, Action Method |
 | `money` | Principle-based personal money skills. Optional CFO seat. Plaid for live balances; optional fiscal.sh; Tiller only if still the plan sheet. No secrets. |
-| `relationships` | Sharp reusable jobs only: `conference-who-to-meet`, `thank-you-note`. Lane and skip list are optional settings in `workspace.json`. Voice stays outside the skill. |
+| `relationships` | Sharp reusable jobs: `conference-who-to-meet`, `thank-you-note`, `circle-rotation`, `touch-note`. Draft only. Nothing is sent. Lane, skip list, circle cadences, and the weekly touch count are settings in `workspace.json`. Voice stays outside the skill. |
+| `household` | Three rhythms: `date-night`, `evening-activities`, `weekend-with-kids`. Updates `household.rhythms` and files a task reminder. Not outreach. |
 | `agent-ops` | Planning plus gated execution: `project-brief`, `weekly-plan`, `daily-plan`, `gated-work` (capped runs, handoff checklist, human gate) |
 | `leadership` | Coaching prep: `coaching-angles`, `personality`, `one-on-one-prep`, `open-items`, `onboarding`. Draft only. Nothing is sent. |
 
@@ -47,7 +48,7 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map.
 ## Not in this repo
 
 - Writing skills (Triumph plugins)
-- Domain filler packs (communication, engineering, faith, family, health, gtm, design, project-ops; the small PM set lives in `agent-ops`). Leadership is back as a portable plugin, not a filler pack.
+- Domain filler packs (communication, engineering, faith, health, gtm, design, project-ops; the small PM set lives in `agent-ops`). Leadership is a portable plugin, not a filler pack. Household is three rhythm skills, not a family domain pack.
 - Triumph Rock / PM / sales
 - Corey Haines marketing (install upstream)
 - Product defaults for Showup / Atlas / bradcerb.com
@@ -58,7 +59,7 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map.
 
 - No bank credentials, tokens, or client PII in this repo.
 - Money skills are educational planning aids, not advice.
-- Relationship skills are draft-only until the author says send.
+- Relationship skills draft only. They do not send. Household skills update a rhythm row and file a task reminder. They do not send outreach.
 - Human judgment for money, outbound send, and irreversible agent actions.
 
 ## License

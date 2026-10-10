@@ -70,9 +70,21 @@
       "connector": "REPLACE_WITH_PROFILE_CONNECTOR",
       "target": "REPLACE_WITH_DISC_FIELD"
     },
+    "people.circles": {
+      "via": "file",
+      "path": "relationships/circles.json"
+    },
     "log.open-items": {
       "via": "file",
       "path": "leadership/open-items.json"
+    },
+    "log.touches": {
+      "via": "file",
+      "path": "relationships/touches.jsonl"
+    },
+    "household.rhythms": {
+      "via": "file",
+      "path": "household/rhythms.json"
     },
     "kb.raw-index": {
       "via": "connector",
@@ -162,7 +174,15 @@
   },
   "relationships": {
     "author_lane": "REPLACE_WITH_LANE",
-    "skip_list": []
+    "skip_list": [],
+    "weekly_touches": 5,
+    "circle_cadences": {
+      "family-outer": { "min_days": 21, "max_days": 28 },
+      "friends-inner": { "min_days": 14, "max_days": 21 },
+      "friends-outer": { "min_days": 90, "max_days": 90 },
+      "professional-inner": { "min_days": 30, "max_days": 30 },
+      "professional-outer": { "min_days": 90, "max_days": 180 }
+    }
   },
   "secrets": {}
 }
