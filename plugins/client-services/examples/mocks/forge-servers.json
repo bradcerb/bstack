@@ -1,0 +1,27 @@
+{
+  "data": [
+    {
+      "id": 111,
+      "type": "servers",
+      "attributes": {
+        "name": "other-server",
+        "php_version": "php83",
+        "ubuntu_version": "22.04",
+        "connection_status": "successful"
+      }
+    },
+    {
+      "id": 222,
+      "type": "servers",
+      "attributes": {
+        "name": "web-01",
+        "php_version": "php84",
+        "ubuntu_version": "24.04",
+        "connection_status": "successful"
+      }
+    }
+  ],
+  "links": {
+    "next": null
+  }
+}

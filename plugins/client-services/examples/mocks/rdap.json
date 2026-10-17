@@ -1,0 +1,38 @@
+{
+  "objectClassName": "domain",
+  "ldhName": "EXAMPLE-SITE.COM",
+  "events": [
+    {
+      "eventAction": "registration",
+      "eventDate": "2001-09-05T15:12:43Z"
+    },
+    {
+      "eventAction": "expiration",
+      "eventDate": "2027-09-05T15:12:43Z"
+    }
+  ],
+  "entities": [
+    {
+      "roles": [
+        "registrar"
+      ],
+      "vcardArray": [
+        "vcard",
+        [
+          [
+            "version",
+            {},
+            "text",
+            "4.0"
+          ],
+          [
+            "fn",
+            {},
+            "text",
+            "Example Registrar"
+          ]
+        ]
+      ]
+    }
+  ]
+}

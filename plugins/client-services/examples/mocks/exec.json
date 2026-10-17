@@ -1,0 +1,11 @@
+[
+  {
+    "cmd": "curl",
+    "stdout": "200 0.412"
+  },
+  {
+    "cmd": "sh",
+    "contains": "openssl",
+    "stdout": "notBefore=Nov 11 01:00:00 2026 GMT\nnotAfter=Feb  9 01:00:00 2027 GMT\nissuer=C=US, O=Let's Encrypt, CN=R11\n"
+  }
+]
