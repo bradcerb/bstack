@@ -44,7 +44,7 @@ A skill with no `bstack-config` line does not read this file.
 | `household.rhythms`, `tasks.commitments`, `calendar.events?` | `date-night`, `evening-activities`, `weekend-with-kids` |
 | `hosting.sites`; settings `hosting.snapshots_dir` | `hosting-metrics-collect` |
 | `hosting.sites`; settings `hosting.snapshots_dir`, `hosting.reports_dir`, `hosting.sender_name`, `hosting.project_url`, `hosting.thresholds?`, `hosting.copy_file?` | `hosting-snapshot-diff` |
-| `hosting.sites`, `approvals.pages`; settings `hosting.reports_dir`, `hosting.render_kit_dir`, `hosting.render_brand_file`, `hosting.agent_ops_dir?` | `monthly-hosting-report` |
+| `hosting.sites`, `approvals.pages`; settings `hosting.snapshots_dir`, `hosting.reports_dir`, `hosting.sender_name`, `hosting.project_url`, `hosting.render_kit_dir`, `hosting.render_brand_file`, `email_send.from`, `email_send.reply_to?`, `email_send.ledger_file`, `hosting.agent_ops_dir?` | `monthly-hosting-report` |
 | `approvals.pages`; settings `email_send.from`, `email_send.reply_to?`, `approvals.statuses?` | `approval-stage` |
 | `approvals.pages`; settings `email_send.ledger_file`, `approvals.statuses?` | `email-send` |
 

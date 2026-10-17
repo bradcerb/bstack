@@ -153,9 +153,9 @@ Settings are not sources. They are dotted paths on the top-level objects below.
 | `hosting.render_kit_dir` | none; required | monthly-hosting-report. A checkout of the email repo that has `email-render` |
 | `hosting.render_brand_file` | none; required | monthly-hosting-report. An email-brand v1 file kept outside both repos |
 | `hosting.agent_ops_dir` | `../agent-ops` next to client-services | monthly-hosting-report (optional) |
-| `email_send.from` | none; required | approval-stage (frozen into the draft) |
-| `email_send.reply_to` | absent | approval-stage (optional) |
-| `email_send.ledger_file` | none; required | email-send. Keep it: it is what stops a second send |
+| `email_send.from` | none; required | approval-stage (frozen into the draft), monthly-hosting-report |
+| `email_send.reply_to` | absent | approval-stage, monthly-hosting-report (optional) |
+| `email_send.ledger_file` | none; required | email-send, monthly-hosting-report. Keep it: it is what stops a second send |
 | `approvals.statuses` | Needs review, Approved, Sent | approval-stage, email-send (optional) |
 
 Not in `workspace.json`:
