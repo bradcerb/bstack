@@ -1,0 +1,249 @@
+{
+  "schema": "hosting-report-model",
+  "version": 1,
+  "siteId": "example",
+  "domain": "example-site.com",
+  "month": "2026-10",
+  "monthLabel": "October",
+  "monthYear": "October 2026",
+  "prevLabel": "September",
+  "subject": "Your hosting report for October 2026: one quick thing",
+  "preview": "Your website is healthy. One quick thing inside.",
+  "headerMeta": "Hosting report · October 2026",
+  "kicker": "example-site.com · October",
+  "headline": "Your website is healthy.",
+  "headlineSentence": "It was up 99.98% of October, it loaded fast, and it was backed up every night.",
+  "greeting": "Hey Sam and Pat,",
+  "opener": "I hope this email finds you well!",
+  "careLog": "This month I watched your site around the clock, applied two security updates, renewed your security certificate, and checked every nightly backup (I even test-restored one to make sure it works).",
+  "attentionHeading": "Needs your attention",
+  "attention": [
+    {
+      "key": "domainManagedElsewhere",
+      "title": "Your domain renews Dec 7",
+      "body": "Northwind IT manages it, so it's worth a quick check that it's set to auto-renew. Want me to check with them for you? Just reply and I'll take care of it."
+    }
+  ],
+  "attentionNone": null,
+  "highlights": [
+    {
+      "key": "uptime",
+      "title": "Always on",
+      "chart": "uptime.png",
+      "caption": "Your site was up all month except for 9 minutes on Oct 14.",
+      "alt": "Bar chart of how often the site was up each month, May to October. October 99.98%, September 99.97%."
+    },
+    {
+      "key": "speed",
+      "title": "Fast on phones",
+      "chart": "speed.png",
+      "caption": "Pages start loading in under half a second. Google scores your site 94 out of 100 for speed on phones, up from 92.",
+      "alt": "Bar chart of Google's mobile speed score out of 100 each month. October 94, September 92."
+    },
+    {
+      "key": "errors",
+      "title": "No error pages",
+      "chart": "errors.png",
+      "caption": "Visitors didn't run into a single error page this month, down from two in September.",
+      "alt": "Bar chart of error pages visitors hit each month. October 0, September 2."
+    }
+  ],
+  "charts": [
+    {
+      "file": "uptime.png",
+      "type": "bars",
+      "labels": [
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct"
+      ],
+      "values": [
+        99.95,
+        100,
+        99.99,
+        100,
+        99.97,
+        99.98
+      ],
+      "valueFormat": "pct",
+      "min": 99.5,
+      "max": 100,
+      "target": {
+        "value": 99.9,
+        "label": "Goal 99.9%"
+      },
+      "scaleNote": "chart starts at 99.5%",
+      "delta": "Up from 99.97%"
+    },
+    {
+      "file": "speed.png",
+      "type": "bars",
+      "labels": [
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct"
+      ],
+      "values": [
+        88,
+        90,
+        87,
+        91,
+        92,
+        94
+      ],
+      "valueFormat": "int",
+      "min": 0,
+      "max": 100,
+      "target": {
+        "value": 90,
+        "label": "Great is 90+"
+      },
+      "scaleNote": null,
+      "delta": "Up from 92"
+    },
+    {
+      "file": "errors.png",
+      "type": "bars",
+      "labels": [
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct"
+      ],
+      "values": [
+        3,
+        0,
+        1,
+        0,
+        2,
+        0
+      ],
+      "valueFormat": "int",
+      "min": 0,
+      "max": 5,
+      "target": null,
+      "scaleNote": null,
+      "delta": "Down from 2"
+    }
+  ],
+  "checklistTitle": "All good",
+  "checklist": [
+    {
+      "key": "ssl",
+      "label": "Security certificate",
+      "mark": "ok",
+      "line": "Renewed Oct 2, good through Dec 31, 2026."
+    },
+    {
+      "key": "backups",
+      "label": "Backups",
+      "mark": "ok",
+      "line": "Every night, 31 of 31. Test restore worked on Oct 3."
+    },
+    {
+      "key": "server",
+      "label": "Server",
+      "mark": "ok",
+      "line": "Up to date with this month's security updates."
+    },
+    {
+      "key": "billing",
+      "label": "Billing",
+      "mark": "ok",
+      "line": "October's $35 payment went through Oct 1. Thanks!"
+    }
+  ],
+  "close": {
+    "question": "Questions about your site or ideas for it? Just reply, it comes straight to me.",
+    "projectLine": "Want something changed or added to your site? I take on projects too.",
+    "projectLinkText": "Tell me what you have in mind",
+    "projectUrl": "https://example.com/book",
+    "thanks": "Thanks for letting me take care of it!",
+    "signature": "Alex"
+  },
+  "footer": {
+    "reason": "You're getting this because example-site.com is hosted with me.",
+    "replyNote": "Questions? Just reply.",
+    "preferencesText": "Email preferences"
+  },
+  "plainText": {
+    "titleLine": "Hosting report · example-site.com · October 2026",
+    "attentionHeading": "NEEDS YOUR ATTENTION"
+  },
+  "review": {
+    "details": [
+      {
+        "label": "Uptime",
+        "value": "99.98% (September 99.97%), 1 incident, 9 min"
+      },
+      {
+        "label": "Server response (TTFB, median of 3)",
+        "value": "0.34s (September 0.36s)"
+      },
+      {
+        "label": "PageSpeed mobile (median of 3)",
+        "value": "94, LCP 2.1s, CLS 0.01, TBT 60ms"
+      },
+      {
+        "label": "SSL certificate",
+        "value": "Let's Encrypt, expires Dec 31, 2026 (61 days)"
+      },
+      {
+        "label": "Domain",
+        "value": "expires Dec 7, 2026 (52 days), managed by Northwind IT"
+      },
+      {
+        "label": "Server",
+        "value": "name web-01, connected yes, disk 41%, PHP 8.4, Ubuntu 24.04, 2 security updates, site installed, last deploy 2026-10-09 ok"
+      },
+      {
+        "label": "Server errors (5xx) / broken pages",
+        "value": "0 / 0 (September 2 / 1)"
+      },
+      {
+        "label": "Backups",
+        "value": "31/31, restore test passed Oct 3"
+      },
+      {
+        "label": "Billing",
+        "value": "paid, 35 usd, invoice 2026-10-01, subscription active"
+      }
+    ],
+    "unavailableSources": [],
+    "notes": []
+  },
+  "inputs": [
+    {
+      "month": "2026-05",
+      "sha256": "141f346711da3e9604515d75357efdde1d237556d51f39df96cc7526ef31d85b"
+    },
+    {
+      "month": "2026-06",
+      "sha256": "d41295496388b41689383a8b540ae39ddcdd838008452c790b03c8a9c6e8e90e"
+    },
+    {
+      "month": "2026-07",
+      "sha256": "d0e00ac87f945bbbe5b817abe0d21abf3ab93851e58139941391286f408ade4f"
+    },
+    {
+      "month": "2026-08",
+      "sha256": "2a4bc71dade444882cbd4f12e21aa7bac69b5266091545fbe836612d04e0067d"
+    },
+    {
+      "month": "2026-09",
+      "sha256": "b097157bfda6e7681bc012a0aba3079a24e06870eb983d4b0c2dc48a0d645a34"
+    },
+    {
+      "month": "2026-10",
+      "sha256": "d63e4db89d56d9de38ab05b912572db9e0ddf2353f707665cc626392b8c4ab6f"
+    }
+  ]
+}

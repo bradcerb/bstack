@@ -1,0 +1,9 @@
+{
+  "schema": "diff-golden",
+  "version": 1,
+  "_about": "sha256 of hosting-snapshot-diff output for the example site, 2026-10. Same bytes as examples/model.example.json. The email render kit renders this model in its own golden check.",
+  "files": {
+    "model.json": "ff4a8104297fd96da10cf70c725dafef8bf250fd43415d46c49d3f8509158035",
+    "review-note.md": "b662b53356d2822b4ba16a1c353f3a3b690300fa76e2152f747d9056d4bc202e"
+  }
+}
