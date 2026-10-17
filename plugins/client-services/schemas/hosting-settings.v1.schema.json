@@ -1,0 +1,36 @@
+{
+  "$id": "hosting-settings.v1",
+  "title": "workspace.json hosting block, version 1",
+  "type": "object",
+  "required": ["snapshots_dir", "reports_dir", "sender_name", "project_url"],
+  "additionalProperties": false,
+  "properties": {
+    "snapshots_dir": { "type": "string" },
+    "reports_dir": { "type": "string" },
+    "sender_name": { "type": "string" },
+    "project_url": { "type": "string", "pattern": "^https://" },
+    "render_kit_dir": { "type": "string" },
+    "render_brand_file": { "type": "string" },
+    "agent_ops_dir": { "type": "string" },
+    "copy_file": { "type": "string" },
+    "thresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "uptimeTargetPct": { "type": "number", "minimum": 90, "maximum": 100 },
+        "ttfbGoodSec": { "type": "number", "minimum": 0 },
+        "perfGoodScore": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "sslWarnDays": { "type": "integer", "minimum": 0 },
+        "domainWarnDays": { "type": "integer", "minimum": 0 },
+        "diskWarnPct": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "diskNearPct": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "backupMissWarn": { "type": "integer", "minimum": 1 },
+        "uptimeChartMinPct": { "type": "number", "minimum": 0, "maximum": 100 },
+        "historyMonths": { "type": "integer", "minimum": 1, "maximum": 24 },
+        "minMonthsForChart": { "type": "integer", "minimum": 1 },
+        "maxAttention": { "type": "integer", "minimum": 0, "maximum": 2 },
+        "maxCharts": { "type": "integer", "minimum": 0, "maximum": 3 }
+      }
+    }
+  }
+}

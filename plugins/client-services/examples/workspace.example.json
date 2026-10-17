@@ -1,0 +1,30 @@
+{
+  "_comment": "Test and demo workspace for this plugin. Paths resolve from this folder. Real workspaces copy the hosting entries from examples/workspace.json.example at the repo root.",
+  "bstack_config_version": 2,
+  "workspace": { "id": "example", "root": "." },
+  "sources": {
+    "hosting.sites": { "via": "file", "path": "sites.json" },
+    "approvals.pages": { "via": "connector", "connector": "notion", "target": "00000000000000000000000000000000" }
+  },
+  "hosting": {
+    "snapshots_dir": "snapshots",
+    "reports_dir": "../.out/reports",
+    "sender_name": "Alex",
+    "project_url": "https://example.com/book",
+    "render_kit_dir": "../.out/no-render-kit",
+    "render_brand_file": "../.out/no-render-kit/config.example/email-brand.json"
+  },
+  "email_send": {
+    "from": "Alex <reports@example.com>",
+    "reply_to": "alex@example.com",
+    "ledger_file": "../.out/send-ledger.jsonl"
+  },
+  "secrets": {
+    "uptimerobot": { "env": "UPTIMEROBOT_API_KEY", "used_by": ["hosting-metrics-collect"] },
+    "pagespeed": { "env": "PAGESPEED_API_KEY", "used_by": ["hosting-metrics-collect"] },
+    "forge": { "env": "FORGE_API_TOKEN", "used_by": ["hosting-metrics-collect"] },
+    "stripe": { "env": "STRIPE_RESTRICTED_KEY", "used_by": ["hosting-metrics-collect"] },
+    "notion": { "env": "NOTION_TOKEN", "used_by": ["approval-stage", "email-send"] },
+    "resend": { "env": "RESEND_API_KEY", "used_by": ["email-send"] }
+  }
+}

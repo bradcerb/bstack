@@ -1,0 +1,83 @@
+{
+  "schema": "hosting-snapshot",
+  "version": 1,
+  "siteId": "example",
+  "domain": "example-site.com",
+  "month": "2026-07",
+  "collectedAt": null,
+  "sources": {
+    "uptimerobot": {
+      "status": "ok"
+    },
+    "pagespeed": {
+      "status": "ok"
+    },
+    "ttfb": {
+      "status": "ok"
+    },
+    "ssl": {
+      "status": "unavailable",
+      "reason": "not in example data"
+    },
+    "rdap": {
+      "status": "unavailable",
+      "reason": "not in example data"
+    },
+    "forge": {
+      "status": "ok"
+    },
+    "stripe": {
+      "status": "ok"
+    }
+  },
+  "uptime": {
+    "pct": 99.99,
+    "incidents": 1,
+    "downMinutes": 4,
+    "incidentDays": []
+  },
+  "ttfb": {
+    "medianSec": 0.44,
+    "runsSec": [
+      0.44
+    ]
+  },
+  "pagespeed": {
+    "score": 87,
+    "runs": [
+      87
+    ],
+    "lcpSec": null,
+    "cls": null,
+    "tbtMs": null
+  },
+  "ssl": null,
+  "domainRegistration": null,
+  "server": {
+    "name": null,
+    "connected": null,
+    "php": null,
+    "ubuntu": null,
+    "diskPct": 38,
+    "securityUpdates": null,
+    "siteStatus": null,
+    "lastDeploy": null
+  },
+  "backups": {
+    "ok": 31,
+    "total": 31,
+    "daysMissed": [],
+    "restoreTest": null
+  },
+  "billing": {
+    "state": "paid",
+    "invoiceDate": null,
+    "amount": 35,
+    "currency": "usd",
+    "subscriptionStatus": "active"
+  },
+  "errors": {
+    "errors5xx": 1,
+    "brokenPages": 0
+  }
+}

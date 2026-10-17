@@ -1,0 +1,426 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hosting-report-model.v1",
+  "title": "Hosting report model, version 1",
+  "description": "Everything the email needs, already worded. Written by hosting-snapshot-diff; read by chart-render (charts) and report-email-stage-send (all other fields). Fields under review are for the reviewer only and never appear in the client email.",
+  "type": "object",
+  "required": [
+    "schema",
+    "version",
+    "siteId",
+    "domain",
+    "month",
+    "monthLabel",
+    "monthYear",
+    "prevLabel",
+    "subject",
+    "preview",
+    "headerMeta",
+    "kicker",
+    "headline",
+    "headlineSentence",
+    "greeting",
+    "opener",
+    "careLog",
+    "attentionHeading",
+    "attention",
+    "attentionNone",
+    "highlights",
+    "charts",
+    "checklistTitle",
+    "checklist",
+    "close",
+    "footer",
+    "plainText",
+    "review",
+    "inputs"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "hosting-report-model"
+    },
+    "version": {
+      "const": 1
+    },
+    "siteId": {
+      "type": "string"
+    },
+    "domain": {
+      "type": "string"
+    },
+    "month": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+    },
+    "monthLabel": {
+      "type": "string"
+    },
+    "monthYear": {
+      "type": "string"
+    },
+    "prevLabel": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "subject": {
+      "type": "string"
+    },
+    "preview": {
+      "type": "string"
+    },
+    "headerMeta": {
+      "type": "string"
+    },
+    "kicker": {
+      "type": "string"
+    },
+    "headline": {
+      "type": "string"
+    },
+    "headlineSentence": {
+      "type": "string"
+    },
+    "greeting": {
+      "type": "string"
+    },
+    "opener": {
+      "type": "string"
+    },
+    "careLog": {
+      "type": "string"
+    },
+    "attentionHeading": {
+      "type": "string"
+    },
+    "attention": {
+      "type": "array",
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "required": [
+          "key",
+          "title",
+          "body"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "attentionNone": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "highlights": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "key",
+          "title",
+          "chart",
+          "caption",
+          "alt"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "chart": {
+            "type": "string"
+          },
+          "caption": {
+            "type": "string",
+            "description": "Used in the plain-text part only."
+          },
+          "alt": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "charts": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "file",
+          "type",
+          "labels",
+          "values",
+          "valueFormat",
+          "min",
+          "max",
+          "target",
+          "scaleNote",
+          "delta"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "file": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+\\.png$"
+          },
+          "type": {
+            "const": "bars"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "valueFormat": {
+            "enum": [
+              "pct",
+              "pctInt",
+              "int",
+              "sec"
+            ]
+          },
+          "min": {
+            "type": "number"
+          },
+          "max": {
+            "type": "number"
+          },
+          "target": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "value",
+              "label"
+            ],
+            "properties": {
+              "value": {
+                "type": "number"
+              },
+              "label": {
+                "type": "string"
+              }
+            }
+          },
+          "scaleNote": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "delta": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "checklistTitle": {
+      "type": "string"
+    },
+    "checklist": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "line",
+          "mark"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "line": {
+            "type": "string"
+          },
+          "mark": {
+            "enum": [
+              "ok",
+              "watch"
+            ]
+          }
+        }
+      }
+    },
+    "close": {
+      "type": "object",
+      "required": [
+        "question",
+        "projectLine",
+        "projectLinkText",
+        "projectUrl",
+        "thanks",
+        "signature"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "question": {
+          "type": "string"
+        },
+        "projectLine": {
+          "type": "string"
+        },
+        "projectLinkText": {
+          "type": "string"
+        },
+        "projectUrl": {
+          "type": "string"
+        },
+        "thanks": {
+          "type": "string"
+        },
+        "signature": {
+          "type": "string"
+        }
+      }
+    },
+    "footer": {
+      "type": "object",
+      "required": [
+        "reason",
+        "replyNote",
+        "preferencesText"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "reason": {
+          "type": "string"
+        },
+        "replyNote": {
+          "type": "string"
+        },
+        "preferencesText": {
+          "type": "string"
+        }
+      }
+    },
+    "plainText": {
+      "type": "object",
+      "required": [
+        "titleLine",
+        "attentionHeading"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "titleLine": {
+          "type": "string"
+        },
+        "attentionHeading": {
+          "type": "string"
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "required": [
+        "details",
+        "unavailableSources",
+        "notes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "label",
+              "value"
+            ],
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "unavailableSources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "source",
+              "status",
+              "reason"
+            ],
+            "properties": {
+              "source": {
+                "type": "string"
+              },
+              "status": {
+                "enum": [
+                  "unavailable",
+                  "error"
+                ]
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "month",
+          "sha256"
+        ],
+        "properties": {
+          "month": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schema": "hosting-sites",
+  "version": 1,
+  "_about": "Neutral example sites file (made-up site and people). Copy the shape for your own sites file, which lives in your workspace, not here.",
+  "sites": [
+    {
+      "id": "example",
+      "enabled": true,
+      "domain": "example-site.com",
+      "url": "https://example-site.com/",
+      "greetingNames": "Sam and Pat",
+      "contacts": [{ "name": "Sam", "email": "sam@example.com" }, { "name": "Pat", "email": "pat@example.com" }],
+      "domainManagedBy": "Northwind IT",
+      "uptimerobot": { "monitorUrl": "https://example-site.com" },
+      "pagespeed": { "strategy": "mobile", "runs": 3 },
+      "ttfb": { "runs": 3 },
+      "forge": { "organization": "example-org", "server": "web-01", "site": "example-site.com" },
+      "stripe": { "subscriptionId": "sub_example123" }
+    }
+  ]
+}
