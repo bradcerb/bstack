@@ -42,6 +42,11 @@ A skill with no `bstack-config` line does not read this file.
 | `people.circles`, `log.touches?`, `calendar.events?`, `tasks.commitments?`; settings `relationships.circle_cadences`, `relationships.weekly_touches`, `relationships.skip_list?` | `circle-rotation` |
 | `log.touches`, `people.circles`, `tasks.commitments`; setting `workspace.timezone?` | `touch-note` |
 | `household.rhythms`, `tasks.commitments`, `calendar.events?` | `date-night`, `evening-activities`, `weekend-with-kids` |
+| `hosting.sites`; settings `hosting.snapshots_dir` | `hosting-metrics-collect` |
+| `hosting.sites`; settings `hosting.snapshots_dir`, `hosting.reports_dir`, `hosting.sender_name`, `hosting.project_url`, `hosting.thresholds?`, `hosting.copy_file?` | `hosting-snapshot-diff` |
+| `hosting.sites`, `approvals.pages`; settings `hosting.snapshots_dir`, `hosting.reports_dir`, `hosting.sender_name`, `hosting.project_url`, `hosting.render_kit_dir`, `hosting.render_brand_file`, `email_send.from`, `email_send.reply_to?`, `email_send.ledger_file`, `hosting.agent_ops_dir?` | `monthly-hosting-report` |
+| `approvals.pages`; settings `email_send.from`, `email_send.reply_to?`, `approvals.statuses?` | `approval-stage` |
+| `approvals.pages`; settings `email_send.ledger_file`, `approvals.statuses?` | `email-send` |
 
 Knowledge-intake skills declare `kb.raw-index`, `kb.wiki`, `kb.wiki-log`, and the `knowledge.*` settings they use. A connector such as Notion is one way to bind the `kb.*` kinds. Older flat names still resolve through the alias table in SOURCES.md.
 
@@ -54,7 +59,8 @@ Knowledge-intake skills declare `kb.raw-index`, `kb.wiki`, `kb.wiki-log`, and th
 | **money** | `money-check`, `bill-triage`, `margin-plan`, `debt-order`, `cash-cushion`, `purchase-pause`, `money-date`, `step-status` | Personal money procedures. Optional CFO seat. No bank secrets in the repo. |
 | **relationships** | `conference-who-to-meet`, `thank-you-note`, `circle-rotation`, `touch-note` | Sharp reusable jobs. Draft only. Nothing is sent. Lane, skip list, circle cadences, and the weekly touch count are settings. Voice stays outside the skill. |
 | **household** | `date-night`, `evening-activities`, `weekend-with-kids` | Three household rhythms. Each one updates `household.rhythms` and files a task reminder. Not outreach. |
-| **agent-ops** | `project-brief`, `weekly-plan`, `daily-plan`, `gated-work` | Open a project, plan the week, plan the day, then move queue items safely in capped, gated runs |
+| **agent-ops** | `project-brief`, `weekly-plan`, `daily-plan`, `gated-work`, `approval-stage`, `email-send` | Open a project, plan the week, plan the day, then move queue items safely in capped, gated runs. Gate any email on a human approval of its exact hash, then send it once |
+| **client-services** | `hosting-metrics-collect`, `hosting-snapshot-diff`, `monthly-hosting-report`, `verify-hosting-report` | Monthly hosting report per client site. Rendering lives in a separate email repo (see the plugin README) |
 | **leadership** | `coaching-angles`, `personality`, `one-on-one-prep`, `open-items`, `onboarding` | Prep a manager. One moment, a DISC read, a one-on-one brief, commitment tracking, one-skill config. Nothing is sent. |
 
 ## What does *not* live here
@@ -168,8 +174,11 @@ Leadership skills declare those entries in frontmatter. The old flat `leadership
 
 Upstream commands are inputs, not forks. If an org already ships a `/weekly-review` command that pulls its tasks and calendar, run it, paste the output into `weekly-plan`, and let this skill add triage and priorities. Do not copy the upstream command into bstack. `weekly-plan` is deliberately not named weekly-review, so it stays distinct from those commands and from Cursor Team Kit's `weekly-review` skill.
 
+- `approval-stage` - freezes a rendered email and its envelope under one hash, stages a review page, and is the only code that can issue an `ApprovedDraft`.
+- `email-send` - sends an `ApprovedDraft` through Resend with an idempotency key and a ledger. Never the same key twice, never a changed draft.
+
 Default gates: send, spend, merge, publish, delete, relationship-affecting outreach.
 
 ## One line
 
-Coding floor = pstack. High-value portable skills = bstack (`knowledge-intake`, `thinking`, `money`, `relationships`, `agent-ops`, `leadership`, `household`). Writing = Triumph plugins. Upstream marketing = Corey. Optional money ledger agents = fiscal.sh. One product's quirks = that product's repo.
+Coding floor = pstack. High-value portable skills = bstack (`knowledge-intake`, `thinking`, `money`, `relationships`, `agent-ops`, `client-services`, `leadership`, `household`). Writing = Triumph plugins. Upstream marketing = Corey. Optional money ledger agents = fiscal.sh. One product's quirks = that product's repo.

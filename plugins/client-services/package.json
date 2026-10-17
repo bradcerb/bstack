@@ -1,0 +1,23 @@
+{
+  "name": "bstack-client-services",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Client services skills: hosting metrics, month-over-month report model, monthly hosting report runner.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "node ../../scripts/repo-lint.mjs",
+    "test": "tsx --test test/*.test.ts",
+    "check": "npm run typecheck && npm run lint && npm test"
+  },
+  "dependencies": {
+    "tsx": "4.23.13"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.2",
+    "typescript": "^5.9.3"
+  }
+}

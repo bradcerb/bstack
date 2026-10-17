@@ -1,0 +1,43 @@
+[
+  {
+    "method": "POST",
+    "match": "api.uptimerobot.com/v2/getMonitors",
+    "file": "uptimerobot.json"
+  },
+  {
+    "match": "pagespeedonline/v5/runPagespeed",
+    "file": "pagespeed.json"
+  },
+  {
+    "match": "rdap.org/domain/",
+    "file": "rdap.json"
+  },
+  {
+    "match": "/database/backups/444/instances",
+    "file": "forge-backup-instances.json"
+  },
+  {
+    "match": "/database/backups",
+    "file": "forge-backup-configs.json"
+  },
+  {
+    "match": "/deployments",
+    "file": "forge-deployments.json"
+  },
+  {
+    "match": "/servers/222/sites",
+    "file": "forge-sites.json"
+  },
+  {
+    "match": "forge.laravel.com/api/orgs/example-org/servers",
+    "file": "forge-servers.json"
+  },
+  {
+    "match": "api.stripe.com/v1/subscriptions/",
+    "file": "stripe-subscription.json"
+  },
+  {
+    "match": "api.stripe.com/v1/invoices",
+    "file": "stripe-invoices.json"
+  }
+]

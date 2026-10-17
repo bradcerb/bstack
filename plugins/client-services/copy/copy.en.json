@@ -1,0 +1,154 @@
+{
+  "schema": "report-copy",
+  "version": 1,
+  "_about": "Every sentence the report can say. hosting-snapshot-diff picks a template by fixed rules and fills {placeholders}. Edit wording here, never in code. Do not use em-dashes.",
+  "subject": "Your hosting report for {monthYear}: {status}",
+  "subjectStatus": {
+    "none": "all good",
+    "one": "one quick thing",
+    "two": "two quick things"
+  },
+  "preview": {
+    "none": "{headline} Nothing needs you this month.",
+    "one": "{headline} One quick thing inside.",
+    "two": "{headline} Two quick things inside."
+  },
+  "headerMeta": "Hosting report · {monthYear}",
+  "kicker": "{domain} · {month}",
+  "headline": {
+    "healthy": "Your website is healthy.",
+    "fixingOne": "Your website is up, and I'm fixing one thing.",
+    "fixingSeveral": "Your website is up, and I'm fixing a few things."
+  },
+  "sentence": {
+    "upOk": "it was up {uptime} of {month}",
+    "upLow": "it was up {uptime} of {month}, which is less than I like",
+    "fast": "it loaded fast",
+    "slow": "it loaded a little slower than I'd like",
+    "backupsAll": "it was backed up every night",
+    "backupsSome": "it was backed up {ok} of {total} nights"
+  },
+  "greeting": "Hey {names},",
+  "opener": "I hope this email finds you well!",
+  "care": {
+    "intro": "This month I {items}",
+    "monitoring": "watched your site around the clock",
+    "securityUpdatesOne": "applied {count} security update",
+    "securityUpdatesMany": "applied {count} security updates",
+    "sslRenewed": "renewed your security certificate",
+    "backupsAll": "checked every nightly backup",
+    "backupsSome": "checked your nightly backups",
+    "endRestoreTested": " (I even test-restored one to make sure it works).",
+    "end": "."
+  },
+  "attention": {
+    "heading": "Needs your attention",
+    "paymentFailed": {
+      "title": "{month}'s payment didn't go through",
+      "body": "Could you update your card when you get a minute? I'll send the link in a separate email. Your site stays up in the meantime."
+    },
+    "domainManagedElsewhere": {
+      "title": "Your domain renews {date}",
+      "body": "{holder} manages it, so it's worth a quick check that it's set to auto-renew. Want me to check with them for you? Just reply and I'll take care of it."
+    },
+    "none": "Nothing needs you this month."
+  },
+  "highlights": {
+    "uptime": {
+      "title": "Always on",
+      "captionLow": "Your site was down {minutes} minutes this month. That's more than I like, and I'm working on it.",
+      "captionNone": "Your site was up the whole month, so customers could find you any time.",
+      "captionOne": "Your site was up all month except for {minutes} minutes on {monthShort} {day}.",
+      "captionOneNoDay": "Your site was up all month except for {minutes} minutes.",
+      "captionMany": "Your site was up all month except for {count} short blips ({minutes} minutes total).",
+      "alt": "Bar chart of how often the site was up each month, {firstMonth} to {month}. {month} {value}{prevPart}.",
+      "goal": "Goal {target}",
+      "scaleNote": "chart starts at {min}"
+    },
+    "speed": {
+      "title": "Fast on phones",
+      "captionLoad": "Pages start loading {loadPhrase}. ",
+      "captionScore": "Google scores your site {score} out of 100 for speed on phones{changePart}",
+      "changeUp": ", up from {prev}.",
+      "changeDown": ", down from {prev}.",
+      "changeSame": ", same as {prevMonth}.",
+      "changeNone": ".",
+      "loadUnderHalf": "in under half a second",
+      "loadUnderOne": "in under a second",
+      "loadAbout": "in about {seconds} seconds",
+      "alt": "Bar chart of Google's mobile speed score out of 100 each month. {month} {value}{prevPart}.",
+      "goal": "Great is {target}+"
+    },
+    "errors": {
+      "titleNone": "No error pages",
+      "titleSome": "A few error pages",
+      "captionNone": "Visitors didn't run into a single error page this month, down from {prevCount} in {prevMonth}.",
+      "captionSomeOne": "{count} page load ran into an error this month. I'm tracking down why.",
+      "captionSomeMany": "{count} page loads ran into an error this month. I'm tracking down why.",
+      "alt": "Bar chart of error pages visitors hit each month. {month} {value}{prevPart}."
+    },
+    "storage": {
+      "title": "Storage space",
+      "captionOk": "Your site is using {value} of its storage. Plenty of room, and I'm keeping an eye on it.",
+      "captionLow": "Your site is running low on storage. I'm cleaning it up so nothing slows down.",
+      "alt": "Bar chart of storage used each month. {month} {value}.",
+      "goal": "Clean up at {target}"
+    },
+    "altPrevPart": ", {prevMonth} {prevValue}",
+    "deltaUp": "Up from {prev}",
+    "deltaDown": "Down from {prev}",
+    "deltaSame": "Same as {prevMonth}"
+  },
+  "checklist": {
+    "titleAllGood": "All good",
+    "titleMixed": "Everything else",
+    "ssl": {
+      "label": "Security certificate",
+      "expiring": "Expires {date}. I'm renewing it now.",
+      "renewed": "Renewed {renewed}, good through {date}.",
+      "ok": "Good through {date}. It renews on its own."
+    },
+    "domain": {
+      "label": "Domain",
+      "ok": "Paid through {date}."
+    },
+    "backups": {
+      "label": "Backups",
+      "all": "Every night, {ok} of {total}.",
+      "restorePassed": " Test restore worked on {date}.",
+      "some": "{ok} of {total} nights. I'm looking into the missed {ones}.",
+      "missedOne": "one",
+      "missedMany": "ones"
+    },
+    "server": {
+      "label": "Server",
+      "lowDisk": "Running low on space. I'm cleaning it up.",
+      "updated": "Up to date with this month's security updates.",
+      "noUpdates": "Up to date. No updates were due.",
+      "ok": "Up and running."
+    },
+    "billing": {
+      "label": "Billing",
+      "paid": "{month}'s {amount} payment went through {date}. Thanks!",
+      "processing": "{month}'s {amount} payment is on its way. Nothing to do."
+    }
+  },
+  "close": {
+    "question": "Questions about your site or ideas for it? Just reply, it comes straight to me.",
+    "projectLine": "Want something changed or added to your site? I take on projects too.",
+    "projectLinkText": "Tell me what you have in mind",
+    "thanks": "Thanks for letting me take care of it!"
+  },
+  "footer": {
+    "reason": "You're getting this because {domain} is hosted with me.",
+    "replyNote": "Questions? Just reply.",
+    "preferences": "Email preferences"
+  },
+  "plainText": {
+    "attentionHeading": "NEEDS YOUR ATTENTION",
+    "titleLine": "Hosting report · {domain} · {monthYear}"
+  },
+  "currencySymbols": {
+    "usd": "$"
+  }
+}

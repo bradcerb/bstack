@@ -1,0 +1,102 @@
+{
+  "schema": "hosting-snapshot",
+  "version": 1,
+  "siteId": "example",
+  "domain": "example-site.com",
+  "month": "2026-10",
+  "collectedAt": null,
+  "sources": {
+    "uptimerobot": {
+      "status": "ok"
+    },
+    "pagespeed": {
+      "status": "ok"
+    },
+    "ttfb": {
+      "status": "ok"
+    },
+    "ssl": {
+      "status": "ok"
+    },
+    "rdap": {
+      "status": "ok"
+    },
+    "forge": {
+      "status": "ok"
+    },
+    "stripe": {
+      "status": "ok"
+    }
+  },
+  "uptime": {
+    "pct": 99.98,
+    "incidents": 1,
+    "downMinutes": 9,
+    "incidentDays": [
+      14
+    ]
+  },
+  "ttfb": {
+    "medianSec": 0.34,
+    "runsSec": [
+      0.36,
+      0.34,
+      0.33
+    ]
+  },
+  "pagespeed": {
+    "score": 94,
+    "runs": [
+      93,
+      94,
+      96
+    ],
+    "lcpSec": 2.1,
+    "cls": 0.01,
+    "tbtMs": 60
+  },
+  "ssl": {
+    "expires": "2026-12-31",
+    "daysLeft": 61,
+    "issuer": "Let's Encrypt",
+    "issuedOn": "2026-10-02"
+  },
+  "domainRegistration": {
+    "expires": "2026-12-07",
+    "daysLeft": 52,
+    "registrar": null
+  },
+  "server": {
+    "name": "web-01",
+    "connected": true,
+    "php": "8.4",
+    "ubuntu": "24.04",
+    "diskPct": 41,
+    "securityUpdates": 2,
+    "siteStatus": "installed",
+    "lastDeploy": {
+      "date": "2026-10-09",
+      "ok": true
+    }
+  },
+  "backups": {
+    "ok": 31,
+    "total": 31,
+    "daysMissed": [],
+    "restoreTest": {
+      "date": "2026-10-03",
+      "passed": true
+    }
+  },
+  "billing": {
+    "state": "paid",
+    "invoiceDate": "2026-10-01",
+    "amount": 35,
+    "currency": "usd",
+    "subscriptionStatus": "active"
+  },
+  "errors": {
+    "errors5xx": 0,
+    "brokenPages": 0
+  }
+}

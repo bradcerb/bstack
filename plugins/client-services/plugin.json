@@ -1,0 +1,21 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "client-services",
+  "version": "0.1.0",
+  "description": "Client services: monthly hosting report (collect metrics, diff snapshots, render via an email kit, stage for approval, send once)",
+  "author": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "repository": "https://github.com/bradcerb/bstack",
+  "license": "MIT",
+  "keywords": [
+    "client-services",
+    "bstack",
+    "skills",
+    "hosting-report",
+    "monthly-report",
+    "uptime",
+    "pagespeed"
+  ]
+}

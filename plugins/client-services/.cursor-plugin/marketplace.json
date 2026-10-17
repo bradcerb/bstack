@@ -1,0 +1,19 @@
+{
+  "name": "client-services",
+  "owner": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "metadata": {
+    "description": "Client services: monthly hosting report (collect metrics, diff snapshots, render via an email kit, stage for approval, send once)",
+    "version": "0.1.0",
+    "repository": "https://github.com/bradcerb/bstack"
+  },
+  "plugins": [
+    {
+      "name": "client-services",
+      "description": "Client services: monthly hosting report (collect metrics, diff snapshots, render via an email kit, stage for approval, send once)",
+      "source": "./"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "client-services",
+  "displayName": "Client Services",
+  "description": "Client services: monthly hosting report (collect metrics, diff snapshots, render via an email kit, stage for approval, send once)",
+  "version": "0.1.0",
+  "author": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "homepage": "https://github.com/bradcerb/bstack",
+  "repository": "https://github.com/bradcerb/bstack",
+  "license": "MIT",
+  "keywords": [
+    "client-services",
+    "bstack",
+    "skills",
+    "hosting-report",
+    "monthly-report",
+    "uptime",
+    "pagespeed"
+  ]
+}

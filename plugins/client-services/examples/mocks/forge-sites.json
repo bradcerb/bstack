@@ -1,0 +1,15 @@
+{
+  "data": [
+    {
+      "id": 333,
+      "type": "sites",
+      "attributes": {
+        "name": "example-site.com",
+        "status": "installed"
+      }
+    }
+  ],
+  "links": {
+    "next": null
+  }
+}

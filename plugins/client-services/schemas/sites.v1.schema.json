@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hosting-sites.v1",
+  "title": "Sites config, version 1",
+  "description": "The list of hosted sites. Each source block is optional; a missing or placeholder block makes that source 'unavailable'.",
+  "type": "object",
+  "required": [
+    "schema",
+    "version",
+    "sites"
+  ],
+  "properties": {
+    "schema": {
+      "const": "hosting-sites"
+    },
+    "version": {
+      "const": 1
+    },
+    "sites": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "enabled",
+          "domain",
+          "url",
+          "greetingNames",
+          "contacts"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^https://"
+          },
+          "greetingNames": {
+            "type": "string"
+          },
+          "contacts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "email"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "domainManagedBy": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Name of a third party that holds the domain, or null if the sender manages it."
+          },
+          "uptimerobot": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "monitorUrl": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "pagespeed": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "strategy": {
+                "enum": [
+                  "mobile",
+                  "desktop"
+                ]
+              },
+              "runs": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5
+              }
+            },
+            "additionalProperties": false
+          },
+          "ttfb": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "runs": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9
+              }
+            },
+            "additionalProperties": false
+          },
+          "forge": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "organization": {
+                "type": "string"
+              },
+              "server": {
+                "type": "string"
+              },
+              "site": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "stripe": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "subscriptionId": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "_about": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

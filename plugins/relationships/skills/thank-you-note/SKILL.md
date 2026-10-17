@@ -21,7 +21,7 @@ Draft a short thank-you that names what happened and moves the relationship one 
 
 - Specific > effusive. One sincere line about impact beats a paragraph of flattery.
 - Include **one specific memory** (what they did, said, or shared).
-- Include **one concrete offer or next step** (intro, resource, time, follow-up). If none fits honestly, say so and stop at thanks — do not invent an ask.
+- Include **one concrete offer or next step** (intro, resource, time, follow-up). If none fits honestly, say so and stop at thanks. Do not invent an ask.
 - Draft only. Do not send.
 - If `voice.style-guide` is bound and that file is there, match it. If the entry was skipped or the file is missing, match a style guide supplied in the conversation, otherwise write plain and warm. Do not stop to ask for a guide.
 - Never invent mutuals, meetings, or promises the author did not make.

@@ -1,0 +1,34 @@
+{
+  "stat": "ok",
+  "monitors": [
+    {
+      "id": 800000001,
+      "friendly_name": "example",
+      "url": "https://example-site.com",
+      "custom_uptime_ranges": "99.972",
+      "logs": [
+        {
+          "type": 1,
+          "datetime": 1795183500,
+          "duration": 720
+        },
+        {
+          "type": 2,
+          "datetime": 1795184220,
+          "duration": 1000000
+        },
+        {
+          "type": 1,
+          "datetime": 1793322000,
+          "duration": 300
+        }
+      ]
+    },
+    {
+      "id": 800000002,
+      "url": "https://other.example",
+      "custom_uptime_ranges": "100.000",
+      "logs": []
+    }
+  ]
+}
