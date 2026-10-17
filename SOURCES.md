@@ -105,6 +105,8 @@ A source value is one binding, or a list of bindings when the skill reads severa
 | `tasks.client-work` | read | client task progress | saved retainer skill only. Not in the bstack example |
 | `email.locked-drafts` | read only | drafts to copy verbatim | saved retainer skill only, optional. Not in the bstack example |
 | `people.partners` | read | partner names and greetings | saved retainer skill only. Not in the bstack example |
+| `hosting.sites` | read | a file listing hosted sites (sites v1 in `plugins/client-services/schemas`) | hosting-metrics-collect, hosting-snapshot-diff, monthly-hosting-report |
+| `approvals.pages` | read and write | a review database; `target` is its id. Properties Name, Status, Key, Subject, Draft hash | approval-stage, email-send, monthly-hosting-report |
 
 Blocks a user does not use are absent. A skill asks only for the entries on its own line.
 
@@ -142,6 +144,19 @@ Settings are not sources. They are dotted paths on the top-level objects below.
 | `relationships.skip_list` | absent | conference-who-to-meet (optional), circle-rotation (optional) |
 | `relationships.circle_cadences` | family-outer 21-28 days, friends-inner 14-21, friends-outer 90, professional-inner 30, professional-outer 90-180. The score divides by `min_days`. family-inner is not a key | circle-rotation |
 | `relationships.weekly_touches` | `5` | circle-rotation |
+| `hosting.snapshots_dir` | none; required | hosting-metrics-collect (write), hosting-snapshot-diff (read) |
+| `hosting.reports_dir` | none; required | hosting-snapshot-diff, monthly-hosting-report. One folder per site and month |
+| `hosting.sender_name` | none; required | hosting-snapshot-diff (sign-off) |
+| `hosting.project_url` | none; required | hosting-snapshot-diff (the ask link) |
+| `hosting.thresholds` | uptime, speed, TTFB, SSL 14 days, domain days | hosting-snapshot-diff (optional) |
+| `hosting.copy_file` | the plugin's `copy/copy.en.json` | hosting-snapshot-diff (optional). Same keys as the default |
+| `hosting.render_kit_dir` | none; required | monthly-hosting-report. A checkout of the email repo that has `email-render` |
+| `hosting.render_brand_file` | none; required | monthly-hosting-report. An email-brand v1 file kept outside both repos |
+| `hosting.agent_ops_dir` | `../agent-ops` next to client-services | monthly-hosting-report (optional) |
+| `email_send.from` | none; required | approval-stage (frozen into the draft) |
+| `email_send.reply_to` | absent | approval-stage (optional) |
+| `email_send.ledger_file` | none; required | email-send. Keep it: it is what stops a second send |
+| `approvals.statuses` | Needs review, Approved, Sent | approval-stage, email-send (optional) |
 
 Not in `workspace.json`:
 
@@ -315,7 +330,7 @@ Prefer the host's connector auth. If a script needs a raw key, `workspace.json` 
 }
 ```
 
-The value is set in the host environment. A skill does not write it. No skill in this repo needs a secret today. `.env` and `.env.*` stay in `.gitignore` as a guard only.
+The value is set in the host environment. A skill does not write it or print it. Today only the hosting report chain needs raw keys: `uptimerobot`, `pagespeed`, `forge`, `stripe` (hosting-metrics-collect), `notion` (approval-stage, email-send), and `resend` (email-send). Each is read only on a live run; a missing key makes that source unavailable, not the run fail. `.env` and `.env.*` stay in `.gitignore` as a guard only.
 
 ## Config check
 

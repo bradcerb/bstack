@@ -118,6 +118,15 @@
         "context/working-preferences.md",
         "context/about-me.md"
       ]
+    },
+    "hosting.sites": {
+      "via": "file",
+      "path": "REPLACE_WITH_SITES_FILE"
+    },
+    "approvals.pages": {
+      "via": "connector",
+      "connector": "REPLACE_WITH_NOTION_CONNECTOR",
+      "target": "REPLACE_WITH_APPROVALS_DATABASE_ID"
     }
   },
   "knowledge": {
@@ -184,5 +193,25 @@
       "professional-outer": { "min_days": 90, "max_days": 180 }
     }
   },
-  "secrets": {}
+  "hosting": {
+    "snapshots_dir": "hosting/snapshots",
+    "reports_dir": "hosting/reports",
+    "sender_name": "REPLACE_WITH_SENDER_NAME",
+    "project_url": "REPLACE_WITH_PROJECT_URL",
+    "render_kit_dir": "REPLACE_WITH_RENDER_KIT_CHECKOUT",
+    "render_brand_file": "REPLACE_WITH_EMAIL_BRAND_FILE"
+  },
+  "email_send": {
+    "from": "REPLACE_WITH_FROM_ADDRESS",
+    "reply_to": "REPLACE_WITH_REPLY_TO",
+    "ledger_file": "hosting/send-ledger.jsonl"
+  },
+  "secrets": {
+    "uptimerobot": { "env": "UPTIMEROBOT_API_KEY", "used_by": ["hosting-metrics-collect"] },
+    "pagespeed": { "env": "PAGESPEED_API_KEY", "used_by": ["hosting-metrics-collect"] },
+    "forge": { "env": "FORGE_API_TOKEN", "used_by": ["hosting-metrics-collect"] },
+    "stripe": { "env": "STRIPE_RESTRICTED_KEY", "used_by": ["hosting-metrics-collect"] },
+    "notion": { "env": "NOTION_TOKEN", "used_by": ["approval-stage", "email-send"] },
+    "resend": { "env": "RESEND_API_KEY", "used_by": ["email-send"] }
+  }
 }
