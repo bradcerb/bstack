@@ -58,7 +58,7 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map.
 
 ## Checks
 
-`node scripts/repo-lint.mjs` runs on every pull request, with `npm run check` in each plugin that has code (`client-services`, `agent-ops`). The workflow is staged at `ci/github-actions-ci.yml`; move it to `.github/workflows/ci.yml` to turn it on (pushing workflow files needs a token with the `workflow` scope).
+`node scripts/repo-lint.mjs` runs on every pull request, with `npm run check` in each plugin that has code (`client-services`, `agent-ops`). See `.github/workflows/ci.yml`.
 
 ## Safety
 
