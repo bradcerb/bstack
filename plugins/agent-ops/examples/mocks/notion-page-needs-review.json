@@ -1,0 +1,18 @@
+{
+  "object": "page",
+  "id": "00000000-0000-4000-8000-000000000001",
+  "properties": {
+    "Status": {
+      "select": {
+        "name": "Needs review"
+      }
+    },
+    "Draft hash": {
+      "rich_text": [
+        {
+          "plain_text": "x"
+        }
+      ]
+    }
+  }
+}
