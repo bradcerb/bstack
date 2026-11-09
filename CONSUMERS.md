@@ -19,16 +19,16 @@ Prefer naming skills (`relationships/touch-note`) over whole plugins. A plugin n
 
 ## Vendor the skills
 
-Run the script from a bstack checkout at the commit you pin:
+Clone the public repository at the tag you pin. That clone needs no token and no private checkout:
 
 ```sh
 git clone --depth 1 --branch v0.1.0 https://github.com/bradcerb/bstack /tmp/bstack
 node /tmp/bstack/scripts/vendor.mjs --out agent/skills/bstack --allow thinking,relationships,household --capabilities web
 ```
 
-The output is a dedicated directory. The script refuses symlinks in the output path or tree, hard-linked output files, tracked source symlinks, invalid lock paths, and unmanaged skill-folder collisions before copying. Relative Markdown links with HTML entities or backslash escapes are unsupported and refused. Standard macOS temporary-directory aliases resolve to their fixed system paths. It copies the committed regular files in each skill folder, unchanged, copies `SOURCES.md` next to them, and writes `bstack.lock.json` with the tag, the commit, and the flags it ran with. It removes skills that an earlier run vendored and this allowlist drops. It refuses to run from a bstack checkout with uncommitted changes.
+The output is a dedicated directory. The script refuses symlinks in the output path or tree, hard-linked output files, tracked source symlinks, invalid lock paths, and unmanaged skill-folder collisions before copying. Relative Markdown links with HTML entities or backslash escapes are unsupported and refused. Standard macOS temporary-directory aliases resolve to their fixed system paths. It copies the committed regular files in each skill folder, unchanged, copies `SOURCES.md` next to them, and writes `bstack.lock.json` with the tag, the commit, and the flags it ran with. It removes skills that an earlier run vendored and this allowlist drops. It refuses to run from a bstack checkout with uncommitted changes. It does not copy the email render kit. That kit stays in its own private repository.
 
-Check that nobody edited a vendored file by vendoring again from the locked commit and comparing:
+Check that nobody edited a vendored file by vendoring again from the locked commit and comparing. Use the same public URL, still with no token:
 
 ```sh
 L=agent/skills/bstack/bstack.lock.json
@@ -107,6 +107,7 @@ jobs:
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
       - name: Re-vendor
         run: |
+          # Public repository. No read token and no private checkout.
           git clone --depth 1 --branch "${{ steps.tag.outputs.tag }}" https://github.com/bradcerb/bstack /tmp/bstack
           L=agent/skills/bstack/bstack.lock.json
           node /tmp/bstack/scripts/vendor.mjs --out agent/skills/bstack --allow "$(jq -r '.allow | join(",")' $L)" \
@@ -120,4 +121,6 @@ jobs:
 
 When nothing changed, the job opens no pull request. Run the re-vendor check above in the consumer's own CI, so a hand edit fails before review.
 
-Two GitHub settings matter. The repo must allow GitHub Actions to create pull requests. A pull request opened with the default `GITHUB_TOKEN` does not start other workflows, so pass a fine-grained token or a GitHub App token to `create-pull-request` if the update PR should run the consumer's CI.
+Cloning and vendoring bstack use that public URL with no credentials, in CI and on a laptop. Do not point those commands at a private checkout, and do not pass a token to them.
+
+The consumer repository must allow GitHub Actions to create pull requests. A pull request opened with the default `GITHUB_TOKEN` does not start other workflows in that same repository. That limit belongs to the consumer repository. It is not a credential for bstack.
