@@ -17,7 +17,9 @@ Anyone should be able to start with empty configs and clear skill names. No jarg
 
 ## Config check
 
-`workspace.json` is the only config file. Copy `examples/workspace.json.example` to `workspace.json` in the workspace where you run skills. It is gitignored. Never commit it, and never put a secret in it.
+`workspace.json` is the only config file a user edits. Copy `examples/workspace.json.example` to `workspace.json` in the workspace where you run skills. It is gitignored. Never commit it, and never put a secret in it.
+
+A host with no writable workspace, such as a runtime agent, commits a read-only host profile instead, shaped like `examples/bstack-host.json.example`. Skills look for a host profile first and fall back to `workspace.json`, so hosts without a profile behave as before. A profile is never written at run time. A required source the profile leaves unbound acts as `paste`. A source can bind to one host tool with `"via": "tool"`. See Host profile in [SOURCES.md](./SOURCES.md).
 
 [SOURCES.md](./SOURCES.md) is the vocabulary: source kinds, settings, binding shapes, the alias table, the secrets rule, and the config-check text each declaring skill pastes. There is no per-plugin example.
 
