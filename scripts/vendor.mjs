@@ -2,7 +2,7 @@
 // Copies an allowlist of skills, verbatim, into a consumer repo and records what it copied in bstack.lock.json.
 //   node scripts/vendor.mjs --out <dir> --allow thinking,relationships/touch-note [--capabilities web] [--allow-sends] [--allow-work]
 import { execFileSync } from "node:child_process";
-import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { readSkills, root } from "./skill-index.mjs";
@@ -37,7 +37,11 @@ if (dupes.length) fail(`two plugins ship a skill named ${dupes.join(", ")}`);
 const dirty = git("status", "--porcelain", "--", "plugins", "SOURCES.md");
 if (dirty) fail(`bstack has uncommitted changes, so the lock would name the wrong commit:\n${dirty}`);
 
-const filesOf = (s) => git("ls-files", "--", `plugins/${s.plugin}/skills/${s.skill}`).split("\n").filter(Boolean);
+const filesOf = (s) => git("ls-files", "-z", "--", `plugins/${s.plugin}/skills/${s.skill}`).split("\0").filter(Boolean);
+for (const s of picked) {
+  const entries = git("ls-files", "--stage", "-z", "--", `plugins/${s.plugin}/skills/${s.skill}`).split("\0").filter(Boolean);
+  if (entries.some((entry) => !/^100(644|755) /.test(entry))) fail(`${s.plugin}/${s.skill}: only regular tracked files can be vendored`);
+}
 const refused = picked.flatMap((s) => {
   const needs = (s.metadata["bstack-needs"] ?? "").split(" ").filter((t) => t && t !== "none" && !t.endsWith("?"));
   const why = [];
@@ -47,9 +51,15 @@ const refused = picked.flatMap((s) => {
   if (s.metadata["bstack-scope"] === "work" && !args["allow-work"]) why.push("work scope (pass --allow-work)");
   const dir = join(root, "plugins", s.plugin, "skills", s.skill);
   for (const f of filesOf(s).filter((f) => f.endsWith(".md"))) {
-    for (const [, target] of readFileSync(join(root, f), "utf8").matchAll(/\]\(([^)#\s]+)/g)) {
-      if (/^[a-z]+:/i.test(target)) continue;
-      if (relative(dir, resolve(dirname(join(root, f)), target)).startsWith("..")) why.push(`links outside its folder (${target})`);
+    const text = readFileSync(join(root, f), "utf8");
+    const links = [...text.matchAll(/\]\(\s*(?:<([^>]+)>|([^\s)#]+))/g), ...text.matchAll(/^ {0,3}\[[^\]]+\]:\s*(?:<([^>]+)>|(\S+))/gm)];
+    for (const match of links) {
+      const target = match[1] ?? match[2];
+      if (/^(https?|mailto|data):/i.test(target) || target.startsWith("#")) continue;
+      let path;
+      try { path = decodeURIComponent(target.split("#")[0]); } catch { why.push(`invalid link (${target})`); continue; }
+      const rel = relative(dir, resolve(dirname(join(root, f)), path));
+      if (rel === ".." || rel.startsWith("../") || /^[a-z]+:/i.test(path)) why.push(`links outside its folder (${target})`);
     }
   }
   return why.length ? [`${s.plugin}/${s.skill}: ${why.join("; ")}`] : [];
@@ -57,17 +67,31 @@ const refused = picked.flatMap((s) => {
 if (refused.length) fail(`refused:\n  ${refused.join("\n  ")}`);
 
 const LOCK = join(args.out, "bstack.lock.json");
-const previous = existsSync(LOCK) ? JSON.parse(readFileSync(LOCK, "utf8")).skills : [];
+function refuseSymlinks(path) {
+  let stat;
+  try { stat = lstatSync(path); } catch (error) { if (error.code === "ENOENT") return; throw error; }
+  if (stat.isSymbolicLink()) fail(`output contains a symlink: ${path}`);
+  if (stat.isDirectory()) for (const name of readdirSync(path)) refuseSymlinks(join(path, name));
+}
+refuseSymlinks(args.out);
+let previous = [];
+if (existsSync(LOCK)) {
+  let lock;
+  try { lock = JSON.parse(readFileSync(LOCK, "utf8")); } catch { fail("existing lock is not valid JSON"); }
+  if (lock.repo !== "bradcerb/bstack" || !Array.isArray(lock.skills) || !lock.skills.every((name) => typeof name === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(name))) fail("existing lock contains invalid skill names");
+  previous = lock.skills;
+}
+for (const s of picked) if (existsSync(join(args.out, s.skill)) && !previous.includes(s.skill)) fail(`refusing to overwrite an unmanaged skill: ${s.skill}`);
 for (const s of previous) rmSync(join(args.out, s), { recursive: true, force: true });
 for (const s of picked) {
   const base = `plugins/${s.plugin}/skills/${s.skill}`;
   for (const f of filesOf(s)) {
     const to = join(args.out, s.skill, relative(base, f));
     mkdirSync(dirname(to), { recursive: true });
-    copyFileSync(join(root, f), to);
+    writeFileSync(to, execFileSync("git", ["show", `HEAD:${f}`], { cwd: root }), { mode: lstatSync(join(root, f)).mode & 0o777 });
   }
 }
-copyFileSync(join(root, "SOURCES.md"), join(args.out, "SOURCES.md"));
+writeFileSync(join(args.out, "SOURCES.md"), execFileSync("git", ["show", "HEAD:SOURCES.md"], { cwd: root }));
 
 const commit = git("rev-parse", "HEAD");
 const tag = git("tag", "--points-at", "HEAD").split("\n").filter(Boolean).sort((a, b) => b.localeCompare(a, undefined, { numeric: true }))[0] ?? null;
