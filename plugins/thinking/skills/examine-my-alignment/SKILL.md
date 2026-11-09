@@ -4,6 +4,10 @@ description: >-
   Use when checking recent choices against stated values or positions. Surface one hard tension. No shame theater.
 metadata:
   bstack-config: "sources: kb.positions?"
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "any"
 ---
 # Examine my alignment
 

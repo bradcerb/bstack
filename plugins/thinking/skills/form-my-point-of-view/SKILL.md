@@ -4,6 +4,10 @@ description: >-
   Use when the author wants to turn ingested knowledge into a confirmed personal position. Socratic: one question at a time. Never invent their belief.
 metadata:
   bstack-config: "sources: kb.positions?"
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "any"
 ---
 # Form my point of view
 

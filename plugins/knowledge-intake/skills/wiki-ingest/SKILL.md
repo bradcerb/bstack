@@ -6,6 +6,10 @@ description: >-
   raw blobs.
 metadata:
   bstack-config: "sources: kb.wiki kb.wiki-log kb.raw-index? | settings: knowledge.raw_dir knowledge.schema_categories knowledge.routing_policy"
+  bstack-needs: "files"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "any"
 ---
 # Wiki ingest
 

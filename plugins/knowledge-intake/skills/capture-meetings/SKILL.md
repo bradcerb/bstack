@@ -7,6 +7,10 @@ description: >-
   return.
 metadata:
   bstack-config: "sources: kb.raw-index calendar.events transcripts.meetings? | settings: knowledge.raw_dir knowledge.loop_state knowledge.meeting_lookback knowledge.routing_policy workspace.timezone?"
+  bstack-needs: "shell files"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "any"
 ---
 # Capture meetings
 

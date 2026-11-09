@@ -4,6 +4,11 @@ description: >-
   Use when someone needs to turn a vague situation, data dump, or rough
   communication into a concise message with a clear recommendation, reasoning,
   tradeoffs, and specific ask.
+metadata:
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "any"
 ---
 # Action Method Communication Coach
 

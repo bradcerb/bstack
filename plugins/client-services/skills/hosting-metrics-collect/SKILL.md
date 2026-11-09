@@ -7,6 +7,10 @@ description: >-
 metadata:
   bstack-config: "sources: hosting.sites | settings: hosting.snapshots_dir"
   bstack-sources: "hosting.sites: read"
+  bstack-needs: "shell files web"
+  bstack-sends: "no"
+  bstack-money: "yes"
+  bstack-scope: "work"
 ---
 # Hosting metrics collect
 

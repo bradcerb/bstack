@@ -2,6 +2,11 @@
 name: build-fluency
 description: >-
   Use when teaching the author how a recent build, system, or decision actually works so they can explain it without the agent.
+metadata:
+  bstack-needs: "files?"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "any"
 ---
 # Build fluency
 

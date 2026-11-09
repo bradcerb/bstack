@@ -6,6 +6,10 @@ description: >-
   the writes, then invoke wiki-ingest for new raw only.
 metadata:
   bstack-config: "sources: kb.raw-index kb.wiki kb.wiki-log | settings: knowledge.raw_dir knowledge.loop_state knowledge.routing_policy knowledge.wiki_ingest_skill"
+  bstack-needs: "shell? files web"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "any"
 ---
 # Knowledge intake
 

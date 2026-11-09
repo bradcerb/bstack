@@ -8,6 +8,10 @@ description: >-
   standing CRM ownership outside a named trip.
 metadata:
   bstack-config: "settings: relationships.author_lane? relationships.skip_list?"
+  bstack-needs: "web"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "any"
 ---
 # Conference who-to-meet
 

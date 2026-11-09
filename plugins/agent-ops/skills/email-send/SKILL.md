@@ -7,6 +7,10 @@ description: >-
 metadata:
   bstack-config: "sources: approvals.pages | settings: email_send.ledger_file approvals.statuses?"
   bstack-sources: "approvals.pages: read-write"
+  bstack-needs: "shell files web"
+  bstack-sends: "yes"
+  bstack-money: "no"
+  bstack-scope: "any"
 ---
 # Email send
 

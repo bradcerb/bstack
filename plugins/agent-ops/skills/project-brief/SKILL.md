@@ -4,6 +4,11 @@ description: >-
   Use to open a real project (large initiative with a unique result and an end
   point): purpose, principles, scope in and out, action stages as finish lines,
   info/risks, and one next action. Draft only; no tickets unless asked.
+metadata:
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "any"
 ---
 # Project brief
 

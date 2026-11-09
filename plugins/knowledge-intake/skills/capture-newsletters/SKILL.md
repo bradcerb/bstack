@@ -6,6 +6,10 @@ description: >-
   from the email.newsletters binding.
 metadata:
   bstack-config: "sources: kb.raw-index email.newsletters | settings: knowledge.raw_dir knowledge.loop_state"
+  bstack-needs: "files"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "any"
 ---
 # Capture newsletters
 

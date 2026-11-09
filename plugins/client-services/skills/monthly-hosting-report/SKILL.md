@@ -7,6 +7,10 @@ description: >-
 metadata:
   bstack-config: "sources: hosting.sites approvals.pages | settings: hosting.snapshots_dir hosting.reports_dir hosting.sender_name hosting.project_url hosting.render_kit_dir hosting.render_brand_file email_send.from email_send.reply_to? email_send.ledger_file hosting.agent_ops_dir?"
   bstack-sources: "hosting.sites: read; approvals.pages: read-write"
+  bstack-needs: "shell files web"
+  bstack-sends: "yes"
+  bstack-money: "yes"
+  bstack-scope: "work"
 ---
 # Monthly hosting report
 

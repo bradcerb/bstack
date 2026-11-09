@@ -6,6 +6,10 @@ description: >-
   links to capture as private raw Markdown with a kb.raw-index row.
 metadata:
   bstack-config: "sources: kb.raw-index | settings: knowledge.raw_dir knowledge.monitored_pages?"
+  bstack-needs: "files web browser?"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "any"
 ---
 # Capture articles
 

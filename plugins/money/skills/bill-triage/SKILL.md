@@ -2,6 +2,11 @@
 name: bill-triage
 description: >-
   Use when sorting medical or household bills/EOBs: what is owed, to whom, due date, and next call. No credentials. Educational, not advice.
+metadata:
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "yes"
+  bstack-scope: "personal"
 ---
 # Bill triage
 

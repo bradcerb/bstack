@@ -6,6 +6,10 @@ description: >-
   public feed into raw Markdown and a kb.raw-index row.
 metadata:
   bstack-config: "sources: kb.raw-index | settings: knowledge.raw_dir knowledge.loop_state knowledge.podcast_feeds knowledge.guardrails"
+  bstack-needs: "shell files web"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "any"
 ---
 # Capture podcasts
 

@@ -2,6 +2,11 @@
 name: cash-cushion
 description: >-
   Use when checking starter buffer vs fuller months-of-expenses cushion: gap, timeline, and one next move. Ask for numbers; educational, not advice.
+metadata:
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "yes"
+  bstack-scope: "personal"
 ---
 # Cash cushion
 

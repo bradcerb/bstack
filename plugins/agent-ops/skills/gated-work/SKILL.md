@@ -6,6 +6,10 @@ description: >-
   verify, close with evidence. Draft and stop before irreversible actions.
 metadata:
   bstack-config: "sources: tasks.work-queue"
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "any"
 ---
 # Gated work
 

@@ -6,6 +6,10 @@ description: >-
   delivery shaped by their DISC profile. On demand or scheduled. Draft only.
 metadata:
   bstack-config: "sources: transcripts.meetings people.assessments people.roster | settings: leadership.coaching_state leadership.coaching_briefs_dir? workspace.timezone?"
+  bstack-needs: "files"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "work"
 ---
 # Coaching angles
 

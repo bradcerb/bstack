@@ -2,6 +2,11 @@
 name: debt-order
 description: >-
   Use when ordering consumer debts to pay off: default smallest-balance-first for momentum; optionally show largest-APR-first math side-by-side. Ask for numbers; educational, not advice.
+metadata:
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "yes"
+  bstack-scope: "personal"
 ---
 # Debt order
 

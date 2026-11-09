@@ -7,6 +7,10 @@ description: >-
   Prep only. Does not send, schedule, or script the meeting.
 metadata:
   bstack-config: "sources: transcripts.meetings transcripts.one-on-ones people.assessments"
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "work"
 ---
 # One-on-one prep
 

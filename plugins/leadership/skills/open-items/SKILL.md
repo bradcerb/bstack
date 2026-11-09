@@ -6,6 +6,10 @@ description: >-
   close, and list what is open. Surfaces items. Does not chase people.
 metadata:
   bstack-config: "sources: log.open-items tasks.commitments | settings: workspace.timezone?"
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "work"
 ---
 # Open items
 

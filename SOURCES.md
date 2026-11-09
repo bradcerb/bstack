@@ -49,6 +49,34 @@ A skill with no `bstack-config` line declares nothing and does not read `workspa
 
 An optional entry never blocks. Absent, empty, `"via": "none"`, or a value that starts with `REPLACE_WITH` is skipped. The skill keeps the behavior it had when that entry did not exist. Do not ask for it.
 
+## Portability
+
+Every SKILL.md declares four more frontmatter strings, so a host that vendors skills can filter them without reading the prose. `node scripts/repo-lint.mjs` fails when one is missing or holds a value not listed here. `node scripts/skill-index.mjs` prints every skill with these fields as JSON.
+
+```yaml
+metadata:
+  bstack-needs: "files web browser?"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "any"
+```
+
+| Key | Values | Meaning |
+| --- | --- | --- |
+| `bstack-needs` | `none`, or any of `shell`, `files`, `web`, `browser`, separated by spaces | What the host must give the skill beyond a chat and its bound sources. A token ending in `?` is optional: the skill runs without it and loses one path. |
+| `bstack-sends` | `yes`, `no` | `yes` when the skill itself sends email or a message to another person, even after an approval. A draft is `no`. |
+| `bstack-money` | `yes`, `no` | `yes` when the skill reads or reasons about money: balances, bills, billing, or spending decisions. |
+| `bstack-scope` | `personal`, `work`, `any` | `work` when the skill only makes sense for an employer or client. `personal` when it only makes sense for one person or household. `any` otherwise. |
+
+The `bstack-needs` tokens:
+
+- `shell` runs a script or a command (`python3`, `npx tsx`, `bash`).
+- `files` reads or writes local files that are not a source binding, such as `knowledge.raw_dir`, `knowledge.loop_state`, or a ledger. Reading and writing the config file does not count, and a source bound to a file does not count, because a host can bind that source another way.
+- `web` fetches a URL or calls a web API itself, not through a bound connector.
+- `browser` drives a signed-in browser session.
+
+Classify by what the skill text and its scripts do today, not by what a host might add.
+
 ## Binding
 
 A source value is one binding, or a list of bindings when the skill reads several (for example `tasks.commitments`).
