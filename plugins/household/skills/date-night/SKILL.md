@@ -10,7 +10,7 @@ metadata:
   bstack-sources: "household.rhythms: read-write; tasks.commitments: write; calendar.events: read-write"
   bstack-needs: "none"
   bstack-sends: "no"
-  bstack-money: "no"
+  bstack-money: "yes"
   bstack-scope: "personal"
 ---
 
