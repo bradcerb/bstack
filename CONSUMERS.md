@@ -11,8 +11,11 @@ How a downstream repo vendors a chosen set of bstack skills, pins a version, and
 - a required `bstack-needs` token that is not in `--capabilities`
 - `bstack-sends: "yes"`, unless you pass `--allow-sends`
 - `bstack-scope: "work"`, unless you pass `--allow-work`
+- a Markdown link that leaves the skill's own folder, because the vendored copy would point at nothing
 
 Money is not refused. Put a money skill on the allowlist only when the host should have it.
+
+Prefer naming skills (`relationships/touch-note`) over whole plugins. A plugin name also takes skills added to it later, and a new skill the host cannot run makes the whole update fail.
 
 ## Vendor the skills
 
@@ -23,15 +26,19 @@ git clone --depth 1 --branch v0.1.0 https://github.com/bradcerb/bstack /tmp/bsta
 node /tmp/bstack/scripts/vendor.mjs --out agent/skills/bstack --allow thinking,relationships,household --capabilities web
 ```
 
-The script copies each skill folder unchanged, copies `SOURCES.md` next to them, and writes `bstack.lock.json` with the tag, the commit, the allowlist, and a SHA-256 hash per file. It removes skills that an earlier run vendored and this allowlist drops. It refuses to run from a bstack checkout with uncommitted changes.
+The script copies the files git tracks in each skill folder, unchanged, copies `SOURCES.md` next to them, and writes `bstack.lock.json` with the tag, the commit, and the flags it ran with. It removes skills that an earlier run vendored and this allowlist drops. It refuses to run from a bstack checkout with uncommitted changes.
 
-Check that nobody edited a vendored file:
+Check that nobody edited a vendored file by vendoring again from the locked commit and comparing:
 
 ```sh
-node /tmp/bstack/scripts/vendor.mjs --out agent/skills/bstack --check
+L=agent/skills/bstack/bstack.lock.json
+git clone https://github.com/bradcerb/bstack /tmp/bstack && git -C /tmp/bstack checkout "$(jq -r .commit $L)"
+node /tmp/bstack/scripts/vendor.mjs --out /tmp/fresh --allow "$(jq -r '.allow | join(",")' $L)" \
+  --capabilities "$(jq -r '.capabilities | join(",")' $L)" $(jq -r 'if .allow_sends then "--allow-sends" else "" end, if .allow_work then "--allow-work" else "" end' $L)
+diff -r /tmp/fresh agent/skills/bstack
 ```
 
-It fails when a file differs from its hash or a vendored skill folder holds a file that bstack did not ship.
+Any difference, including an added file, fails the check.
 
 Skills cite `SOURCES.md` for row shapes, defaults, and the alias table. Make the vendored copy readable to the agent the same way the skills are.
 
@@ -68,7 +75,7 @@ Each tool name is one the host exposes. A kind that is read and written binds to
 Pin a tag. Never pin a branch.
 
 - Tags are `vMAJOR.MINOR.PATCH` on `main`.
-- MAJOR changes the config-check text in a way a host must react to, removes or renames a source kind, a binding, a setting, or a metadata key, or changes a row shape.
+- MAJOR changes the config-check text in a way a host must react to, removes or renames a source kind, a binding, a setting, or a metadata key, changes a row shape, or makes a skill's portability stricter (a new required `bstack-needs` token, `bstack-sends` to `yes`, or `bstack-scope` to `work`).
 - MINOR adds a skill, a kind, a binding, a setting, or a metadata value.
 - PATCH changes wording or a script fix that keeps every shape.
 - Until a tag covers what you need, pin a full commit SHA from `main`. A SHA from an open pull request can vanish when it merges by squash.
@@ -94,12 +101,16 @@ jobs:
         with: { node-version: 20 }
       - name: Find the newest tag
         id: tag
-        run: echo "tag=$(git ls-remote --tags --sort=-v:refname https://github.com/bradcerb/bstack 'v*' | head -1 | sed 's|.*refs/tags/||')" >> "$GITHUB_OUTPUT"
+        run: |
+          tag=$(git ls-remote --tags --refs https://github.com/bradcerb/bstack 'v*' | sed 's|.*refs/tags/||' \
+            | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1)
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
       - name: Re-vendor
         run: |
           git clone --depth 1 --branch "${{ steps.tag.outputs.tag }}" https://github.com/bradcerb/bstack /tmp/bstack
-          node /tmp/bstack/scripts/vendor.mjs --out agent/skills/bstack \
-            --allow "$(jq -r '.allow | join(",")' agent/skills/bstack/bstack.lock.json)" --capabilities web
+          L=agent/skills/bstack/bstack.lock.json
+          node /tmp/bstack/scripts/vendor.mjs --out agent/skills/bstack --allow "$(jq -r '.allow | join(",")' $L)" \
+            --capabilities "$(jq -r '.capabilities | join(",")' $L)" $(jq -r 'if .allow_sends then "--allow-sends" else "" end, if .allow_work then "--allow-work" else "" end' $L)
       - uses: peter-evans/create-pull-request@v7
         with:
           branch: bstack/${{ steps.tag.outputs.tag }}
@@ -107,4 +118,6 @@ jobs:
           body: "Re-vendored the same allowlist from bstack ${{ steps.tag.outputs.tag }}. Read the bstack release notes for MAJOR changes before merging."
 ```
 
-When nothing changed, the job opens no pull request. In the consumer's own CI, clone bstack at the lock's `commit` and run `--check`, so a hand edit fails before review.
+When nothing changed, the job opens no pull request. Run the re-vendor check above in the consumer's own CI, so a hand edit fails before review.
+
+Two GitHub settings matter. The repo must allow GitHub Actions to create pull requests. A pull request opened with the default `GITHUB_TOKEN` does not start other workflows, so pass a fine-grained token or a GitHub App token to `create-pull-request` if the update PR should run the consumer's CI.
