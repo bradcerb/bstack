@@ -2,7 +2,7 @@
 // Copies an allowlist of skills, verbatim, into a consumer repo and records what it copied in bstack.lock.json.
 //   node scripts/vendor.mjs --out <dir> --allow thinking,relationships/touch-note [--capabilities web] [--allow-sends] [--allow-work]
 import { execFileSync } from "node:child_process";
-import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { readSkills, root } from "./skill-index.mjs";
@@ -24,6 +24,19 @@ function fail(msg) {
 }
 
 if (!args.out) fail("--out is required");
+args.out = resolve(args.out);
+// macOS exposes its temporary directories through fixed system aliases.
+if (process.platform === "darwin") {
+  for (const [alias, canonical] of [["/tmp", "/private/tmp"], ["/var", "/private/var"]]) {
+    if ((args.out === alias || args.out.startsWith(`${alias}/`)) && realpathSync(alias) === canonical) args.out = canonical + args.out.slice(alias.length);
+  }
+}
+for (let path = args.out; ; path = dirname(path)) {
+  let stat;
+  try { stat = lstatSync(path); } catch (error) { if (error.code !== "ENOENT") throw error; }
+  if (stat?.isSymbolicLink()) fail(`output path contains a symlink: ${path}`);
+  if (path === dirname(path)) break;
+}
 const allow = list(args.allow);
 if (!allow.length) fail("--allow names at least one plugin or plugin/skill");
 const capabilities = new Set(list(args.capabilities));
@@ -56,6 +69,7 @@ const refused = picked.flatMap((s) => {
     for (const match of links) {
       const target = match[1] ?? match[2];
       if (/^(https?|mailto|data):/i.test(target) || target.startsWith("#")) continue;
+      if (/[&\\]/.test(target)) { why.push(`unsupported escaped local link (${target})`); continue; }
       let path;
       try { path = decodeURIComponent(target.split("#")[0]); } catch { why.push(`invalid link (${target})`); continue; }
       const rel = relative(dir, resolve(dirname(join(root, f)), path));
@@ -71,6 +85,8 @@ function refuseSymlinks(path) {
   let stat;
   try { stat = lstatSync(path); } catch (error) { if (error.code === "ENOENT") return; throw error; }
   if (stat.isSymbolicLink()) fail(`output contains a symlink: ${path}`);
+  if (stat.isFile() && stat.nlink > 1) fail(`output contains a hard link: ${path}`);
+  if (!stat.isFile() && !stat.isDirectory()) fail(`output contains a non-regular file: ${path}`);
   if (stat.isDirectory()) for (const name of readdirSync(path)) refuseSymlinks(join(path, name));
 }
 refuseSymlinks(args.out);

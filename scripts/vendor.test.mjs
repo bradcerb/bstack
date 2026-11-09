@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, symlinkSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, linkSync, mkdirSync, mkdtempSync, readFileSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
@@ -54,11 +54,33 @@ test('tracked source links are refused rather than copying untracked target cont
   git('rm','-q',link);git('-c','user.name=Fixture','-c','user.email=fixture@example.test','commit','-qm','remove fixture source link');
 });
 
+test('ancestor symlinks cannot redirect creation or cleanup', () => {
+  const outside=directory('ancestor-outside'), alias=join(base,'parent-alias');symlinkSync(outside,alias);
+  const missing=vendor(join(alias,'missing'));
+  assert.notEqual(missing.status,0);assert.match(missing.stderr,/symlink/);assert(!existsSync(join(outside,'missing')));
+  const existing=join(outside,'existing');mkdirSync(join(existing,'precious'),{recursive:true});
+  writeFileSync(join(existing,'precious/keep'),'unchanged');
+  writeFileSync(join(existing,'bstack.lock.json'),JSON.stringify({repo:'bradcerb/bstack',skills:['precious']}));
+  const r=vendor(join(alias,'existing'));
+  assert.notEqual(r.status,0);assert.match(r.stderr,/symlink/);
+  assert.equal(readFileSync(join(existing,'precious/keep'),'utf8'),'unchanged');
+});
+
+test('hard-linked metadata cannot overwrite another file', () => {
+  for(const name of ['SOURCES.md','bstack.lock.json']) {
+    const out=directory('hard-'+name), sentinel=join(base,'sentinel-'+name);
+    const original=name==='SOURCES.md'?'unchanged':JSON.stringify({repo:'bradcerb/bstack',skills:[]});
+    writeFileSync(sentinel,original);linkSync(sentinel,join(out,name));
+    const r=vendor(out);assert.notEqual(r.status,0);assert.match(r.stderr,/hard link/);
+    assert.equal(readFileSync(sentinel,'utf8'),original);
+  }
+});
+
 test('reference-style and angle-bracket links outside the skill are refused', () => {
   const file='plugins/thinking/skills/action-method/SKILL.md';const original=readFileSync(join(source,file),'utf8');
-  for(const [index,suffix] of ['\n[method][external]\n[external]: ../../references/missing.md\n','\n[method](<../../references/missing.md>)\n'].entries()) {
+  for(const [index,suffix] of ['\n[method][external]\n[external]: ../../references/missing.md\n','\n[method](<../../references/missing.md>)\n','\n[method][external]\n[external]: ..&#47;..&#47;references/missing.md\n','\n[method](..&#47;..&#47;references/missing.md)\n'].entries()) {
     writeFileSync(join(source,file),original+suffix);git('add',file);git('-c','user.name=Fixture','-c','user.email=fixture@example.test','commit','-qm','fixture link');
     const r=vendor(directory('reference-'+index));
-    assert.notEqual(r.status,0);assert.match(r.stderr,/links outside/);
+    assert.notEqual(r.status,0);assert.match(r.stderr,/links outside|unsupported escaped local link/);
   }
 });

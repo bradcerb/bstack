@@ -26,7 +26,7 @@ git clone --depth 1 --branch v0.1.0 https://github.com/bradcerb/bstack /tmp/bsta
 node /tmp/bstack/scripts/vendor.mjs --out agent/skills/bstack --allow thinking,relationships,household --capabilities web
 ```
 
-The output is a dedicated directory. The script refuses destination symlinks, tracked source symlinks, invalid lock paths, and unmanaged skill-folder collisions before copying. It copies the committed regular files in each skill folder, unchanged, copies `SOURCES.md` next to them, and writes `bstack.lock.json` with the tag, the commit, and the flags it ran with. It removes skills that an earlier run vendored and this allowlist drops. It refuses to run from a bstack checkout with uncommitted changes.
+The output is a dedicated directory. The script refuses symlinks in the output path or tree, hard-linked output files, tracked source symlinks, invalid lock paths, and unmanaged skill-folder collisions before copying. Relative Markdown links with HTML entities or backslash escapes are unsupported and refused. Standard macOS temporary-directory aliases resolve to their fixed system paths. It copies the committed regular files in each skill folder, unchanged, copies `SOURCES.md` next to them, and writes `bstack.lock.json` with the tag, the commit, and the flags it ran with. It removes skills that an earlier run vendored and this allowlist drops. It refuses to run from a bstack checkout with uncommitted changes.
 
 Check that nobody edited a vendored file by vendoring again from the locked commit and comparing:
 
