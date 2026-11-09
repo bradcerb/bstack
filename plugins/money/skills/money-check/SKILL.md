@@ -2,6 +2,11 @@
 name: money-check
 description: >-
   Use for a calm spend check: income/outflow snapshot, categories, and one decision. Ask for numbers; never store credentials. Educational, not advice.
+metadata:
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "yes"
+  bstack-scope: "personal"
 ---
 # Money check
 

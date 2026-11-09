@@ -6,6 +6,10 @@ description: >-
   not infer a style, cache a profile, or send anything.
 metadata:
   bstack-config: "sources: people.profiles"
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "work"
 ---
 # Personality
 

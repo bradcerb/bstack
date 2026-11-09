@@ -2,6 +2,11 @@
 name: margin-plan
 description: >-
   Use when planning a month so every dollar of income has a job: income minus planned outgo equals zero. Ask for numbers; educational, not advice.
+metadata:
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "yes"
+  bstack-scope: "personal"
 ---
 # Margin plan
 

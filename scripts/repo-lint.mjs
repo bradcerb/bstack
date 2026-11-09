@@ -6,10 +6,12 @@
 //  4. Secrets: env values are read only through lib/workspace.ts (secretValue), never by name elsewhere.
 //  5. ApprovedDraft is never cast or issued outside approval-stage.
 //  6. Shared lib files copied between plugins stay byte-identical.
+//  7. Every SKILL.md declares the portability metadata in SOURCES.md, and its name matches its folder.
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
+import { PORTABILITY, readSkills } from "./skill-index.mjs";
 
 const root = join(fileURLToPath(new URL(".", import.meta.url)), "..");
 const walk = (d) => (existsSync(d) ? readdirSync(d).flatMap((f) => {
@@ -81,6 +83,19 @@ for (const f of kitFiles.filter((p) => p.endsWith(".ts"))) {
 for (const f of ["schema.ts", "io.ts", "http.ts", "workspace.ts"]) {
   const [a, b] = KIT.map((p) => join(p, "lib", f));
   if (readFileSync(a, "utf8") !== readFileSync(b, "utf8")) problems.push(`lib/${f} differs between client-services and agent-ops; change both copies together`);
+}
+
+const KNOWN_META = new Set(["bstack-config", "bstack-sources", ...Object.keys(PORTABILITY)]);
+for (const s of readSkills()) {
+  if (s.name !== s.skill) problems.push(`${s.path}: name "${s.name}" does not match its folder "${s.skill}"`);
+  for (const [key, valid] of Object.entries(PORTABILITY)) {
+    const v = s.metadata[key];
+    if (v === undefined) problems.push(`${s.path}: missing metadata.${key} (see Portability in SOURCES.md)`);
+    else if (!valid.test(v)) problems.push(`${s.path}: metadata.${key} "${v}" is not a value SOURCES.md allows`);
+  }
+  for (const key of Object.keys(s.metadata)) {
+    if (key.startsWith("bstack-") && !KNOWN_META.has(key)) problems.push(`${s.path}: unknown metadata.${key}`);
+  }
 }
 
 for (const p of problems) console.error(`repo-lint: ${p}`);

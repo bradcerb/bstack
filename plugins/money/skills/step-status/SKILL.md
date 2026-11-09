@@ -2,6 +2,11 @@
 name: step-status
 description: >-
   Use when checking where you are on a simple personal money ladder (starter cushion → consumer debt → fuller cushion → long-term saving → house goal → give/build). One current step + one next action. Educational, not advice.
+metadata:
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "yes"
+  bstack-scope: "personal"
 ---
 # Step status
 

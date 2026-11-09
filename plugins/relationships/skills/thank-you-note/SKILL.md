@@ -6,6 +6,10 @@ description: >-
   only until the author says to send.
 metadata:
   bstack-config: "sources: voice.style-guide?"
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "any"
 ---
 # Thank-you note
 

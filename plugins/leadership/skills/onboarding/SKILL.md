@@ -4,6 +4,11 @@ description: >-
   Use to fill config for one named skill: ask only for the entries that skill
   declares as missing in workspace.json, write the v2 bindings, and stop.
   Does not interview for the whole stack.
+metadata:
+  bstack-needs: "files"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "any"
 ---
 # Onboarding
 

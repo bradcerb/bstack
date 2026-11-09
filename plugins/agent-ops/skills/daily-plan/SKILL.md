@@ -8,6 +8,10 @@ description: >-
   the ranked list.
 metadata:
   bstack-config: "sources: email.inbox tasks.priorities calendar.events tasks.agent-queue chat.messages?"
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "any"
 ---
 # Daily plan
 

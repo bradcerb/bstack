@@ -8,6 +8,10 @@ description: >-
 metadata:
   bstack-config: "sources: log.touches people.circles tasks.commitments | settings: workspace.timezone?"
   bstack-sources: "log.touches: append; people.circles: read-write; tasks.commitments: write"
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "personal"
 ---
 
 # Touch note

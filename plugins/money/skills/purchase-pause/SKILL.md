@@ -2,6 +2,11 @@
 name: purchase-pause
 description: >-
   Use before a non-budget buy: need, wait, or yes with plain criteria. Calm decision aid; educational, not advice.
+metadata:
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "yes"
+  bstack-scope: "personal"
 ---
 # Purchase pause
 

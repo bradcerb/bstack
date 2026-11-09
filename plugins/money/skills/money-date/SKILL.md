@@ -2,6 +2,11 @@
 name: money-date
 description: >-
   Use for a short household money meeting agenda (partners optional): wins, numbers, one decision, next date. Draft-only invites; educational, not advice.
+metadata:
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "yes"
+  bstack-scope: "personal"
 ---
 # Money date
 

@@ -8,6 +8,10 @@ description: >-
 metadata:
   bstack-config: "sources: people.circles log.touches? calendar.events? tasks.commitments? | settings: relationships.circle_cadences relationships.weekly_touches relationships.skip_list?"
   bstack-sources: "people.circles: read; log.touches: read; calendar.events: read; tasks.commitments: read"
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "personal"
 ---
 
 # Circle rotation

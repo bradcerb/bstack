@@ -60,6 +60,8 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map.
 
 `node scripts/repo-lint.mjs` runs on every pull request, with `npm run check` in each plugin that has code (`client-services`, `agent-ops`). See `.github/workflows/ci.yml`.
 
+Every SKILL.md declares `bstack-needs`, `bstack-sends`, `bstack-money`, and `bstack-scope` in its frontmatter. The lint fails without them. `node scripts/skill-index.mjs` prints all skills with those fields as JSON, for a host that vendors a filtered set. The values are in the Portability section of [SOURCES.md](./SOURCES.md).
+
 ## Safety
 
 - No bank credentials, tokens, or client PII in this repo.

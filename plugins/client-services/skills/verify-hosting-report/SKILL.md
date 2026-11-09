@@ -4,6 +4,11 @@ description: >-
   Use after changing the hosting report kit (collect, diff, runner, approval,
   send, or the render kit) to drive the whole chain as a user would, in a
   scratch workspace with recorded responses, and keep evidence.
+metadata:
+  bstack-needs: "shell files"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "work"
 ---
 # Verify hosting report
 

@@ -7,6 +7,10 @@ description: >-
 metadata:
   bstack-config: "sources: approvals.pages | settings: email_send.from email_send.reply_to? approvals.statuses?"
   bstack-sources: "approvals.pages: read-write"
+  bstack-needs: "shell files web"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "any"
 ---
 # Approval stage
 

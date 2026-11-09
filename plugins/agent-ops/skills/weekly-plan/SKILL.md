@@ -7,6 +7,10 @@ description: >-
   output from an upstream weekly review command.
 metadata:
   bstack-config: "sources: tasks.week-snapshot"
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "any"
 ---
 # Weekly plan
 

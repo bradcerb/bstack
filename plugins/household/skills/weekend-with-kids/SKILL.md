@@ -8,6 +8,10 @@ description: >-
 metadata:
   bstack-config: "sources: household.rhythms tasks.commitments calendar.events?"
   bstack-sources: "household.rhythms: read-write; tasks.commitments: write; calendar.events: read-write"
+  bstack-needs: "none"
+  bstack-sends: "no"
+  bstack-money: "no"
+  bstack-scope: "personal"
 ---
 
 # Weekend with kids

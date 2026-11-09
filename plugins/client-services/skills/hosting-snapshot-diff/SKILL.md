@@ -7,6 +7,10 @@ description: >-
 metadata:
   bstack-config: "sources: hosting.sites | settings: hosting.snapshots_dir hosting.reports_dir hosting.sender_name hosting.project_url hosting.thresholds? hosting.copy_file?"
   bstack-sources: "hosting.sites: read"
+  bstack-needs: "shell files"
+  bstack-sends: "no"
+  bstack-money: "yes"
+  bstack-scope: "work"
 ---
 # Hosting snapshot diff
 
