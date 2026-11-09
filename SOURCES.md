@@ -156,7 +156,7 @@ A source value is one binding, or a list of bindings when the skill reads severa
 | `log.open-items` | read and write | open-items log | open-items |
 | `log.touches` | append | one touch record. Fields below | touch-note (append); circle-rotation (optional read) |
 | `household.rhythms` | read and write | one row per rhythm. Fields below | date-night, evening-activities, weekend-with-kids |
-| `kb.raw-index` | write | one index row per raw blob | knowledge-intake and the capture skills |
+| `kb.raw-index` | write | one index row per raw blob. Bound to a tool, it takes the whole raw record (frontmatter fields and body) and stores the blob too, so no raw file is written | knowledge-intake and the capture skills. Tool binding: capture-articles only |
 | `kb.wiki` | read and write | curated pages by schema category | knowledge-intake, wiki-ingest |
 | `kb.wiki-log` | append | dated ingest log | knowledge-intake, wiki-ingest |
 | `kb.positions` | read, and an optional write of confirmed positions | confirmed positions | examine-my-alignment (optional), form-my-point-of-view (optional write) |
