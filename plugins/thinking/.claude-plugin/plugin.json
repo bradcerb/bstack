@@ -1,0 +1,13 @@
+{
+  "name": "thinking",
+  "description": "POV, alignment, fluency, and Action Method decision writing",
+  "version": "1.0.1",
+  "author": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "homepage": "https://github.com/bradcerb/bstack",
+  "repository": "https://github.com/bradcerb/bstack",
+  "license": "MIT",
+  "skills": "./skills"
+}

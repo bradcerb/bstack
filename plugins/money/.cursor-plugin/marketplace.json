@@ -1,0 +1,19 @@
+{
+  "name": "money",
+  "owner": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "metadata": {
+    "description": "Principle-based personal money skills: margin plan, debt order, cash cushion, purchase pause, bill triage, money check, money date, and step status. No secrets in the repo.",
+    "version": "1.2.0",
+    "repository": "https://github.com/bradcerb/bstack"
+  },
+  "plugins": [
+    {
+      "name": "money",
+      "description": "Principle-based personal money skills: margin plan, debt order, cash cushion, purchase pause, bill triage, money check, money date, and step status. No secrets in the repo.",
+      "source": "./"
+    }
+  ]
+}

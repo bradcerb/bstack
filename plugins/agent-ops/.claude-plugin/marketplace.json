@@ -1,0 +1,27 @@
+{
+  "name": "agent-ops",
+  "owner": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "metadata": {
+    "description": "Planning plus gated execution: project-brief, weekly-plan, daily-plan, a capped gated work loop (intake, classify, handoff, human gate, execute, verify, close), and approval-gated email: approval-stage and email-send",
+    "version": "1.3.0",
+    "repository": "https://github.com/bradcerb/bstack"
+  },
+  "plugins": [
+    {
+      "name": "agent-ops",
+      "description": "Planning plus gated execution: project-brief, weekly-plan, daily-plan, a capped gated work loop (intake, classify, handoff, human gate, execute, verify, close), and approval-gated email: approval-stage and email-send",
+      "source": "./",
+      "category": "productivity",
+      "tags": [
+        "bstack",
+        "agent-ops",
+        "skills",
+        "planning",
+        "daily-plan"
+      ]
+    }
+  ]
+}

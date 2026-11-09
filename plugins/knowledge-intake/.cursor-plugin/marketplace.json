@@ -1,0 +1,19 @@
+{
+  "name": "knowledge-intake",
+  "owner": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "metadata": {
+    "description": "Portable knowledge capture and wiki ingest skills. The knowledge base is kb.raw-index, kb.wiki, and kb.wiki-log.",
+    "version": "1.1.0",
+    "repository": "https://github.com/bradcerb/bstack"
+  },
+  "plugins": [
+    {
+      "name": "knowledge-intake",
+      "description": "Knowledge capture (newsletters, articles, podcasts, YouTube, meetings) plus wiki ingest",
+      "source": "./"
+    }
+  ]
+}

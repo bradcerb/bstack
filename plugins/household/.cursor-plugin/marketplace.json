@@ -1,0 +1,19 @@
+{
+  "name": "household",
+  "owner": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "metadata": {
+    "description": "Household rhythm skills: a recurring date night, one weeknight practice, and a light weekend with kids. Each one updates household.rhythms and files a task reminder. Nothing is sent.",
+    "version": "1.0.1",
+    "repository": "https://github.com/bradcerb/bstack"
+  },
+  "plugins": [
+    {
+      "name": "household",
+      "description": "Household rhythm skills: a recurring date night, one weeknight practice, and a light weekend with kids. Each one updates household.rhythms and files a task reminder. Nothing is sent.",
+      "source": "./"
+    }
+  ]
+}

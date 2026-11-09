@@ -1,0 +1,22 @@
+[
+  {
+    "method": "POST",
+    "match": "api.notion.com/v1/pages",
+    "file": "notion-create-page.json"
+  },
+  {
+    "method": "GET",
+    "match": "api.notion.com/v1/pages/",
+    "file": "notion-page-needs-review.json"
+  },
+  {
+    "method": "PATCH",
+    "match": "api.notion.com/v1/pages/",
+    "file": "notion-ok.json"
+  },
+  {
+    "method": "POST",
+    "match": "api.resend.com/emails",
+    "file": "resend-send.json"
+  }
+]

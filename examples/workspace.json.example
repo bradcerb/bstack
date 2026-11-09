@@ -1,0 +1,201 @@
+{
+  "_comment": "Copy to workspace.json in the folder you run skills from. One file per host. Never commit it. Replace every REPLACE_WITH_ value a skill asks for; skills ask only for their own entries. No secrets here: use host connectors, or name an env var under secrets.",
+  "bstack_config_version": 2,
+  "workspace": {
+    "id": "personal",
+    "root": ".",
+    "timezone": "REPLACE_WITH_IANA_TIMEZONE"
+  },
+  "sources": {
+    "email.inbox": {
+      "via": "connector",
+      "connector": "REPLACE_WITH_EMAIL_CONNECTOR",
+      "target": "INBOX"
+    },
+    "email.newsletters": {
+      "via": "connector",
+      "connector": "REPLACE_WITH_EMAIL_CONNECTOR",
+      "target": "REPLACE_WITH_NEWSLETTER_LABEL"
+    },
+    "chat.messages": {
+      "via": "none"
+    },
+    "calendar.events": {
+      "via": "connector",
+      "connector": "REPLACE_WITH_CALENDAR_CONNECTOR",
+      "target": "primary"
+    },
+    "tasks.priorities": {
+      "via": "file",
+      "path": "planning/this-week.md"
+    },
+    "tasks.week-snapshot": {
+      "via": "paste"
+    },
+    "tasks.work-queue": {
+      "via": "connector",
+      "connector": "REPLACE_WITH_QUEUE_CONNECTOR",
+      "target": "REPLACE_WITH_QUEUE"
+    },
+    "tasks.agent-queue": {
+      "via": "connector",
+      "connector": "REPLACE_WITH_QUEUE_CONNECTOR",
+      "target": "REPLACE_WITH_AGENT_QUEUE"
+    },
+    "tasks.commitments": [
+      {
+        "via": "file",
+        "path": "REPLACE_WITH_COMMITMENTS_FILE"
+      }
+    ],
+    "transcripts.meetings": {
+      "via": "skill",
+      "skill": "capture-meetings",
+      "target": "output=raw"
+    },
+    "transcripts.one-on-ones": {
+      "via": "file",
+      "path": "REPLACE_WITH_ONE_ON_ONE_FOLDER"
+    },
+    "people.roster": {
+      "via": "file",
+      "path": "REPLACE_WITH_ROSTER_FILE"
+    },
+    "people.assessments": {
+      "via": "file",
+      "path": "REPLACE_WITH_ASSESSMENT_FILE"
+    },
+    "people.profiles": {
+      "via": "connector",
+      "connector": "REPLACE_WITH_PROFILE_CONNECTOR",
+      "target": "REPLACE_WITH_DISC_FIELD"
+    },
+    "people.circles": {
+      "via": "file",
+      "path": "relationships/circles.json"
+    },
+    "log.open-items": {
+      "via": "file",
+      "path": "leadership/open-items.json"
+    },
+    "log.touches": {
+      "via": "file",
+      "path": "relationships/touches.jsonl"
+    },
+    "household.rhythms": {
+      "via": "file",
+      "path": "household/rhythms.json"
+    },
+    "kb.raw-index": {
+      "via": "connector",
+      "connector": "REPLACE_WITH_KB_CONNECTOR",
+      "target": "REPLACE_WITH_RAW_INDEX_ID",
+      "name": "Raw"
+    },
+    "kb.wiki": {
+      "via": "connector",
+      "connector": "REPLACE_WITH_KB_CONNECTOR",
+      "target": "REPLACE_WITH_WIKI_ID",
+      "name": "Wiki"
+    },
+    "kb.wiki-log": {
+      "via": "connector",
+      "connector": "REPLACE_WITH_KB_CONNECTOR",
+      "target": "REPLACE_WITH_WIKI_LOG_ID",
+      "name": "Wiki Log"
+    },
+    "kb.positions": {
+      "via": "none"
+    },
+    "voice.style-guide": {
+      "via": "file",
+      "path": "context/style-guide.md"
+    },
+    "voice.canon": {
+      "via": "file",
+      "paths": [
+        "context/voice.md",
+        "context/working-preferences.md",
+        "context/about-me.md"
+      ]
+    },
+    "approvals.pages": {
+      "via": "connector",
+      "connector": "REPLACE_WITH_NOTION_CONNECTOR",
+      "target": "REPLACE_WITH_APPROVALS_DATABASE_ID"
+    }
+  },
+  "knowledge": {
+    "raw_dir": "learnings/raw",
+    "loop_state": ".agents/loops/knowledge-intake.json",
+    "meeting_lookback": "REPLACE_WITH_LOOKBACK_WINDOW",
+    "wiki_ingest_skill": "wiki-ingest",
+    "podcast_feeds": "knowledge/podcast-feeds.json",
+    "youtube_channels": "knowledge/youtube-channels.json",
+    "monitored_pages": "knowledge/monitored-pages.json",
+    "guardrails": {
+      "max_podcast_items_per_run": 2,
+      "max_meeting_artifacts_per_run": 2,
+      "max_audio_minutes_per_run": 180,
+      "max_web_items_per_run": 100
+    },
+    "routing_policy": {
+      "accept": [
+        "personal learning",
+        "research",
+        "writing",
+        "ideas",
+        "life administration",
+        "side projects"
+      ],
+      "reject": [
+        "work operations",
+        "client support tickets",
+        "confidential personnel",
+        "partner meetings marked confidential"
+      ],
+      "on_ambiguous": "defer"
+    },
+    "schema_categories": [
+      "sources",
+      "topics",
+      "systems",
+      "projects",
+      "ideas",
+      "people",
+      "decisions",
+      "brands",
+      "positions",
+      "clients"
+    ],
+    "transcription": {
+      "tools_dir": "tools",
+      "whisper_cpp_model": "tools/whisper.cpp/models/ggml-base.en.bin"
+    }
+  },
+  "leadership": {
+    "coaching_state": ".agents/loops/coaching-angles.json",
+    "coaching_briefs_dir": ""
+  },
+  "relationships": {
+    "author_lane": "REPLACE_WITH_LANE",
+    "skip_list": [],
+    "weekly_touches": 5,
+    "circle_cadences": {
+      "family-outer": { "min_days": 21, "max_days": 28 },
+      "friends-inner": { "min_days": 14, "max_days": 21 },
+      "friends-outer": { "min_days": 90, "max_days": 90 },
+      "professional-inner": { "min_days": 30, "max_days": 30 },
+      "professional-outer": { "min_days": 90, "max_days": 180 }
+    }
+  },
+  "email_send": {
+    "from": "REPLACE_WITH_FROM_ADDRESS",
+    "reply_to": "REPLACE_WITH_REPLY_TO",
+    "ledger_file": "email/send-ledger.jsonl"
+  },
+  "secrets": {
+    "notion": { "env": "NOTION_TOKEN", "used_by": ["approval-stage", "email-send"] },
+    "resend": { "env": "RESEND_API_KEY", "used_by": ["email-send"] }
+  }
+}

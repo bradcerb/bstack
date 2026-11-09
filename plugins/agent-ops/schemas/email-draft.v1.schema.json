@@ -1,0 +1,143 @@
+{
+  "$id": "email-draft.v1",
+  "title": "Email draft, version 1",
+  "description": "Written by approval-stage next to a rendered email. draftHash is the sha256 of this object without draftHash, so it covers the envelope and every file hash. Paths are relative to this file.",
+  "type": "object",
+  "required": [
+    "schema",
+    "version",
+    "key",
+    "envelope",
+    "subject",
+    "content",
+    "note",
+    "draftHash"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "email-draft"
+    },
+    "version": {
+      "const": 1
+    },
+    "key": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9/._-]{2,255}$"
+    },
+    "envelope": {
+      "type": "object",
+      "required": [
+        "from",
+        "to",
+        "replyTo"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "replyTo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "subject": {
+      "type": "string"
+    },
+    "content": {
+      "type": "object",
+      "required": [
+        "html",
+        "text",
+        "images"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "html": {
+          "$ref": "#/$defs/file"
+        },
+        "text": {
+          "$ref": "#/$defs/file"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "cid",
+              "path",
+              "sha256"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "cid": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+$"
+              },
+              "path": {
+                "type": "string"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          }
+        }
+      }
+    },
+    "note": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "draftHash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "$defs": {
+    "file": {
+      "type": "object",
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    }
+  }
+}

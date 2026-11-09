@@ -1,0 +1,13 @@
+.DS_Store
+.venv/
+__pycache__/
+*.pyc
+workspace.json
+.env
+.env.*
+.agents/loops/
+learnings/raw/
+tools/
+*.log
+.idea/
+.vscode/
