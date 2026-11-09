@@ -5,13 +5,19 @@ description: >-
   the knowledge base, or a scheduled knowledge-intake run has queued article
   links to capture as private raw Markdown with a kb.raw-index row.
 metadata:
-  bstack-config: "sources: kb.raw-index | settings: knowledge.raw_dir knowledge.monitored_pages?"
-  bstack-needs: "files? web browser?"
+  bstack-config: "sources: kb.raw-index state.knowledge-intake? queue.articles? | settings: knowledge.raw_dir knowledge.monitored_pages?"
+  bstack-needs: "shell? files? web?"
   bstack-sends: "no"
   bstack-money: "no"
   bstack-scope: "any"
 ---
 # Capture articles
+
+## Runtime path
+
+Before the config check, select the runtime path defined under Knowledge runtime bindings in SOURCES.md. Apply that contract and this skill's config check. Skip local settings and scripts in runtime mode. Use submitted URLs, or `queue.articles` under the state and lease rules. Do not read a monitored-pages file.
+
+Fetch and extract the complete article, reject login walls and partial extractions, and apply routing before saving. Never use a browser unless that capability exists. Save the complete record through `kb.raw-index`; a paste binding returns it as prepared. Return durable receipt ids and versions, or the prepared records. Acknowledge queue items and update state only after confirmed saves. Defer failures. Do not run the file workflow below in runtime mode.
 
 ## Config check
 
@@ -21,7 +27,7 @@ Do this before any other step. Find the config: a host profile (JSON with `bstac
 
 On a profile host without `files`, skip the monitored-pages file and take only URLs submitted for this run. When `kb.raw-index` acts as `paste`, return the complete raw record with `body` in the reply, omit `raw_path`, and skip all file and index writes. Report it as prepared, not saved, and do not mark a queue item handled. When a fileless host binds `kb.raw-index` through something other than a tool or `paste`, stop and explain that this capture path needs a tool that stores the body too.
 
-## Prerequisites
+## File workflow prerequisites
 
 Write raw Markdown under `knowledge.raw_dir` and one index row in `kb.raw-index`. When `kb.raw-index` is bound to a tool, that tool is the store: send it the whole raw record in step 7, write no file, and do not read `knowledge.raw_dir`. Do not create a database. Do not ingest browsing history. Take only an explicit submission or a URL listed in the monitored-pages file.
 

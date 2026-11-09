@@ -1,5 +1,7 @@
 # Scheduled task
 
+This reference describes the file-host workflow. On runtime hosts use the Runtime path in SKILL.md and Knowledge runtime bindings in SOURCES.md. Never bootstrap local tools or open workspace files on that path.
+
 The host routine owns the clock. Do not store a cadence here. When the routine needs a zone, read `workspace.timezone`.
 
 Caps are `knowledge.guardrails` (`max_podcast_items_per_run`, `max_meeting_artifacts_per_run`, `max_audio_minutes_per_run`). Paths are the settings in `workspace.json`. Pass `--config` so the scripts read them. A flag on the command overrides one run.

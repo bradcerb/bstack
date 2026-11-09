@@ -1,0 +1,36 @@
+{
+  "bstack_host_version": 1,
+  "host": { "name": "library-agent", "capabilities": ["web"] },
+  "workspace": { "id": "personal", "timezone": "America/New_York" },
+  "sources": {
+    "kb.raw-index": { "via": "tool", "tool": "library_save" },
+    "kb.raw-content": { "via": "tool", "tool": "library_read" },
+    "state.knowledge-intake": { "via": "tool", "tool": "intake_state" },
+    "feeds.podcasts": { "via": "tool", "tool": "podcast_feeds" },
+    "feeds.youtube": { "via": "tool", "tool": "youtube_channels" },
+    "queue.articles": { "via": "tool", "tool": "article_queue" },
+    "email.newsletters": { "via": "tool", "tool": "newsletter_read" },
+    "calendar.events": { "via": "tool", "tool": "calendar_read" },
+    "transcripts.meetings": { "via": "tool", "tool": "meeting_transcripts" },
+    "transcripts.media": { "via": "tool", "tool": "media_transcript" },
+    "kb.wiki": { "via": "tool", "tool": "wiki_pages" },
+    "kb.wiki-log": { "via": "tool", "tool": "wiki_log" }
+  },
+  "knowledge": {
+    "meeting_lookback": "last 7 days",
+    "wiki_ingest_skill": "wiki-ingest",
+    "schema_categories": ["sources", "concepts"],
+    "routing_policy": {
+      "accept": ["personal"],
+      "reject": ["client-work"],
+      "on_ambiguous": "ask"
+    },
+    "guardrails": {
+      "max_podcast_items_per_run": 2,
+      "max_youtube_items_per_run": 2,
+      "max_meeting_artifacts_per_run": 2,
+      "max_audio_minutes_per_run": 180,
+      "max_web_items_per_run": 10
+    }
+  }
+}

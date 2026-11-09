@@ -5,13 +5,25 @@ description: >-
   capture skills into raw storage, write a kb.raw-index row per raw item, verify
   the writes, then invoke wiki-ingest for new raw only.
 metadata:
-  bstack-config: "sources: kb.raw-index kb.wiki kb.wiki-log | settings: knowledge.raw_dir knowledge.loop_state knowledge.routing_policy knowledge.wiki_ingest_skill"
-  bstack-needs: "shell? files web"
+  bstack-config: "sources: kb.raw-index kb.wiki kb.wiki-log state.knowledge-intake? kb.raw-content? email.newsletters? queue.articles? feeds.podcasts? feeds.youtube? calendar.events? | settings: knowledge.raw_dir knowledge.loop_state knowledge.routing_policy knowledge.wiki_ingest_skill"
+  bstack-needs: "shell? files? web?"
   bstack-sends: "no"
   bstack-money: "no"
   bstack-scope: "any"
 ---
 # Knowledge intake
+
+## Runtime path
+
+Before the config check, select the runtime path defined under Knowledge runtime bindings in SOURCES.md. Apply that contract and this skill's config check. Skip local settings, scripts, and file reads in runtime mode. Load only the capture skills needed for explicit inputs or bound sources. Require those skill names to be available; report a missing dependency instead of improvising its method. Use the same agent sequentially if the host has no subagent facility.
+
+For a scheduled or monitored cycle, require `state.knowledge-intake` with read and atomic compare-and-set, then claim its lease. If it is absent, return a deferred cycle with zero discovery; an explicitly requested one-off batch may run without state and must say so. Read routing and finite caps. Pass your run id and state snapshot to each capture skill. Own all checkpoints; children return deltas. Never invoke a child that will independently acquire your lease.
+
+Retry pending capture items and pending ingest receipts before new discovery. Call the appropriate captures for approved newsletters, article submissions or `queue.articles`, `feeds.podcasts`, `feeds.youtube`, and authorized meetings. Initialize new monitored feeds without backfill. Save each returned capture receipt and handled-id delta conditionally before proceeding; keep unresolved ids pending even when later items succeed.
+
+Read each newly saved record through `kb.raw-content`, verify its full body and identity against the capture result, and retain its immutable version when supported. A save receipt without readback remains pending ingest. Load `knowledge.wiki_ingest_skill` (default `wiki-ingest`) only for verified records and previously checkpointed pending ingest. If wiki bindings are absent or paste, report capture-only or prepared synthesis rather than claiming an ingest. Preserve pending ingest receipts across cycles so an already-handled capture can retry a failed ingest.
+
+After verified wiki and log writes, remove only those source versions from pending ingest. Conditionally checkpoint failures, cursors, completion receipts, and last_run_at. Release only your own lease even after a partial failure. A lost lease or failed checkpoint means partial completion, never a completed cycle. Return discovered, written, verified, ingested, deferred, skipped, and failed counts, ids, and the persisted or stateless state outcome. Do not run the file workflow below in runtime mode.
 
 ## Config check
 

@@ -1,5 +1,7 @@
 # Portable workspaces
 
+This reference describes the file-host workflow. On runtime hosts use the Runtime path in SKILL.md and Knowledge runtime bindings in SOURCES.md. Never bootstrap local tools or open workspace files on that path.
+
 Raw Markdown lives under `knowledge.raw_dir`. Curated pages live in `kb.wiki`. The index is `kb.raw-index`. The log is `kb.wiki-log`. A connector is one way to bind those kinds. The binding is in `workspace.json`, not in this plugin.
 
 Use this reference when running the intake skills from a new machine or a workspace that is not already obvious from the conversation.

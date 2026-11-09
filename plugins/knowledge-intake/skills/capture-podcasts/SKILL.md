@@ -5,19 +5,29 @@ description: >-
   backfill, transcribing new episodes, or resolving an episode link through its
   public feed into raw Markdown and a kb.raw-index row.
 metadata:
-  bstack-config: "sources: kb.raw-index | settings: knowledge.raw_dir knowledge.loop_state knowledge.podcast_feeds knowledge.guardrails"
-  bstack-needs: "shell files web"
+  bstack-config: "sources: kb.raw-index state.knowledge-intake? feeds.podcasts? transcripts.media? | settings: knowledge.raw_dir knowledge.loop_state knowledge.podcast_feeds knowledge.guardrails"
+  bstack-needs: "shell? files? web?"
   bstack-sends: "no"
   bstack-money: "no"
   bstack-scope: "any"
 ---
 # Capture podcasts
 
+## Runtime path
+
+Before the config check, select the runtime path defined under Knowledge runtime bindings in SOURCES.md. Apply that contract and this skill's config check. Skip local settings, bootstrap, downloads, and scripts in runtime mode.
+
+For monitoring, read `feeds.podcasts` and acquire or inherit the state lease. An absent feed binding means no monitored feeds; explicit episode submissions still run. Without durable state, process only explicit submissions. Resolve a submitted episode to a public feed and stable GUID; defer uncertain matches. Initialize monitored feeds without backfill, then process pending and unseen items under the shared state and cap rules. Apply feed exclusions and routing.
+
+Prefer a complete publisher transcript attached to the feed item. Otherwise use `transcripts.media` for audio-derived transcription with provenance. A supplied complete authorized transcript is also valid. With no usable transcript or transcript tool, defer the episode without marking it handled. Never turn show notes or a summary into a transcript. Enforce the remaining audio-minute budget before transcription.
+
+Include show notes before the transcript. Save the existing podcast frontmatter plus `body` through `kb.raw-index`. Keep timestamps and known speaker labels. Return counts and receipt ids, or prepared records for paste. Checkpoint only confirmed saves. Do not run the file workflow below in runtime mode.
+
 ## Config check
 
 Do this before any other step. Find the config: a host profile (JSON with `bstack_host_version`) in the host's instructions or at a path the caller gave, else `bstack-host.json` in the active workspace root, else `workspace.json` at the path the caller gave or in that root, else ask once where `workspace.json` is. Read this skill's `bstack-config` line in the frontmatter. For each required source kind look up `sources.<kind>`; for each required setting look up its dotted path. Entries marked `?` that are absent or `"via": "none"` are skipped without asking. In `workspace.json`, if a required entry is absent, empty, or starts with `REPLACE_WITH` (including inside nested objects and lists), ask only for that entry, write it into `workspace.json` in the v2 shape, and continue. A host profile is read-only: never write it and never ask to fill it. There, a required source that is absent or `"via": "none"` acts as `paste` (ask in the conversation for what you would read, return what you would write, and say "`<kind>` is not bound in this host"), and a required setting that is absent takes its default in SOURCES.md, or with no default, one answer for this run only. If a source is bound to a connector or a tool this host does not have, stop and say "`<kind>` is bound to `<name>`, which is not connected here." Do not swap in another tool, a cached copy, or a guess. Old flat field names still count through the alias table in SOURCES.md. Do not run a full onboarding interview.
 
-## Prerequisites
+## File workflow prerequisites
 
 Write raw Markdown under `knowledge.raw_dir` and one index row in `kb.raw-index`. The feed list is the file at `knowledge.podcast_feeds`. A missing file is an empty list. Cursors live in `knowledge.loop_state`. Caps live in `knowledge.guardrails`. Do not create a database.
 

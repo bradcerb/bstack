@@ -5,13 +5,21 @@ description: >-
   Markdown, or when a scheduled knowledge-intake run needs newsletter intake
   from the email.newsletters binding.
 metadata:
-  bstack-config: "sources: kb.raw-index email.newsletters | settings: knowledge.raw_dir knowledge.loop_state"
-  bstack-needs: "files"
+  bstack-config: "sources: kb.raw-index email.newsletters state.knowledge-intake? | settings: knowledge.raw_dir knowledge.loop_state"
+  bstack-needs: "shell? files? web?"
   bstack-sends: "no"
   bstack-money: "no"
   bstack-scope: "any"
 ---
 # Capture newsletters
+
+## Runtime path
+
+Before the config check, select the runtime path defined under Knowledge runtime bindings in SOURCES.md. Apply that contract and this skill's config check. Skip local settings and scripts in runtime mode. Read only the approved `email.newsletters` source, or issues explicitly supplied by the caller. Do not sweep the inbox. Follow `references/newsletter-policy.md`.
+
+For monitored discovery, acquire or inherit the state lease and load newsletter cursors and pending ids. Without durable state, process only explicitly submitted issues and report stateless capture. Dedupe by Message-ID or feed GUID. Prefer a complete issue, clean delivery chrome and tracking, preserve source wording and meaningful links, reject confirmation/login/unsubscribe-only messages, and apply routing.
+
+Save the full private raw record with `source_type: newsletter` through `kb.raw-index`. Advance only confirmed saved or explicitly skipped ids; retain failures for retry. Delivery is not reading or consumption. Return counts and receipt ids, or prepared records when using paste. Never reply, unsubscribe, or change mailbox rules. Do not run the file workflow below in runtime mode.
 
 ## Config check
 
@@ -27,7 +35,7 @@ Prefer the complete mail body for a truncated issue. Prefer the feed when it sup
 
 Keep the full issue private under `knowledge.raw_dir`. Preserve the canonical publisher URL when one exists.
 
-## Prerequisites
+## File workflow prerequisites
 
 Write raw Markdown under `knowledge.raw_dir` and one index row in `kb.raw-index`. Cursors live in `knowledge.loop_state`. Do not create a database. Do not reply, unsubscribe, or change mailbox rules.
 

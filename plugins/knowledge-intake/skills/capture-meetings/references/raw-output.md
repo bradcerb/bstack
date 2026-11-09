@@ -1,6 +1,6 @@
 # Raw transcript payload
 
-`output=raw` and `output=both` return UTF-8 JSON Lines. One JSON object per line. No other lines inside the payload. `skills/capture-meetings/scripts/meeting_params.py format` emits this payload. It does not fetch providers.
+`output=raw` and `output=both` return UTF-8 JSON Lines. One JSON object per line. No other lines inside the payload. `skills/capture-meetings/scripts/meeting_params.py format` emits this payload. It does not fetch providers. Runtime hosts format the same payload directly without executing Python.
 
 Capture files keep the existing Markdown frontmatter. This document is only the return payload other skills parse.
 

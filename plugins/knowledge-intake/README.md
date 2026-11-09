@@ -10,26 +10,26 @@ Scripts take `--config` pointing at that file. If the flag is omitted they walk 
 
 ## Library hosts
 
-A library host stores knowledge through a save tool instead of raw files, and has no shell. To save articles, its host profile binds `kb.raw-index` to that tool and lists `web` in `host.capabilities`. Without a binding, `capture-articles` returns the prepared raw record in the conversation and reports that nothing was saved.
+All seven skills have a runtime path for hosts without files or shell. They read the host profile and the Knowledge runtime bindings contract in the root `SOURCES.md`. The existing file and Python workflows remain the path for workspace hosts without a runtime binding.
 
-The save tool's contract:
+Start from `examples/bstack-library-host.json.example` at the repo root. Use actual tools exposed by the host, not the example names. The host enforces approvals, data boundaries, paid transcription consent, and storage semantics. This plugin defines procedures; it does not install a database or a transcription service.
 
-- It takes one raw record: the frontmatter fields the capture skill builds, plus `body` (the Markdown) and `status`.
-- It upserts by `external_id`, so a second capture of the same URL updates one record.
-- It returns the record's id.
-
-| Skill | On a library host | What it still needs |
+| Skill | Runtime inputs | Durable output |
 | --- | --- | --- |
-| `capture-articles` | Runs for a submitted URL. The tool stores the record. The browser fallback is skipped when `browser` is not listed. | Nothing more |
-| `capture-newsletters` | Not yet | The same tool path as `capture-articles`, and a home for its cursor. `knowledge.loop_state` is a file. A future `state.loop` kind bound to a key-value tool would replace it. |
-| `capture-podcasts`, `capture-youtube` | No | `shell` and local transcription. A publisher-transcript-only path for podcasts could drop the shell later. |
-| `capture-meetings` | No | `shell` (`meeting_params.py`) and `knowledge.loop_state` |
-| `wiki-ingest`, `knowledge-intake` | No | A wiki (`kb.wiki`, `kb.wiki-log`) and raw files. A library host answers from the library instead. |
+| `capture-articles` | Submitted URLs or an approved article queue; full fetch or caller-supplied body | Complete private article record |
+| `capture-newsletters` | Approved newsletter binding or submitted issues | Complete private issue record; per-source cursor when bound |
+| `capture-podcasts` | Submitted episodes or bound feed list; publisher or audio-derived transcript | Show notes and transcript with provenance |
+| `capture-youtube` | Submitted videos or bound channels; audio-derived transcript | Transcript with provenance; platform captions alone are deferred |
+| `capture-meetings` | Authorized calendar artifacts or provider transcripts; optional audio transcription | Private meeting record; raw and both output modes also work without Python |
+| `wiki-ingest` | Full saved records through a read binding, or supplied complete raw records | Verified wiki pages and idempotent log entries, with source citations |
+| `knowledge-intake` | Explicit batch or bound monitored sources; state lease for scheduled discovery | Capture receipts, verified ingest, and conditional state checkpoints |
 
-A profile for `capture-articles` binds one source:
+The raw save tool receives one record containing the existing frontmatter fields plus the full Markdown `body`, without `raw_path`. It upserts by source type and external id and returns a durable id, preferably with an immutable version. A separate `kb.raw-content` read binding supports verification and ingest, so the capture module can stay separate from a read-only librarian. A save-only tool remains usable for capture.
 
-```json
-"kb.raw-index": { "via": "tool", "tool": "library_save" }
-```
+Scheduled monitoring needs workspace-scoped state with atomic compare-and-set and expiring ownership. Pending capture failures and saved records awaiting ingest survive retries. Without that state binding, explicit one-off captures still work and report that state was not saved; scheduled discovery is deferred. Missing transcription defers the item without marking it handled. Missing write bindings produce proposals and report zero saves. The host profile is never changed.
 
-`knowledge.raw_dir` stays at its default and is never read. A fileless host skips the optional monitored-pages file and takes URLs submitted for the run.
+Bind `kb.wiki` and `kb.wiki-log` only when HomeOS should maintain a curated wiki. A library-only deployment can capture and retrieve raw records without them; it reports capture-only rather than a completed wiki cycle. Synthesis requires full reads and idempotent page/log writes. Tool schemas that lack those operations are reported, not guessed.
+
+## Verification
+
+Run the existing meeting parameter tests with Python unittest discovery. `node scripts/eval-knowledge-runtime.mjs` installs all seven skills into a temporary Codex project and runs fixture-backed host evaluations with shell tools disabled. It requires a signed-in Codex CLI. The fixture services use synthetic records and never call live external APIs. The eval checks capture writes, transcription deferral, meeting output modes, wiki receipts, state failure recovery, and refusal of unsupported scheduled state.
