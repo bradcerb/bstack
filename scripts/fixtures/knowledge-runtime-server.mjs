@@ -29,7 +29,7 @@ function call(name, a) {
     if (a.action === 'save') {
       if (!a.record?.body || !a.record?.external_id || a.record.raw_path || a.record.visibility !== 'private') error = 'invalid raw record';
       else {
-        const prior = d.records.find(r => r.source_type === a.record.source_type && r.external_id === a.record.external_id);
+        const prior = d.records.findLast(r => r.source_type === a.record.source_type && r.external_id === a.record.external_id);
         const record = { ...a.record, id: prior?.id ?? `raw-${d.records.length + 1}`, version: prior?.version ?? 1 };
         if (prior && prior.body !== record.body) { record.version++; d.records.push(record); }
         else if (!prior) d.records.push(record);

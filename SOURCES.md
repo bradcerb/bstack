@@ -397,8 +397,7 @@ Check the v2 path first. If it is missing, the old flat field still counts. When
 | `routing_policy` | `knowledge.routing_policy` |
 | `schema_categories` | `knowledge.schema_categories` |
 | `wiki_dir`, `wiki_schema`, `monitored_pages`, `client_calls_dir`, `coaching_client_slugs` | the same names under `knowledge` |
-| a loop spec's `guardrails.max_meeting_items_per_run` | `knowledge.guardrails.max_youtube_items_per_run` | `2` | knowledge runtime channel review |
-| `knowledge.guardrails.max_meeting_artifacts_per_run` |
+| a loop spec's `guardrails.max_meeting_items_per_run` | `knowledge.guardrails.max_meeting_artifacts_per_run` |
 | a loop spec's `guardrails.max_web_items_per_run` | `knowledge.guardrails.max_web_items_per_run` |
 | a loop spec's `timezone` | `workspace.timezone` |
 | a loop spec's `cadence`, `proposed_schedule`, `scheduled_task_id` | the host routine only. Not in `workspace.json` |
