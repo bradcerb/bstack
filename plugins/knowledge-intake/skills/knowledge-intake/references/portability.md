@@ -1,5 +1,7 @@
 # Knowledge intake portability
 
+This reference describes the file-host workflow. On runtime hosts use the Runtime path in SKILL.md and Knowledge runtime bindings in SOURCES.md. Never bootstrap local tools or open workspace files on that path.
+
 Each skill owns its deterministic scripts and supporting references. Machine-level programs such as ffmpeg and Python environments are dependencies, not workspace tools.
 
 ## Portability

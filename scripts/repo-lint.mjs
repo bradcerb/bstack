@@ -99,6 +99,14 @@ for (const s of readSkills()) {
   }
 }
 
+let tableWidth = null;
+for (const [index, line] of readFileSync(join(root, "SOURCES.md"), "utf8").split("\n").entries()) {
+  if (!line.startsWith("|")) { tableWidth = null; continue; }
+  const width = line.split("|").length;
+  if (tableWidth === null) tableWidth = width;
+  else if (width !== tableWidth) problems.push(`SOURCES.md:${index + 1}: table row has the wrong number of columns`);
+}
+
 const configCheck = readFileSync(join(root, "SOURCES.md"), "utf8").match(/```markdown\n## Config check\n\n([^\n]+)\n```/)?.[1];
 if (!configCheck) problems.push("SOURCES.md: no config-check block");
 for (const s of readSkills()) {

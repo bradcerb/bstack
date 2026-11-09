@@ -16,6 +16,20 @@ jobs:
       - run: node scripts/repo-lint.mjs
       - run: node --test scripts/vendor.test.mjs
 
+  knowledge-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m unittest discover -s plugins/knowledge-intake/skills/capture-meetings/scripts -p 'test_*.py'
+      - run: node --test scripts/knowledge-runtime.test.mjs
+      - run: node scripts/vendor.mjs --out "$RUNNER_TEMP/knowledge-skills" --allow knowledge-intake
+
   plugin-check:
     runs-on: ubuntu-latest
     strategy:

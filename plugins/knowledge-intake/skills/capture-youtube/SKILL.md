@@ -3,15 +3,25 @@ name: capture-youtube
 description: >-
   Use when transcribing a video, processing a video URL, monitoring a channel
   feed, or preparing a transcript as raw Markdown with a kb.raw-index row.
-  Transcription is local. Captions are not the source of truth.
+  Use audio-derived transcription. Captions alone are not the source of truth.
 metadata:
-  bstack-config: "sources: kb.raw-index | settings: knowledge.raw_dir knowledge.loop_state knowledge.youtube_channels? knowledge.guardrails"
-  bstack-needs: "shell files web"
+  bstack-config: "sources: kb.raw-index state.knowledge-intake? feeds.youtube? transcripts.media? | settings: knowledge.raw_dir knowledge.loop_state knowledge.youtube_channels? knowledge.guardrails"
+  bstack-needs: "shell? files? web?"
   bstack-sends: "no"
   bstack-money: "no"
   bstack-scope: "any"
 ---
 # Capture YouTube
+
+## Runtime path
+
+Before the config check, select the runtime path defined under Knowledge runtime bindings in SOURCES.md. Apply that contract and this skill's config check. Skip local settings, bootstrap, downloads, and scripts in runtime mode.
+
+Accept an explicit video URL and resolve its stable video id from the provider. For monitoring, read `feeds.youtube` under the state and lease rules. An absent channel binding means no monitored channels. Without durable state, process only explicit submissions. Initialize monitored channels without backfill, then process pending and unseen videos oldest-first within caps and routing policy.
+
+Use `transcripts.media` for audio-derived transcription with source provenance and duration. A caller-supplied complete audio-derived transcript is valid when its origin is stated. Platform captions, a summary, or unknown transcript provenance do not satisfy this path. If audio transcription is unavailable, defer and keep the video pending. Enforce the remaining minute budget before transcription. Do not install tools or claim local transcription occurred.
+
+Save the existing YouTube frontmatter plus the full transcript `body` through `kb.raw-index`. Preserve available timestamps and speaker labels. Checkpoint only confirmed saves. Return counts and receipt ids, or prepared records for paste. Do not run the file workflow below in runtime mode.
 
 ## Config check
 
@@ -19,7 +29,7 @@ Do this before any other step. Find the config: a host profile (JSON with `bstac
 
 `knowledge.youtube_channels` is optional. Absent, empty, a value that starts with `REPLACE_WITH`, or a missing file means there is no channel list. A submitted video URL still runs. Do not ask for the setting.
 
-## Prerequisites
+## File workflow prerequisites
 
 Write raw Markdown under `knowledge.raw_dir` and one index row in `kb.raw-index`. Cursors live in `knowledge.loop_state`. Do not create a database.
 

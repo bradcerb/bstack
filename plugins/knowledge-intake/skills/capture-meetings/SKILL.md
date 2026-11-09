@@ -6,13 +6,23 @@ description: >-
   Also use for an optional date range, one-person filter, or raw transcript
   return.
 metadata:
-  bstack-config: "sources: kb.raw-index calendar.events transcripts.meetings? | settings: knowledge.raw_dir knowledge.loop_state knowledge.meeting_lookback knowledge.routing_policy workspace.timezone?"
-  bstack-needs: "shell files"
+  bstack-config: "sources: kb.raw-index calendar.events transcripts.meetings? state.knowledge-intake? transcripts.media? | settings: knowledge.raw_dir knowledge.loop_state knowledge.meeting_lookback knowledge.routing_policy workspace.timezone?"
+  bstack-needs: "shell? files? web?"
   bstack-sends: "no"
   bstack-money: "no"
   bstack-scope: "any"
 ---
 # Capture meetings
+
+## Runtime path
+
+Before the config check, select the runtime path defined under Knowledge runtime bindings in SOURCES.md. Apply that contract and this skill's config check. Skip local path settings and Python commands in runtime mode. Resolve parameters using the date-range, exact-person-match, and output rules below, without running `meeting_params.py`. Validate real calendar dates, ordered inclusive bounds, positive counts, and a known current date in the calendar timezone (else workspace timezone). If a relative range cannot be resolved reliably, ask for explicit dates. An omitted range uses the configured lookback; ask for it for this run if absent.
+
+Read authorized `calendar.events` and provider artifacts or `transcripts.meetings`, restricted to that window. A self-binding to `capture-meetings` is recursive and must not be called; use event artifacts instead. Apply the exact attendee filter and routing policy before returning or saving anything. Never search transcript text to match a person. Skip declined events, holds without artifacts, and already-handled captures. `output=raw` keeps already-handled items eligible.
+
+Prefer complete provider transcripts or notes. A recording-only event may use audio-derived `transcripts.media` within the audio budget. Defer processing artifacts or unavailable transcription. Preserve provider notes as notes, with provenance. Do not invent a transcript from an event description.
+
+For `capture` and `both`, save the full private meeting record through `kb.raw-index`; its id is event id plus artifact id. Apply the shared state and receipt rules. Without durable state, use explicit caller-selected meetings only and report stateless capture. For `raw`, do not save, change state, acquire a write lease, or mark handled. Format JSON Lines directly, with one object per meeting containing `title` (string), `occurred_at` (ISO-8601 timestamp with offset), `timezone` (IANA name or empty string), `attendees` (strings in provider order, exact duplicates removed), `external_id` (non-empty event id plus artifact id), `source_url` (authorized URL or empty string), and `transcript` (non-empty text). Sort objects by `occurred_at`, then `external_id`; escape embedded newlines in JSON strings. `raw` returns only one `jsonl` fence, empty when no meetings match. `both` returns capture counts then a `Raw transcripts` heading and one `jsonl` fence. This matches `references/raw-output.md` without needing a file-reading tool. For `both`, return JSON Lines only for successful saves. A paste fallback produces prepared records with zero saves; do not include them as successful captures in `both`. Return counts and receipt ids for capture modes. Do not run the file workflow below in runtime mode.
 
 ## Config check
 
@@ -24,7 +34,7 @@ Before asking for `kb.raw-index`, apply one exception. When this call's `output`
 
 `workspace.timezone` is optional. Absent, empty, or a value that starts with `REPLACE_WITH` does not block. Do not ask for it.
 
-## Prerequisites
+## File workflow prerequisites
 
 Require `knowledge.raw_dir`, `knowledge.routing_policy`, `knowledge.loop_state`, `knowledge.meeting_lookback`, `calendar.events`, and `kb.raw-index` for a capture write. If `kb.raw-index` is missing, stop and ask, except for the `output=raw` case above. Do not create a database.
 
