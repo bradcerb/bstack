@@ -7,6 +7,7 @@
 //  5. ApprovedDraft is never cast or issued outside approval-stage.
 //  6. Shared lib files copied between plugins stay byte-identical.
 //  7. Every SKILL.md declares the portability metadata in SOURCES.md, and its name matches its folder.
+//  8. Every skill that declares bstack-config carries the config-check text from SOURCES.md word for word.
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
@@ -96,6 +97,15 @@ for (const s of readSkills()) {
   for (const key of Object.keys(s.metadata)) {
     if (key.startsWith("bstack-") && !KNOWN_META.has(key)) problems.push(`${s.path}: unknown metadata.${key}`);
   }
+}
+
+const configCheck = readFileSync(join(root, "SOURCES.md"), "utf8").match(/```markdown\n## Config check\n\n([^\n]+)\n```/)?.[1];
+if (!configCheck) problems.push("SOURCES.md: no config-check block");
+for (const s of readSkills()) {
+  const declares = s.metadata["bstack-config"] !== undefined;
+  const carries = configCheck && readFileSync(join(root, s.path), "utf8").includes(configCheck);
+  if (declares && !carries) problems.push(`${s.path}: declares bstack-config without the config-check text from SOURCES.md, word for word`);
+  if (!declares && carries) problems.push(`${s.path}: has the config-check text but no bstack-config line`);
 }
 
 for (const p of problems) console.error(`repo-lint: ${p}`);

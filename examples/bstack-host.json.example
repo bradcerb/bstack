@@ -1,0 +1,23 @@
+{
+  "_comment": "A host profile for a host with no writable workspace. The host's repo commits it and loads it into the agent's instructions, or ships it as bstack-host.json. Skills never write it. A required source left out acts as paste. Tool names are the ones this host exposes. No secrets.",
+  "bstack_host_version": 1,
+  "host": {
+    "name": "example-agent",
+    "capabilities": ["web"]
+  },
+  "workspace": {
+    "timezone": "America/Chicago"
+  },
+  "sources": {
+    "calendar.events": { "via": "connector", "connector": "calendar", "target": "primary" },
+    "tasks.commitments": [{ "via": "tool", "tool": "reminders_add" }],
+    "household.rhythms": { "via": "tool", "tool": "household_rhythms" },
+    "people.circles": { "via": "tool", "tool": "circles" },
+    "log.touches": { "via": "tool", "tool": "touches_append" },
+    "voice.style-guide": { "via": "none" },
+    "kb.positions": { "via": "tool", "tool": "positions" }
+  },
+  "relationships": {
+    "weekly_touches": 5
+  }
+}

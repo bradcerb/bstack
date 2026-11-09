@@ -24,6 +24,8 @@ Pick a plugin under `plugins/<name>/`:
 
 Copy `examples/workspace.json.example` to `workspace.json` in the workspace where you run skills. That file is the only config you own, and it is gitignored. [SOURCES.md](./SOURCES.md) is the vocabulary: source kinds, settings, bindings, and the alias table from older field names. Skills that declare `metadata.bstack-config` check that file first. If one of their required entries is missing or still a `REPLACE_WITH_` placeholder, they ask only for those entries, write them in the v2 shape, and continue. Skills that declare nothing do not read it. Never commit the file, and never put a secret in it.
 
+A host that cannot write files, such as a runtime agent, commits a read-only host profile instead. Start from `examples/bstack-host.json.example`. Skills read it first, never write it, and treat an unbound required source as pasted in the conversation. Hosts without a profile are unchanged.
+
 ## Keepers
 
 See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map.

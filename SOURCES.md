@@ -1,14 +1,14 @@
 # Sources
 
-`workspace.json` is the only config file. Skills read it. They do not keep a second config, a plugin-local example, or an environment variable for the same fact.
+`workspace.json` is the only config file a user edits. Skills read it. They do not keep a second config, a plugin-local example, or an environment variable for the same fact. A host that cannot write files commits a read-only host profile instead (see [Host profile](#host-profile)). A host uses one or the other, never both.
 
-This file is the vocabulary. The filled values live in the user's `workspace.json`, copied from [`examples/workspace.json.example`](examples/workspace.json.example).
+This file is the vocabulary. The filled values live in the user's `workspace.json`, copied from [`examples/workspace.json.example`](examples/workspace.json.example), or in the host's profile, shaped like [`examples/bstack-host.json.example`](examples/bstack-host.json.example).
 
 ## Config, state, and output
 
 | Kind | What it holds | Where it lives |
 | --- | --- | --- |
-| Config | What the user chose: which inbox, which database, which folder, caps, timezone, voice files, feed lists | `workspace.json` only |
+| Config | What the user chose: which inbox, which database, which folder, caps, timezone, voice files, feed lists | `workspace.json`, or the host profile on a host that has one |
 | State | What a run remembers: cursors, seen ids, `last_run_at`, in-flight locks | A file whose path is a setting in `workspace.json`, such as `knowledge.loop_state` or `leadership.coaching_state` |
 | Output | What a skill produces: raw Markdown, briefs, logs, notes | A folder or file named in `workspace.json`, or a path chosen for that run |
 | Package | `plugin.json` and marketplace manifests | This repo. They describe the plugin, not the user |
@@ -16,13 +16,16 @@ This file is the vocabulary. The filled values live in the user's `workspace.jso
 
 A path inside `workspace.json` does not compete with it. A second file that chooses the same inbox, cap, or folder does.
 
-## How to find workspace.json
+## How to find the config
 
-Look in this order:
+Look in this order. Stop at the first one found.
 
-1. The path the caller gave.
-2. `workspace.json` in the active workspace root, the folder the host treats as the workspace.
-3. Ask once where the file is.
+1. A host profile the host already gave you: JSON with `"bstack_host_version"` in the host's instructions or context, or at a path the caller gave.
+2. `bstack-host.json` in the active workspace root.
+3. `workspace.json` at the path the caller gave, else in the active workspace root, the folder the host treats as the workspace.
+4. Ask once where `workspace.json` is.
+
+Claude Code, Cursor, Codex, and Grok Bot have no host profile, so they reach step 3 and behave as before.
 
 One file per host. Connector names differ by host, so do not share one file across machines. Put it at the root of the folder you run skills from. It is gitignored. Never commit it.
 
@@ -43,7 +46,7 @@ The double-quoted string is the whole list. Split on `|`. Each piece is `sources
 - A source token is one key of `sources`, even when the name contains a dot. `email.inbox` is `sources["email.inbox"]`.
 - A setting token is a dotted path. `leadership.coaching_state` is `leadership`, then `coaching_state`.
 
-A skill with no `bstack-config` line declares nothing and does not read `workspace.json`.
+A skill with no `bstack-config` line declares nothing and does not read `workspace.json` or a host profile.
 
 `metadata.bstack-sources` is a second frontmatter string. It names the access for kinds already listed in `bstack-config`: `read`, `write`, `read-write`, or `append`, separated by semicolons. It does not add a kind, and the config check does not read it. A skill with no `bstack-sources` line is unchanged.
 
@@ -77,6 +80,36 @@ The `bstack-needs` tokens:
 
 Classify by what the skill text and its scripts do today, not by what a host might add.
 
+## Host profile
+
+A host profile is the config for a host that has no writable workspace, such as a runtime agent with no persistent filesystem. The host's repo commits it, and the host loads it into the agent's instructions or ships it as `bstack-host.json`. Nobody edits it at run time.
+
+```json
+{
+  "bstack_host_version": 1,
+  "host": { "name": "example-agent", "capabilities": ["web"] },
+  "sources": {
+    "household.rhythms": { "via": "tool", "tool": "household_rhythms" },
+    "tasks.commitments": [{ "via": "tool", "tool": "reminders_add" }],
+    "calendar.events": { "via": "connector", "connector": "calendar", "target": "primary" },
+    "kb.positions": { "via": "none" }
+  },
+  "workspace": { "timezone": "America/Chicago" },
+  "relationships": { "weekly_touches": 5 }
+}
+```
+
+- `bstack_host_version` is `1`. Its presence is what makes the file a host profile.
+- `host.name` is a label. `host.capabilities` lists the `bstack-needs` tokens this host gives (`shell`, `files`, `web`, `browser`). A skill skips an optional path whose token is not listed. A consumer filters out a skill whose required tokens are not all listed.
+- `sources` and the settings objects have the same shapes as in `workspace.json`. Bindings, kinds, and settings are the ones in this file.
+- No secrets, same as `workspace.json`.
+
+A host profile is read-only. A skill never writes it and never asks the user to fill it. These rules replace asking:
+
+- A required source that is absent or `"via": "none"` acts as `paste`. Ask in the conversation for what the skill would read. Return what it would write in the reply. Say "`<kind>` is not bound in this host" once in the output.
+- A required setting that is absent takes its default from the Settings table. When it has no default, ask once and use the answer for this run only.
+- An optional entry is skipped, the same as in `workspace.json`.
+
 ## Binding
 
 A source value is one binding, or a list of bindings when the skill reads several (for example `tasks.commitments`).
@@ -86,6 +119,7 @@ A source value is one binding, or a list of bindings when the skill reads severa
 { "via": "file", "path": "<relative to workspace.root, or absolute>" }
 { "via": "url", "url": "https://..." }
 { "via": "skill", "skill": "<bstack skill name>", "target": "<call args>" }
+{ "via": "tool", "tool": "<tool name as this host shows it>", "target": "<optional fixed argument>" }
 { "via": "paste" }
 { "via": "none" }
 ```
@@ -94,6 +128,7 @@ A source value is one binding, or a list of bindings when the skill reads severa
 - `file` may use `paths` (a list) instead of `path` when the kind is several files, such as `voice.canon`.
 - `url` is an address, not a file path.
 - `skill` means call that skill and use what it returns. `transcripts.meetings` may be `{ "via": "skill", "skill": "capture-meetings", "target": "output=raw" }`.
+- `tool` names one tool the host exposes, not a connector server. To read, call it and use what it returns. To write, call it with the record the skill builds, such as one `household.rhythms` row or one reminder. The tool owns storage, ids, and updates in place. A skill does not rebuild a file or a table around a tool. `target` is a fixed argument for every call, when the tool needs one. A kind that is read and written, such as `household.rhythms`, binds to one tool that does both. The tool's own input schema says how to read and how to write.
 - `paste` means the caller supplies that data in the conversation.
 - `none` is legal only on an optional kind. It means skip.
 
@@ -367,7 +402,7 @@ Paste this at the top of every skill that declares `bstack-config`. Do not parap
 ```markdown
 ## Config check
 
-Do this before any other step. Find `workspace.json`: the path the caller gave, else the active workspace root, else ask once. Read this skill's `bstack-config` line in the frontmatter. For each required source kind look up `sources.<kind>`; for each required setting look up its dotted path. If an entry is absent, empty, or starts with `REPLACE_WITH` (including inside nested objects and lists), ask only for that entry, write it into `workspace.json` in the v2 shape, and continue. Entries marked `?` that are absent or `"via": "none"` are skipped without asking. If a source is bound to a connector this host does not have, stop and say "`<kind>` is bound to `<connector>`, which is not connected here." Do not swap in another tool, a cached copy, or a guess. Old flat field names still count through the alias table in SOURCES.md. Do not run a full onboarding interview.
+Do this before any other step. Find the config: a host profile (JSON with `bstack_host_version`) in the host's instructions or at a path the caller gave, else `bstack-host.json` in the active workspace root, else `workspace.json` at the path the caller gave or in that root, else ask once where `workspace.json` is. Read this skill's `bstack-config` line in the frontmatter. For each required source kind look up `sources.<kind>`; for each required setting look up its dotted path. Entries marked `?` that are absent or `"via": "none"` are skipped without asking. In `workspace.json`, if a required entry is absent, empty, or starts with `REPLACE_WITH` (including inside nested objects and lists), ask only for that entry, write it into `workspace.json` in the v2 shape, and continue. A host profile is read-only: never write it and never ask to fill it. There, a required source that is absent or `"via": "none"` acts as `paste` (ask in the conversation for what you would read, return what you would write, and say "`<kind>` is not bound in this host"), and a required setting that is absent takes its default in SOURCES.md, or with no default, one answer for this run only. If a source is bound to a connector or a tool this host does not have, stop and say "`<kind>` is bound to `<name>`, which is not connected here." Do not swap in another tool, a cached copy, or a guess. Old flat field names still count through the alias table in SOURCES.md. Do not run a full onboarding interview.
 ```
 
 ## Scripts
