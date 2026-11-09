@@ -8,7 +8,7 @@ description: >-
   standing CRM ownership outside a named trip.
 metadata:
   bstack-config: "settings: relationships.author_lane? relationships.skip_list?"
-  bstack-needs: "web"
+  bstack-needs: "web?"
   bstack-sends: "no"
   bstack-money: "no"
   bstack-scope: "any"
@@ -42,8 +42,8 @@ One named trip → ranked list + paste-ready drafts. Draft only until the author
 
 ## Steps
 
-1. Pull the public roster; note gaps.
-2. Enrich from public sources only: role, org, why meet, hook, offer, source URL.
+1. Pull the public roster; note gaps. When this host cannot fetch the web, ask the caller to paste the roster and any public bios, and say the list is only as good as that paste.
+2. Enrich from public sources only, or from the paste when there is no web: role, org, why meet, hook, offer, source URL.
 3. Rank Must / Should / Nice against the author's lane.
 4. Draft short pre-trip reach-outs and matching on-site openers.
 5. Optional: find emails with confidence labels (found vs guess).

@@ -54,7 +54,7 @@ If the weekend they describe is already full, keep rest, mark the outing optiona
 
 Read `household.rhythms` before writing. The row shape is in SOURCES.md. `type` for this skill is `weekend`.
 
-Match that type. If several rows match, ask which one. If none exists, create one when they confirm the plan. Storage follows the binding: a file is a JSON array (create the array if the file is missing), a connector is a row in that target, and `paste` means return the row. Do not name a product, and do not swap the binding for a different tool.
+Match that type. If several rows match, ask which one. If none exists, create one when they confirm the plan. Storage follows the binding: a file is a JSON array (create the array if the file is missing), a connector is a row in that target, a tool is one call with the row, and `paste` means return the row. Do not name a product, and do not swap the binding for a different tool.
 
 - `frequency` is the weekend cadence they name, or each weekend when they do not name one.
 - `who` is who the weekend is for.
@@ -78,7 +78,7 @@ When the row is `active`, append one reminder to the first binding of `tasks.com
 }
 ```
 
-Fill `due` from `next_date`, `who` from the row, and `notes` with the beats. A JSON array gets the object appended. A missing or empty file becomes a one-element JSON array. A connector creates one row in that target. Another shape: show the reminder and ask once before writing.
+Fill `due` from `next_date`, `who` from the row, and `notes` with the beats. A JSON array gets the object appended. A missing or empty file becomes a one-element JSON array. A connector creates one row in that target. A tool gets one call with the object. Another shape: show the reminder and ask once before writing.
 
 When `calendar.events` is bound, also append one draft event for that weekend. Do not invite anyone and do not send.
 

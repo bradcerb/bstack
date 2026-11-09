@@ -47,7 +47,7 @@ Build one `log.touches` object. The shape is in SOURCES.md.
 - `next_step` and `next_step_date`: only what the recap names. Leave the date null when they named a step and no date.
 - `sentiment`: `warm`, `neutral`, or `cooling`.
 
-Append that one object. Do not rewrite earlier lines. A file binding is one JSON object per line. If the file is missing, create it with this one line. A connector binding creates one row. A `paste` binding returns the object in the reply.
+Append that one object. Do not rewrite earlier lines. A file binding is one JSON object per line. If the file is missing, create it with this one line. A connector binding creates one row. A tool binding gets one call with the object. A `paste` binding returns the object in the reply.
 
 ## Update the person
 
@@ -67,7 +67,7 @@ When `promised` is non-empty, append one task to the first binding of `tasks.com
 }
 ```
 
-Fill `person`, `promised`, and `next_step_date` from the touch. A file that is a JSON array gets the object appended. A missing or empty file becomes a one-element JSON array. Another shape: show the object and ask once before writing.
+Fill `person`, `promised`, and `next_step_date` from the touch. A file that is a JSON array gets the object appended. A missing or empty file becomes a one-element JSON array. A connector creates one row, and a tool gets one call with the object. Another shape: show the object and ask once before writing.
 
 Do not write `log.open-items`. That log belongs to `open-items`.
 

@@ -57,7 +57,7 @@ Confirm the cadence and the one idea before writing. If they already named both 
 
 Read `household.rhythms` before writing. The row shape is in SOURCES.md. `type` for this skill is `date night`.
 
-Match that type. If several rows match, ask which one. If none exists, create one when they confirm the plan. Storage follows the binding: a file is a JSON array (create the array if the file is missing), a connector is a row in that target, and `paste` means return the row. Do not name a product, and do not swap the binding for a different tool.
+Match that type. If several rows match, ask which one. If none exists, create one when they confirm the plan. Storage follows the binding: a file is a JSON array (create the array if the file is missing), a connector is a row in that target, a tool is one call with the row, and `paste` means return the row. Do not name a product, and do not swap the binding for a different tool.
 
 - `frequency` is the cadence they confirmed.
 - `who` is who the date is for.
@@ -81,7 +81,7 @@ When the row is `active`, append one reminder to the first binding of `tasks.com
 }
 ```
 
-Fill `due` from `next_date`, `who` from the row, and `notes` with the idea plus the two lists. A JSON array gets the object appended. A missing or empty file becomes a one-element JSON array. A connector creates one row in that target. Another shape: show the reminder and ask once before writing.
+Fill `due` from `next_date`, `who` from the row, and `notes` with the idea plus the two lists. A JSON array gets the object appended. A missing or empty file becomes a one-element JSON array. A connector creates one row in that target. A tool gets one call with the object. Another shape: show the reminder and ask once before writing.
 
 When `calendar.events` is bound, also append one draft event for that same next date. Do not invite anyone and do not send. If the day is taken, say so and still keep the rhythm row and the reminder.
 
