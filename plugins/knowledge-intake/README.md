@@ -10,7 +10,7 @@ Scripts take `--config` pointing at that file. If the flag is omitted they walk 
 
 ## Library hosts
 
-A library host stores knowledge through a save tool instead of raw files, and has no shell. It runs a skill from this plugin only when the host profile binds `kb.raw-index` to that tool and lists `web` in `host.capabilities`.
+A library host stores knowledge through a save tool instead of raw files, and has no shell. To save articles, its host profile binds `kb.raw-index` to that tool and lists `web` in `host.capabilities`. Without a binding, `capture-articles` returns the prepared raw record in the conversation and reports that nothing was saved.
 
 The save tool's contract:
 
@@ -32,4 +32,4 @@ A profile for `capture-articles` binds one source:
 "kb.raw-index": { "via": "tool", "tool": "library_save" }
 ```
 
-`knowledge.raw_dir` stays at its default and is never read.
+`knowledge.raw_dir` stays at its default and is never read. A fileless host skips the optional monitored-pages file and takes URLs submitted for the run.

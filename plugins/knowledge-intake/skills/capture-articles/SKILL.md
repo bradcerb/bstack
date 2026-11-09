@@ -19,6 +19,8 @@ Do this before any other step. Find the config: a host profile (JSON with `bstac
 
 `knowledge.monitored_pages` is optional. Absent, empty, a value that starts with `REPLACE_WITH`, or a missing file means there is no queue. Capture the URL the caller submitted. Do not ask for the setting.
 
+On a profile host without `files`, skip the monitored-pages file and take only URLs submitted for this run. When `kb.raw-index` acts as `paste`, return the complete raw record with `body` in the reply, omit `raw_path`, and skip all file and index writes. Report it as prepared, not saved, and do not mark a queue item handled. When a fileless host binds `kb.raw-index` through something other than a tool or `paste`, stop and explain that this capture path needs a tool that stores the body too.
+
 ## Prerequisites
 
 Write raw Markdown under `knowledge.raw_dir` and one index row in `kb.raw-index`. When `kb.raw-index` is bound to a tool, that tool is the store: send it the whole raw record in step 7, write no file, and do not read `knowledge.raw_dir`. Do not create a database. Do not ingest browsing history. Take only an explicit submission or a URL listed in the monitored-pages file.
@@ -52,7 +54,7 @@ raw_path: "<relative path>"
 
    With a tool-bound `kb.raw-index`, do not write a file. Call the tool once with the same fields as one record, plus `body` (the Markdown) and `status: raw`. Leave `raw_path` out. The tool upserts by `external_id` and returns the record's id.
 8. Upsert a `kb.raw-index` row pointing at the blob. Status `raw`. Do not paste the full body into the index when it is large. With a tool-bound `kb.raw-index`, step 7 was the upsert. Skip this step.
-9. Deduplicate by canonical URL and content hash. Mark a queue item handled only after the raw write and the index upsert both succeed.
+9. On file hosts, deduplicate by canonical URL and content hash. On tool hosts, use the canonical URL as `external_id`; recapturing that URL updates the existing record instead of making another. Mark a queue item handled only after the raw write and the index upsert both succeed, or after the tool confirms the save.
 
 ## Result
 
