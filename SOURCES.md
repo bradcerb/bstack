@@ -201,6 +201,9 @@ When `kb.raw-index` acts as `paste`, return the prepared record and report zero 
 
 ### State and retries
 
+Runtime state uses `lease` (null or `{owner, expires_at}`), `sources` (a map keyed by source kind and provider/feed identity, each with `seen_ids` and `pending`), `pending_ingest` (an array of raw `{id, version}` receipts), `ingested` (verified source receipts), and `last_run_at`. An absent collection starts empty. Preserve unknown fields and unrelated source entries on every conditional write. The version token belongs to the state service response, not a model-generated counter. Use a trustworthy host clock for lease expiry; without one, defer stateful work. Set `last_run_at` only for a fully completed cycle; partial attempts may record `last_attempt_at` instead.
+
+
 A one-off run may capture explicitly supplied items without durable state; report that monitoring state was not saved. Without `state.knowledge-intake`, do not discover monitored feeds, initialize cursors, or claim a scheduled cycle completed. Any run that writes durable state must read state and acquire its lease by atomic compare-and-set before discovery or checkpointing. An unexpired lease owned by another run means defer. An expired lease may be replaced conditionally. A conflicting version means reread and retry only after confirming ownership. Stop writes if ownership is lost. Release only your own lease.
 
 Use a separate handled-id set and pending-item map per source. A successful save adds the receipt to pending ingest and marks that capture id handled in the same state update. Never move a high-water cursor past an unresolved item unless its id and metadata remain in pending for retry. Deferred, failed, prepared-only, and approval-denied items remain pending. An explicit policy rejection may be recorded as skipped. If a state write fails after a save, report partial success; retry the idempotent save and checkpoint later.

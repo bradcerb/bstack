@@ -3,7 +3,7 @@ name: capture-youtube
 description: >-
   Use when transcribing a video, processing a video URL, monitoring a channel
   feed, or preparing a transcript as raw Markdown with a kb.raw-index row.
-  Transcription is local. Captions are not the source of truth.
+  Use audio-derived transcription. Captions alone are not the source of truth.
 metadata:
   bstack-config: "sources: kb.raw-index state.knowledge-intake? feeds.youtube? transcripts.media? | settings: knowledge.raw_dir knowledge.loop_state knowledge.youtube_channels? knowledge.guardrails"
   bstack-needs: "shell? files? web?"

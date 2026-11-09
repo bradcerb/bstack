@@ -1,4 +1,5 @@
 import { readFileSync, writeFileSync } from 'node:fs';
+import { join, dirname } from 'node:path';
 import { createInterface } from 'node:readline';
 
 const store = process.argv[2];
@@ -6,7 +7,9 @@ const schema = (properties, required = []) => ({ type: 'object', properties, req
 const str = { type: 'string' };
 const obj = { type: 'object', additionalProperties: true };
 const action = (...values) => ({ type: 'string', enum: values });
+const skillNames = ['capture-articles','capture-newsletters','capture-podcasts','capture-youtube','capture-meetings','wiki-ingest','knowledge-intake'];
 const tools = [
+  { name: 'load_skill', description: 'Load an installed skill by name, including dependencies of knowledge-intake. Returns the complete skill instructions. This is the runtime skill loader, not a shell or general file reader.', inputSchema: schema({ name: action(...skillNames) }, ['name']) },
   { name: 'records', description: 'Private raw storage. save upserts by source_type and external_id and returns id/version. get returns full immutable body for id/version. list returns records.', inputSchema: schema({ action: action('save', 'get', 'list'), record: obj, id: str, version: { type: 'integer' } }, ['action']) },
   { name: 'state', description: 'Workspace state: read returns version and state. compare_and_set atomically replaces state only when expected_version matches. All writes require compare_and_set.', inputSchema: schema({ action: action('read', 'compare_and_set'), expected_version: { type: 'integer' }, state: obj }, ['action']) },
   { name: 'wiki', description: 'Private wiki pages: list, get by id, upsert by stable key. Returns full pages and ids.', inputSchema: schema({ action: action('list', 'get', 'upsert'), id: str, key: str, page: obj }, ['action']) },
@@ -19,7 +22,10 @@ function call(name, a) {
   d.calls.push({ name, arguments: a });
   let result;
   let error;
-  if (name === 'records') {
+  if (name === 'load_skill') {
+    if (!skillNames.includes(a.name)) error = 'unknown skill';
+    else result = readFileSync(join(dirname(store), '.agents/skills', a.name, 'SKILL.md'), 'utf8');
+  } else if (name === 'records') {
     if (a.action === 'save') {
       if (!a.record?.body || !a.record?.external_id || a.record.raw_path || a.record.visibility !== 'private') error = 'invalid raw record';
       else {
