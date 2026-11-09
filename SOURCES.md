@@ -125,7 +125,7 @@ A source value is one binding, or a list of bindings when the skill reads severa
 ```
 
 - `connector` names a server this host already shows. `target` is the thing inside it (inbox, database id, queue, field).
-- `file` may use `paths` (a list) instead of `path` when the kind is several files, such as `voice.canon`.
+- `file` may use `paths` (a list) instead of `path` when one kind is several files.
 - `url` is an address, not a file path.
 - `skill` means call that skill and use what it returns. `transcripts.meetings` may be `{ "via": "skill", "skill": "capture-meetings", "target": "output=raw" }`.
 - `tool` names one tool the host exposes, not a connector server. To read, call it and use what it returns. To write, call it with the record the skill builds, such as one `household.rhythms` row or one reminder. The tool owns storage, ids, and updates in place. A skill does not rebuild a file or a table around a tool. `target` is a fixed argument for every call, when the tool needs one. A kind that is read and written, such as `household.rhythms`, binds to one tool that does both. The tool's own input schema says how to read and how to write. When a skill reads a kind whose tool has no read operation, the kind is unbound for that read: an optional kind is skipped, and a required kind acts as `paste`. Never call a write tool to read.
@@ -160,14 +160,7 @@ A source value is one binding, or a list of bindings when the skill reads severa
 | `kb.wiki` | read and write | curated pages by schema category | knowledge-intake, wiki-ingest |
 | `kb.wiki-log` | append | dated ingest log | knowledge-intake, wiki-ingest |
 | `kb.positions` | read, and an optional write of confirmed positions | confirmed positions | examine-my-alignment (optional), form-my-point-of-view (optional write) |
-| `voice.style-guide` | read; the style-guide skill writes | style guide | thank-you-note (optional). Saved voice skills use the same kind |
-| `voice.canon` | read | voice, preferences, about-me, and work-context files | saved voice skills |
-| `analytics.product-events` | read | product analytics project | saved analytics skill only. Not in the bstack example |
-| `comms.drafts` | write a draft only | review drafts | saved retainer skill only. Not in the bstack example |
-| `time.entries` | read | hours per client | saved retainer skill only. Not in the bstack example |
-| `tasks.client-work` | read | client task progress | saved retainer skill only. Not in the bstack example |
-| `email.locked-drafts` | read only | drafts to copy verbatim | saved retainer skill only, optional. Not in the bstack example |
-| `people.partners` | read | partner names and greetings | saved retainer skill only. Not in the bstack example |
+| `voice.style-guide` | read | style guide | thank-you-note (optional) |
 | `approvals.pages` | read and write | a review database; `target` is its id. Properties Name, Status, Key, Subject, Draft hash | approval-stage, email-send |
 
 Blocks a user does not use are absent. A skill asks only for the entries on its own line.
@@ -255,8 +248,6 @@ Not in `workspace.json`:
 
 - A schedule cadence, a cron expression, or a routine id. The host owns the clock. `workspace.timezone` is the only clock fact here. Touch windows in `relationships.circle_cadences` are settings, not a schedule.
 - An `exercises` block. Exercise files are outputs.
-- `drafting.work_dir` and `drafting.personal_dir`. Saved drafting skills only. Not in the bstack example.
-- `retainer.drafts_dir`, `retainer.outlook_capture_dir`, and `retainer.send_day`. Saved retainer skill only. Not in the bstack example.
 
 ## Circle rows and touch entries
 
@@ -402,7 +393,6 @@ Check the v2 path first. If it is missing, the old flat field still counts. When
 | `leadership.coaching_state` | `leadership.coaching_state` |
 | `leadership.coaching_briefs_dir` | `leadership.coaching_briefs_dir` |
 | `context/style-guide.md` as a fixed path | `sources["voice.style-guide"]` |
-| fixed voice-canon paths, or voice paths remembered by the host | `sources["voice.canon"]` and `sources["voice.style-guide"]` |
 | a remembered author lane or skip list | `relationships.author_lane`, `relationships.skip_list` |
 
 Per-call arguments such as a date range, a person filter, or an output mode are not config and have no alias.

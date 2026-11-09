@@ -2,9 +2,9 @@
 
 High-value portable skill plugins: knowledge intake, thinking, personal money procedures, sharp relationship jobs, agent ops (planning plus gated execution), leadership (coaching prep), and household rhythms.
 
-**pstack** is the coding floor. **bstack** is only what is worth downloading and reusing. Not a life-domain matrix.
+This repo is the set worth downloading and reusing. It is a small set of skills, not a pack for every life domain.
 
-Writing skills install from Triumph plugins; not in bstack. Corey Haines marketing stays upstream. Do not fork either here.
+Voice, marketing playbooks, and one product's defaults stay in the files or repos that own them.
 
 ## Install
 
@@ -15,7 +15,7 @@ Pick a plugin under `plugins/<name>/`:
 3. **Claude Code** - use `.claude-plugin/marketplace.json` the same way.
 4. **Agent Plugins / Grok** - install from the plugin directory (root `plugin.json`).
 
-### Grok Bot / Cursor local prove
+### Local plugin directories
 
 `InstallPlugin` marketplace id is N/A until a plugin is published. The prove path is local:
 
@@ -34,7 +34,7 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map.
 | --- | --- |
 | `knowledge-intake` | Capture → raw → wiki |
 | `thinking` | POV, alignment, fluency, Action Method |
-| `money` | Principle-based personal money skills. Optional CFO seat. Plaid for live balances; optional fiscal.sh; Tiller only if still the plan sheet. No secrets. |
+| `money` | Principle-based personal money skills. Ask a read-only finance connector or a plan spreadsheet for numbers. Never store credentials. |
 | `relationships` | Sharp reusable jobs: `conference-who-to-meet`, `thank-you-note`, `circle-rotation`, `touch-note`. Draft only. Nothing is sent. Lane, skip list, circle cadences, and the weekly touch count are settings in `workspace.json`. Voice stays outside the skill. |
 | `household` | Three rhythms: `date-night`, `evening-activities`, `weekend-with-kids`. Updates `household.rhythms` and files a task reminder. Not outreach. |
 | `agent-ops` | Planning plus gated execution: `project-brief`, `weekly-plan`, `daily-plan`, `gated-work` (capped runs, handoff checklist, human gate), `approval-stage` and `email-send` (send an email only after a human approved its exact hash, and only once) |
@@ -45,17 +45,17 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full map.
 - **Skill** = the method (portable, in this repo).
 - **Routine or command** = when it runs (schedule, trigger, or slash command in your host).
 - **Connector** = the data (task board, calendar, repo, inbox).
-- Upstream commands (for example an org's own `/weekly-review` command that pulls tasks and calendar) are **inputs**, not forks. Paste their output into `weekly-plan`; do not copy them here. `weekly-plan` is named to stay distinct from those review commands and from Cursor Team Kit's `weekly-review` skill.
+- Upstream commands (for example a host command that pulls tasks and calendar) are **inputs**. Paste their output into `weekly-plan`. Leave the host command where it is. `weekly-plan` stays distinct from a host review command.
 
 ## Not in this repo
 
-- Writing skills (Triumph plugins)
-- Domain filler packs (communication, engineering, faith, health, gtm, design, project-ops; the small PM set lives in `agent-ops`). Leadership is a portable plugin, not a filler pack. Household is three rhythm skills, not a family domain pack.
-- Triumph Rock / PM / sales
-- Corey Haines marketing (install upstream)
-- Product defaults for Showup / Atlas / bradcerb.com
-- Branded money-coach program copy (procedures stay principle-based in `money`)
-- Seat-only wiring (company lane, CRM, voice)
+- Writing voice and branded program copy. Bind a style guide as `voice.style-guide` when a skill should match it.
+- Domain packs for communication, engineering, faith, health, go-to-market, design, or project operations. The small planning set lives in `agent-ops`. Leadership is five coaching skills. Household is three rhythm skills.
+- Delivery, sales, and implementation playbooks for one product
+- Marketing playbooks from another author or marketplace
+- Defaults that belong to one product
+- Branded money-coach program copy. Procedures in `money` stay principle-based.
+- Identity, lane, CRM, and voice. Those belong in `workspace.json`.
 
 ## Checks
 

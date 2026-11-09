@@ -1,11 +1,10 @@
 # bstack
 
-High-value, portable skill plugins you can install and reuse. Not a second engineering floor. Not one plugin per life domain.
+High-value, portable skill plugins you can install and reuse. A small set of skills, not one plugin per life domain.
 
-**pstack** stays the coding floor (verify first, small changes, clean PRs).
-**bstack** ships only skills worth downloading: knowledge intake, thinking, personal money procedures, sharp relationship jobs, agent ops (planning plus gated execution), and leadership (coaching prep).
+bstack ships skills worth downloading: knowledge intake, thinking, personal money procedures, sharp relationship jobs, agent ops (planning plus gated execution), leadership (coaching prep), and household rhythms.
 
-Writing skills install from Triumph plugins; not in bstack. Corey Haines marketing skills stay upstream. Do not fork either here.
+Voice, marketing playbooks, and one product's defaults stay in the files or repos that own them. Project code stays in the project repo.
 
 ## How to use this
 
@@ -55,37 +54,37 @@ Knowledge-intake skills declare `kb.raw-index`, `kb.wiki`, `kb.wiki-log`, and th
 | --- | --- | --- |
 | **knowledge-intake** | `knowledge-intake`, `capture-articles`, `capture-newsletters`, `capture-podcasts`, `capture-youtube`, `capture-meetings`, `wiki-ingest` | Capture → raw → wiki |
 | **thinking** | `form-my-point-of-view`, `examine-my-alignment`, `build-fluency`, `action-method` | Beliefs, understanding, deciding |
-| **money** | `money-check`, `bill-triage`, `margin-plan`, `debt-order`, `cash-cushion`, `purchase-pause`, `money-date`, `step-status` | Personal money procedures. Optional CFO seat. No bank secrets in the repo. |
+| **money** | `money-check`, `bill-triage`, `margin-plan`, `debt-order`, `cash-cushion`, `purchase-pause`, `money-date`, `step-status` | Personal money procedures. Numbers come from the caller's ledger or sheet. No bank secrets in the repo. |
 | **relationships** | `conference-who-to-meet`, `thank-you-note`, `circle-rotation`, `touch-note` | Sharp reusable jobs. Draft only. Nothing is sent. Lane, skip list, circle cadences, and the weekly touch count are settings. Voice stays outside the skill. |
 | **household** | `date-night`, `evening-activities`, `weekend-with-kids` | Three household rhythms. Each one updates `household.rhythms` and files a task reminder. Not outreach. |
 | **agent-ops** | `project-brief`, `weekly-plan`, `daily-plan`, `gated-work`, `approval-stage`, `email-send` | Open a project, plan the week, plan the day, then move queue items safely in capped, gated runs. Gate any email on a human approval of its exact hash, then send it once |
 | **leadership** | `coaching-angles`, `personality`, `one-on-one-prep`, `open-items`, `onboarding` | Prep a manager. One moment, a DISC read, a one-on-one brief, commitment tracking, one-skill config. Nothing is sent. |
 
-## What does *not* live here
+## What stays outside this repo
 
-- **Writing skills:** install from Triumph plugins; not in bstack.
-- Domain filler packs (communication, engineering, faith, health, gtm, design, project-ops; the small PM set lives in `agent-ops`). Leadership is five coaching skills, not a filler pack. Household is three rhythm skills, not a family domain pack. Prefer seats, Triumph, pstack, or upstream marketplace packs instead of growing bstack with filler.
-- Triumph Rock / Lava / C# / SQL delivery, PM, and sales playbooks
-- Product defaults for Showup / Atlas / bradcerb.com
-- Secrets, tokens, Notion database IDs, client PII
-- Branded money-coach program copy (procedures stay principle-based)
-- Seat wiring (who you are, company lane, CRM, voice) - keep that in the seat or workspace config, not in downloadable skills
+- Writing voice and branded program copy. Bind a style guide as `voice.style-guide` when a skill should match it.
+- Domain packs for communication, engineering, faith, health, go-to-market, design, or project operations. The small planning set lives in `agent-ops`. Leadership is five coaching skills. Household is three rhythm skills. Add a skill here when it is reusable on its own.
+- Delivery, sales, and implementation playbooks for one product
+- Defaults that belong to one product
+- Secrets, tokens, database IDs, and client PII
+- Branded money-coach program copy. Procedures stay principle-based.
+- Identity, lane, CRM, and voice. Keep those in `workspace.json`.
 
 ## How projects pull
 
-**Coding** → pstack (always the floor). Companion: cursor-team-kit when installed.
+**Project code** stays in the project repo. These plugins do not replace a coding workflow.
 
 **Beliefs / fluency / capture** → `thinking` + `knowledge-intake`.
 
-**Personal money** → `money` (optional CFO seat). Numbers from your ledger connectors or sheets; skills are judgment procedures only.
+**Personal money** → `money`. Numbers come from the caller's ledger or sheet. Skills are judgment procedures only.
 
 **Relationships** → `relationships` for method (conference who-to-meet, thank-you, circle rotation, touch notes). Lane, skip list, circle cadences, and the weekly touch count live in `relationships` settings in `workspace.json`. Voice and CRM stay outside the skill. Nothing is sent.
 
 **Household rhythms** → `household` (`date-night`, `evening-activities`, `weekend-with-kids`). Each skill reads and updates `household.rhythms` and files a reminder on `tasks.commitments`. Nothing is sent.
 
-**Writing / voice** → Triumph plugins and Writer / Public Posts seats. Not bstack.
+**Writing / voice** → the caller's own style guide, or another repo that owns the voice. These plugins do not ship one.
 
-**Triumph delivery / client GTM / product quirks** → Triumph plugins, Corey upstream, or that product's repo.
+**One product's delivery, marketing, or defaults** → that product's own repo.
 
 **Planning and work queue:** `agent-ops`. `project-brief` opens a project, `weekly-plan` sets the week's priorities, `daily-plan` picks today's slice and feeds the queue, `gated-work` moves the items. Those three read their source kinds from `workspace.json`. `project-brief` declares no config. The skill owns the method.
 
@@ -97,12 +96,11 @@ Knowledge-intake skills declare `kb.raw-index`, `kb.wiki`, `kb.wiki-log`, and th
 
 | Layer | Role |
 | --- | --- |
-| **Live balances / txs** | Finance connector (Plaid) when connected; read-only |
-| **Plan / categories sheet** | Tiller (or any sheet) only while it is still the household plan source |
-| **Optional ledger agents** | [fiscal.sh](https://fiscal.sh/) / `fscl` on Actual Budget upstream; install like Corey, do not fork into bstack |
+| **Live balances** | A read-only finance connector, when the caller has one |
+| **Plan or categories** | The spreadsheet or ledger the caller already uses |
 | **bstack `money`** | Skills below; ask for numbers; never store credentials |
 
-Pick one plan ledger long-term. Do not run three books forever.
+Pick one plan ledger and keep using it.
 
 ### Skills in `money`
 
@@ -131,11 +129,11 @@ Pick one plan ledger long-term. Do not run three books forever.
 - `circle-rotation` - a weekly pick of N people (default 5), scored by days since last touch divided by cadence, with a reason and a suggested opener. Family-inner is excluded from the count. 3 of 5 is a good week.
 - `touch-note` - a free-text recap becomes one `log.touches` entry, updates `last_touched` on `people.circles`, files a promise on `tasks.commitments`, and hands off to `thank-you-note` when gratitude is the point
 
-`conference-who-to-meet` may read `relationships.author_lane` and `relationships.skip_list` when those settings are filled. `circle-rotation` reads `relationships.circle_cadences`, `relationships.weekly_touches`, and the same skip list. `thank-you-note` may read `voice.style-guide` when that kind is bound. An optional entry can be absent. CRM stays outside the skill. Change the method here once; point seats at it.
+`conference-who-to-meet` may read `relationships.author_lane` and `relationships.skip_list` when those settings are filled. `circle-rotation` reads `relationships.circle_cadences`, `relationships.weekly_touches`, and the same skip list. `thank-you-note` may read `voice.style-guide` when that kind is bound. An optional entry can be absent. CRM stays outside the skill. Change the method here once. Lane, skip list, and voice stay in `workspace.json`.
 
 ## Household procedures
 
-`plugins/household` is three rhythms, not a family domain pack. The principles are paraphrased: repeated patterns form a household, grace comes before the habit, something beats nothing, start with one small practice, and the table and hospitality are the keystone. Each skill reads and updates one `household.rhythms` row (next date and how it went) and files a reminder on `tasks.commitments`. A bound `calendar.events` may also receive one draft event. None of them sends a message or an invitation.
+`plugins/household` is three rhythms. Each skill reads and updates one `household.rhythms` row (next date and how it went) and files a reminder on `tasks.commitments`. A bound `calendar.events` may also receive one draft event. None of them sends a message or an invitation.
 
 - `date-night` - one recurring date-night rhythm: cadence, simple ideas, budget, prep and childcare checklist
 - `evening-activities` - one weeknight practice (table, bedtime, screens off, one activity) for the season and the kids' ages, plus a check-in date
@@ -143,7 +141,7 @@ Pick one plan ledger long-term. Do not run three books forever.
 
 ## Leadership procedures
 
-`plugins/leadership` is back as a portable plugin. Five skills, not a domain filler pack. They prep a manager for a live conversation. They do not message anyone, post, schedule, or take the conversation over.
+`plugins/leadership` is five coaching skills. They prep a manager for a live conversation. They do not message anyone, post, schedule, or take the conversation over.
 
 - `coaching-angles` reads team call transcripts for a window (since the last run, or the last 7 days, unless the caller overrides it) and returns one sourced moment per person, tied to a growth area. Delivery comes from `personality`. Quiet when nothing qualifies. A host schedule can run it; the date window is the override.
 - `personality` reads the configured DISC source on request. No cache, no fallback, no guessed style.
@@ -170,7 +168,7 @@ Leadership skills declare those entries in frontmatter. The old flat `leadership
 | Routine or command | When it runs | A Friday routine, a slash command, a scheduled agent |
 | Connector | The data | Task board, calendar, repo issues, inbox |
 
-Upstream commands are inputs, not forks. If an org already ships a `/weekly-review` command that pulls its tasks and calendar, run it, paste the output into `weekly-plan`, and let this skill add triage and priorities. Do not copy the upstream command into bstack. `weekly-plan` is deliberately not named weekly-review, so it stays distinct from those commands and from Cursor Team Kit's `weekly-review` skill.
+Upstream commands are inputs. If the host already has a review command that pulls tasks and calendar, run it, paste the output into `weekly-plan`, and let this skill add triage and priorities. Leave that command where it is. `weekly-plan` stays distinct from a host review command.
 
 - `approval-stage` - freezes a rendered email and its envelope under one hash, stages a review page, and is the only code that can issue an `ApprovedDraft`.
 - `email-send` - sends an `ApprovedDraft` through Resend with an idempotency key and a ledger. Never the same key twice, never a changed draft.
@@ -179,4 +177,4 @@ Default gates: send, spend, merge, publish, delete, relationship-affecting outre
 
 ## One line
 
-Coding floor = pstack. High-value portable skills = bstack (`knowledge-intake`, `thinking`, `money`, `relationships`, `agent-ops`, `leadership`, `household`). Writing = Triumph plugins. Upstream marketing = Corey. Optional money ledger agents = fiscal.sh. One product's quirks = that product's repo.
+Portable skills in this repo: `knowledge-intake`, `thinking`, `money`, `relationships`, `agent-ops`, `leadership`, `household`. Voice, marketing, and one product's defaults stay in the files or repos that own them. Money skills ask for numbers and never store credentials.

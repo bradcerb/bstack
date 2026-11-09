@@ -111,14 +111,6 @@
       "via": "file",
       "path": "context/style-guide.md"
     },
-    "voice.canon": {
-      "via": "file",
-      "paths": [
-        "context/voice.md",
-        "context/working-preferences.md",
-        "context/about-me.md"
-      ]
-    },
     "approvals.pages": {
       "via": "connector",
       "connector": "REPLACE_WITH_NOTION_CONNECTOR",
