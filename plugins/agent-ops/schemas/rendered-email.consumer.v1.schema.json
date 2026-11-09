@@ -1,0 +1,33 @@
+{
+  "$id": "rendered-email.v1 (consumer view)",
+  "title": "The fields approval-stage reads from an email-render manifest",
+  "description": "rendered.json is owned by the email render kit. This side checks only what it uses and ignores the rest, so the kit can add fields without breaking staging.",
+  "type": "object",
+  "required": ["schema", "version", "subject", "html", "text", "images"],
+  "properties": {
+    "schema": { "const": "rendered-email" },
+    "version": { "const": 1 },
+    "subject": { "type": "string" },
+    "html": { "$ref": "#/$defs/file" },
+    "text": { "$ref": "#/$defs/file" },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["cid", "path", "sha256"],
+        "properties": {
+          "cid": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "path": { "type": "string" },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "file": {
+      "type": "object",
+      "required": ["path", "sha256"],
+      "properties": { "path": { "type": "string" }, "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" } }
+    }
+  }
+}

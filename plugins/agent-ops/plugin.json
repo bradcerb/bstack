@@ -1,0 +1,23 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "agent-ops",
+  "version": "1.3.0",
+  "description": "Planning plus gated execution: project-brief, weekly-plan, daily-plan, a capped gated work loop (intake, classify, handoff, human gate, execute, verify, close), and approval-gated email: approval-stage and email-send",
+  "author": {
+    "name": "Brad",
+    "url": "https://github.com/bradcerb"
+  },
+  "repository": "https://github.com/bradcerb/bstack",
+  "license": "MIT",
+  "keywords": [
+    "agent-ops",
+    "skills",
+    "bstack",
+    "planning",
+    "weekly-plan",
+    "project-brief",
+    "daily-plan",
+    "approval-stage",
+    "email-send"
+  ]
+}

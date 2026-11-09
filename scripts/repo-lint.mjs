@@ -1,0 +1,91 @@
+#!/usr/bin/env node
+// Repo checks that would otherwise live in review comments. No dependencies: `node scripts/repo-lint.mjs`.
+//  1. No personal, client or brand strings in any SKILL.md or in plugin code, examples, copy, or schemas.
+//  2. No em-dashes in any SKILL.md, in report copy, or in plugin code and examples.
+//  3. Secrets: env values are read only through lib/workspace.ts (secretValue), never by name elsewhere.
+//  4. ApprovedDraft is never cast or issued outside approval-stage.
+//  5. Every SKILL.md declares the portability metadata in SOURCES.md, and its name matches its folder.
+//  6. Every skill that declares bstack-config carries the config-check text from SOURCES.md word for word.
+import { createHash } from "node:crypto";
+import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
+import { join, relative } from "node:path";
+import { fileURLToPath } from "node:url";
+import { PORTABILITY, readSkills } from "./skill-index.mjs";
+
+const root = join(fileURLToPath(new URL(".", import.meta.url)), "..");
+const walk = (d) => (existsSync(d) ? readdirSync(d).flatMap((f) => {
+  if (f === "node_modules" || f === ".out" || f === "package-lock.json") return [];
+  const p = join(d, f);
+  return statSync(p).isDirectory() ? walk(p) : [p];
+}) : []);
+const rel = (p) => relative(root, p);
+const problems = [];
+const KIT = ["plugins/agent-ops"].map((p) => join(root, p));
+const MANIFEST = /(^|\/)(plugin|marketplace)\.json$|\.claude-plugin|\.cursor-plugin|(^|\/)package\.json$/;
+
+// Denylist of personal, client, and brand terms, stored as sha256 prefixes so the names never appear in code.
+// Add a term: node -e 'console.log(require("crypto").createHash("sha256").update("term").digest("hex").slice(0,16))'
+// Matched against each lowercase word, each two-word phrase, and each word's first six letters.
+const DENY_HASHES = new Set(["322f965a2919f467", "2cb1b1987de67323", "d4b61badb0938463", "29452a304056664a", "b51976231e408137", "1a084da1c2190657", "e836933950d33a65", "8a57a440886c5942"]);
+const h16 = (s) => createHash("sha256").update(s).digest("hex").slice(0, 16);
+function denied(line) {
+  const words = line.toLowerCase().match(/[a-z0-9:]+/g) ?? [];
+  for (let i = 0; i < words.length; i++) {
+    for (const t of [words[i], words[i].slice(0, 6), i + 1 < words.length ? `${words[i]} ${words[i + 1]}` : ""]) {
+      if (t && DENY_HASHES.has(h16(t))) return words[i];
+    }
+  }
+  return null;
+}
+const skillFiles = walk(join(root, "plugins")).filter((p) => p.endsWith("/SKILL.md"));
+const kitFiles = KIT.flatMap(walk).filter((p) => /\.(ts|mjs|json|md)$/.test(p) && !MANIFEST.test(rel(p)));
+for (const f of new Set([...skillFiles, ...kitFiles])) {
+  readFileSync(f, "utf8").split("\n").forEach((line, i) => {
+    const m = denied(line);
+    if (m) problems.push(`${rel(f)}:${i + 1}: personal or brand string "${m}" (belongs in your workspace files)`);
+    if (line.includes("\u2014")) problems.push(`${rel(f)}:${i + 1}: em-dash`);
+  });
+}
+
+for (const f of kitFiles.filter((p) => p.endsWith(".ts"))) {
+  const src = readFileSync(f, "utf8");
+  const r = rel(f);
+  if (!r.endsWith("lib/workspace.ts") && !r.includes("/test/") && /process\.env(\.|\[)/.test(src)) problems.push(`${r}: reads an env var directly; name it under secrets in workspace.json and use secretValue`);
+  if (/console\.\w+\([^)]*process\.env/.test(src)) problems.push(`${r}: prints process.env`);
+  if (/as\s+(unknown\s+as\s+)?ApprovedDraft\b/.test(src) && !r.includes("/test/")) problems.push(`${r}: casts to ApprovedDraft`);
+  if (/ApprovedDraft\.issue\(/.test(src) && !r.endsWith("skills/approval-stage/approval.ts")) problems.push(`${r}: issues an ApprovedDraft outside approval-stage`);
+}
+
+const KNOWN_META = new Set(["bstack-config", "bstack-sources", ...Object.keys(PORTABILITY)]);
+for (const s of readSkills()) {
+  if (s.name !== s.skill) problems.push(`${s.path}: name "${s.name}" does not match its folder "${s.skill}"`);
+  for (const [key, valid] of Object.entries(PORTABILITY)) {
+    const v = s.metadata[key];
+    if (v === undefined) problems.push(`${s.path}: missing metadata.${key} (see Portability in SOURCES.md)`);
+    else if (!valid.test(v)) problems.push(`${s.path}: metadata.${key} "${v}" is not a value SOURCES.md allows`);
+  }
+  for (const key of Object.keys(s.metadata)) {
+    if (key.startsWith("bstack-") && !KNOWN_META.has(key)) problems.push(`${s.path}: unknown metadata.${key}`);
+  }
+}
+
+let tableWidth = null;
+for (const [index, line] of readFileSync(join(root, "SOURCES.md"), "utf8").split("\n").entries()) {
+  if (!line.startsWith("|")) { tableWidth = null; continue; }
+  const width = line.split("|").length;
+  if (tableWidth === null) tableWidth = width;
+  else if (width !== tableWidth) problems.push(`SOURCES.md:${index + 1}: table row has the wrong number of columns`);
+}
+
+const configCheck = readFileSync(join(root, "SOURCES.md"), "utf8").match(/```markdown\n## Config check\n\n([^\n]+)\n```/)?.[1];
+if (!configCheck) problems.push("SOURCES.md: no config-check block");
+for (const s of readSkills()) {
+  const declares = s.metadata["bstack-config"] !== undefined;
+  const carries = configCheck && readFileSync(join(root, s.path), "utf8").includes(configCheck);
+  if (declares && !carries) problems.push(`${s.path}: declares bstack-config without the config-check text from SOURCES.md, word for word`);
+  if (!declares && carries) problems.push(`${s.path}: has the config-check text but no bstack-config line`);
+}
+
+for (const p of problems) console.error(`repo-lint: ${p}`);
+if (problems.length) process.exit(1);
+console.log(`repo-lint: ok (${skillFiles.length} SKILL.md, ${kitFiles.length} kit files)`);
